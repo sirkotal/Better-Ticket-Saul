@@ -25,26 +25,31 @@ CREATE TABLE Client (
 );
 
 CREATE TABLE Agent (
-    username REFERENCES User(username) UNIQUE
+    username REFERENCES User(username) UNIQUE,
+    department REFERENCES Department(name)
 );
 
+CREATE TABLE AgentDepartment (
+     idAgentDeparment INTEGER PRIMARY KEY AUTOINCREMENT,
+     agent REFERENCES Agent(username) UNIQUE,
+     department REFERENCES Department(name)
+)
 CREATE TABLE Admin (
     username REFERENCES User(username) UNIQUE    
 );
 
 CREATE TABLE Department (
     name VARCHAR(25) PRIMARY KEY,
-    agent REFERENCES Agent(username)
 );
 
 CREATE TABLE Reply (
-    idreply INTEGER PRIMARY KEY,
+    idReply INTEGER PRIMARY KEY,
     reply VARCHAR, 
     date INTEGER,
     attachment VARCHAR,
     idTicket INTEGER REFERENCES Ticket(idTicket),
     client REFERENCES Client(username),
-    agent REFERENCES Agent(username),
+    agent REFERENCES Agent(username)
 );
 
 CREATE TABLE Ticket (
@@ -54,8 +59,7 @@ CREATE TABLE Ticket (
      status VARCHAR(10),
      priority INTEGER NOT NULL CHECK(priority >=1),
      client REFERENCES Client(username),
-     agent REFERENCES Agent(username),
-     department REFERENCES Department(name),
+     idAgentDeparment REFERENCES AgentDepartment(idAgentDeparment)   
 );
 
 CREATE TABLE Hashtag (
@@ -63,16 +67,17 @@ CREATE TABLE Hashtag (
 )
 
 CREATE TABLE TicketHashtag (
-     hashtag REFERENCES Hashtag(hashtag)
-     idTicket REFERENCES Ticket(idTicket) 
+     hashtag REFERENCES Hashtag(hashtag) UNIQUE,
+     idTicket REFERENCES Ticket(idTicket) UNIQUE
 )
 
 CREATE TABLE Ticketlog (
      idTicketlog INTEGER PRIMARY KEY,
      date INTEGER,
      change VARCHAR,
-     idticket REFERENCES Ticket(idTicket),
-     agente REFERENCES Agent(username)
+     idTicket REFERENCES Ticket(idTicket),
+     idAgentDeparment REFERENCES AgentDepartment(idAgentDeparment)
+     
 )
 
 CREATE TABLE Faq (

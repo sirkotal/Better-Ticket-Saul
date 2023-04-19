@@ -13,16 +13,16 @@
             <a href="../auth/register.html">Register</a>
             <a href="../auth/login.html">Login</a>
         </div>
+        <nav id="menu">
+            <ul>
+                <li><a href="../main-page/index.html">Home</a></li>
+                <li><a href="../tickets/create.html">Submit Ticket</a></li>
+                <li><a href="../tickets/view.html">View Tickets</a></li>
+                <li><a href="#">FAQs</a></li>
+                <li><a href="#">Contact Us</a></li>
+            </ul>
+        </nav>
     </header>
-    <nav id="menu">
-        <ul>
-            <li><a href="#">Home</a></li>
-            <li><a href="#">Submit Ticket</a></li>
-            <li><a href="#">View Tickets</a></li>
-            <li><a href="#">FAQs</a></li>
-            <li><a href="#">Contact Us</a></li>
-        </ul>
-    </nav>
     <main>
         <h2>Welcome to our Trouble Ticket Management System</h2>
         <p>
@@ -31,7 +31,7 @@
             or contact us for assistance.
         </p>
         <section>
-            <h3><a href="#">Submit a Ticket</a></h3>
+            <h3><a href="../tickets/create.html">Submit a Ticket</a></h3>
             <form action="/submit-ticket" method="post">
                 <label for="name">Name</label>
                 <input type="text" id="name" name="name" required>
@@ -43,7 +43,7 @@
             </form>
         </section>
         <section>
-            <h3><a href="#">View Tickets</a></h3>
+            <h3><a href="../tickets/view.html">View Tickets</a></h3>
             <p>
                 If you have already submitted a ticket, you can view the status and details of your ticket by logging
                 in to your account or using your ticket reference number.

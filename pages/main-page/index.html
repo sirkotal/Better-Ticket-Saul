@@ -2,16 +2,19 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trouble Ticket Management System</title>
-    <!-- TODO -->
 </head>
 <body>
     <header>
-        <!-- TODO -->
-        <h1>Trouble Ticket Management System</h1>
+        <img src="logo.png" alt="logo" />
+        <h1><a href="index.html">Trouble Ticket Management System</a></h1>
+        <div id="signup">
+            <a href="../auth/register.html">Register</a>
+            <a href="../auth/login.html">Login</a>
+        </div>
     </header>
-    <nav>
-        <!-- TODO -->
+    <nav id="menu">
         <ul>
             <li><a href="#">Home</a></li>
             <li><a href="#">Submit Ticket</a></li>
@@ -21,7 +24,6 @@
         </ul>
     </nav>
     <main>
-        <!-- TODO -->
         <h2>Welcome to our Trouble Ticket Management System</h2>
         <p>
             Our system allows you to submit and track trouble tickets related to technical issues, customer support,
@@ -29,9 +31,8 @@
             or contact us for assistance.
         </p>
         <section>
-            <h3>Submit a Ticket</h3>
+            <h3><a href="#">Submit a Ticket</a></h3>
             <form action="/submit-ticket" method="post">
-                <!-- TODO -->
                 <label for="name">Name</label>
                 <input type="text" id="name" name="name" required>
                 <label for="email">Email</label>
@@ -42,32 +43,28 @@
             </form>
         </section>
         <section>
-            <h3>View Tickets</h3>
+            <h3><a href="#">View Tickets</a></h3>
             <p>
                 If you have already submitted a ticket, you can view the status and details of your ticket by logging
                 in to your account or using your ticket reference number.
             </p>
-            <!-- TODO -->
         </section>
         <section>
-            <h3>FAQs</h3>
+            <h3><a href="#">FAQs</a></h3>
             <p>
                 Check our frequently asked questions for answers to common inquiries. If you can't find the information
                 you're looking for, please feel free to contact us for further assistance.
             </p>
-            <!-- TODO -->
         </section>
         <section>
-            <h3>Contact Us</h3>
+            <h3><a href="#">Contact Us</a></h3>
             <p>
                 If you need to reach out to us for any reason, please use the contact information provided below or
                 fill out the contact form. We will get back to you as soon as possible.
             </p>
-            <!-- TODO -->
         </section>
     </main>
     <footer>
-        <!-- TODO -->
         <p>&copy; 2023 The LDTS Group || All Rights Reserved</p>
     </footer>
 </body>

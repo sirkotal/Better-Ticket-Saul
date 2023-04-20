@@ -25,8 +25,7 @@ CREATE TABLE Client (
 );
 
 CREATE TABLE Agent (
-    username REFERENCES User(username) UNIQUE,
-    department REFERENCES Department(name)
+    username REFERENCES User(username) UNIQUE
 );
 
 CREATE TABLE AgentDepartment (
@@ -49,7 +48,7 @@ CREATE TABLE Reply (
     attachment VARCHAR,
     idTicket INTEGER REFERENCES Ticket(idTicket),
     client REFERENCES Client(username),
-    agent REFERENCES Agent(username)
+    idAgentDeparment REFERENCES AgentDepartment(idAgentDeparment) 
 );
 
 CREATE TABLE Ticket (
@@ -71,7 +70,7 @@ CREATE TABLE TicketHashtag (
      idTicket REFERENCES Ticket(idTicket) UNIQUE
 )
 
-CREATE TABLE Ticketlog (
+CREATE TABLE TicketLog (
      idTicketlog INTEGER PRIMARY KEY,
      date INTEGER,
      change VARCHAR,

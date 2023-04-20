@@ -4,13 +4,7 @@
   require_once('/templates/common.php');
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Trouble Ticket Management System</title>
-</head>
+<?php outputHead() ?>
 <body>
   <?php outputHeader() ?>
   <!-- TODO: change what to on the index page -->

@@ -46,6 +46,25 @@
 
       return $result !== false;
     }
+
+    /**
+     * Check if an email is already in use
+     * 
+     * @param string $email The email
+     * 
+     * @return bool true if the email is already in use, false otherwise
+     */
+    public static function emailExists(string $email): bool {
+      $db = getDatabaseConnection();
+
+      $stmt = $db->prepare('SELECT * FROM User WHERE email = :email');
+      $stmt->bindValue(':email', $email);
+      $stmt->execute();
+
+      $result = $stmt->fetch();
+
+      return $result !== false;
+    }
     
     /**
      * Check if a user is valid
@@ -80,7 +99,7 @@
      * @param string $email The user email
      * @param string $password The user password
      */
-    public static function create(string $username, string $name, string $email, string $password): void {
+    public static function create(string $username, string $name, string $email, string $password): bool {
       $db = getDatabaseConnection();
 
       $stmt = $db->prepare('INSERT INTO User (username, name, email, password) VALUES (:username, :name, :email, :password)');
@@ -95,7 +114,9 @@
 
       $stmt = $db->prepare('INSERT INTO Client (username) VALUES (:username)');
       $stmt->bindValue(':username', $username);
-      $stmt->execute();
+      $result = $stmt->execute();
+
+      return $result;
     }
 
     /**

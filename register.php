@@ -14,7 +14,7 @@
         Username <input type="text" name="username">
       </label>
       <label>
-        Name <input type="text" name="realname">
+        Name <input type="text" name="name">
       </label>
       <label>
         E-mail <input type="email" name="email">
@@ -22,7 +22,7 @@
       <label>
         Password <input type="password" name="password">
       </label>
-      <button formaction="#" formmethod="post">Register</button>
+      <button formaction="/actions/action_register.php" formmethod="post">Register</button>
     </form>
   </section>
   <?php outputFooter() ?>

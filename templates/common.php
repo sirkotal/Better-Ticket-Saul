@@ -1,7 +1,7 @@
 <?php
   declare (strict_types = 1);
 
-  require_once('/lib/session.php');
+  require_once(__DIR__ . '/../lib/session.php');
 ?>
 
 <?php function outputHead(
@@ -9,7 +9,7 @@
   array $scripts = []
 ): void { ?>
   <!DOCTYPE html>
-  <html lang="en-US">
+  <html lang="en">
   <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -34,11 +34,11 @@
     <h1><a href="/index.php">Trouble Ticket Management System</a></h1>
     <div id="signup">
       <?php if ($session->isLoggedIn()) { ?>
-        <a href="/register.php">Register</a>
-        <a href="/login.php">Login</a>
-      <?php } else { ?>
         <!-- Add a action to logout -->
         <a href="#">Logout</a>
+      <?php } else { ?>
+          <a href="/register.php">Register</a>
+          <a href="/login.php">Login</a>
       <?php } ?>
     </div>
     <nav id="menu">

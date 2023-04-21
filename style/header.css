@@ -1,0 +1,59 @@
+:root {
+    --color-header: rgb(100, 149, 237)
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    text-decoration: none;
+}
+
+body > header {
+    background-color: var(--color-header);
+    padding: 1rem;
+}
+
+body > header > h1 > a {
+    color: black;
+    font-weight: bold;
+}
+
+#logo {
+    display: block;
+    text-align: left;
+    width: 12%;
+}
+
+body > header > h1, body > header > #logo {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+#signup {
+    margin-left: 1.5rem;
+    margin-top: 0.5rem;
+}
+
+#signup > * {
+    border-right: 1px solid white;
+    padding-inline: 0.75rem;
+}
+
+#signup > a {
+    color: white;
+    padding: 0 1rem 0 1rem;
+}
+
+#signup > a:hover {
+    color: #2a2f33;
+}
+
+#signup > :first-child {
+    padding-left: 0;
+}
+
+#signup > :last-child {
+    border: none;
+    padding-right: 0;
+}

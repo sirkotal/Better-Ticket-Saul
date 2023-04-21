@@ -12,7 +12,7 @@
      * @return bool true if the user is logged in, false otherwise
      */
     public function isLoggedIn(): bool {
-      return isset($_SESSION['user_id']);
+      return isset($_SESSION['user_username']);
     }
 
     /**
@@ -23,12 +23,12 @@
     }
 
     /**
-     * Set the user id in the session
+     * Set the user username in the session
      * 
-     * @param int $user_id the user id
+     * @param string $user_username the user username
      */
-    public function setUserId(int $user_id): void {
-      $_SESSION['user_id'] = $user_id;
+    public function setUserUsername(string $user_username): void {
+      $_SESSION['user_username'] = $user_username;
     }
   }
 ?>

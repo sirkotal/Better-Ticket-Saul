@@ -1,0 +1,61 @@
+:root {
+    --highlight: #575757;
+}
+
+#register {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    padding: 2rem;
+    height: 100%;
+}
+
+#register h1 {
+    text-align: center;
+    color: black;
+    font-weight: bold;
+}
+
+#register form {
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    border: 2px solid black;
+    border-radius: 5%;
+    width: 100%;
+    max-width: 24rem;
+    padding: 2rem;
+    gap: 2rem;
+}
+
+#register input {
+    display: block;
+    background-color: none;
+    border: none;
+    outline: none;
+    border-bottom: 1px solid black;
+    padding: 0.25rem;
+    margin-top: 0.5rem;
+    width: 100%;
+}
+
+#register input:focus {
+    background-color: var(--highlight);
+    color: white;
+    transition: 0.5s;
+}
+
+#register button {
+    background-color: black;
+    color: white;
+    border: none;
+    padding: 1rem;
+}
+
+#register button:hover {
+    cursor: pointer;
+    background-color: var(--highlight);
+    transition: 1s;
+} 

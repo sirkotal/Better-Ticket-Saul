@@ -17,10 +17,18 @@
 
   require_once(__DIR__ . '/../database/user.php');
 
-  if (User::exists($_POST['username'], $_POST['password'])) {
-    $session->setUser($_POST['username']);
+  if (!User::exists($_POST['username'])) {
+    $session->setError('error-login', 'User does not exist');
+    header('Location: ' . $_SERVER['HTTP_REFERER']);
+    die();
   }
 
-  // TODO: error handling
+  if (!User::isValid($_POST['username'], $_POST['password'])) {
+    $session->setError('error-login', 'Invalid password');
+    header('Location: ' . $_SERVER['HTTP_REFERER']);
+    die();
+  }
+
+  $session->setUser($_POST['username']);
   header('Location: /');
 ?>

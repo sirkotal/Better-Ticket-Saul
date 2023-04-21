@@ -10,7 +10,7 @@
     protected string $email;
 
     public function __construct(string $username, string $password) {
-      if (!User::exists($username, $password)) {
+      if (!User::isValid($username, $password)) {
         throw new Exception('User does not exist');
       }
 
@@ -27,16 +27,35 @@
       $this->name = $result['name'];
       $this->email = $result['email'];
     }
+
+    /**
+     * Check if a user exists (finds a user with the given username)
+     * 
+     * @param string $username The user username
+     * 
+     * @return bool true if the user exists, false otherwise
+     */
+    public static function exists(string $username): bool {
+      $db = getDatabaseConnection();
+
+      $stmt = $db->prepare('SELECT * FROM User WHERE username = :username');
+      $stmt->bindValue(':username', $username);
+      $stmt->execute();
+
+      $result = $stmt->fetch();
+
+      return $result !== false;
+    }
     
     /**
-     * Check if the user exists in the database
+     * Check if a user is valid
      * 
      * @param string $username The user username
      * @param string $password The user password
      * 
-     * @return bool true if the user exists, false otherwise
+     * @return bool true if the user is valid, false otherwise
      */
-    public static function exists(string $username, string $password): bool {
+    public static function isValid(string $username, string $password): bool {
       $db = getDatabaseConnection();
       
       $stmt = $db->prepare('SELECT * FROM User WHERE username = :username AND password = :password');
@@ -53,8 +72,8 @@
     }
 
     /**
-     * Create a new user in the database.
-     * A new user is created as a client by default.
+     * Create a new user in the database
+     * A new user is created as a client by default
      * 
      * @param string $username The user username
      * @param string $name The user name

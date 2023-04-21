@@ -35,7 +35,7 @@
     <div id="signup">
       <?php if ($session->isLoggedIn()) { ?>
         <!-- Add a action to logout -->
-        <a href="#">Logout</a>
+        <a href="/actions/action_logout.php">Logout</a>
       <?php } else { ?>
           <a href="/register.php">Register</a>
           <a href="/login.php">Login</a>

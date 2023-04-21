@@ -18,8 +18,7 @@
   require_once(__DIR__ . '/../database/user.php');
 
   if (User::exists($_POST['username'], $_POST['password'])) {
-    $session->setUserUsername($_POST['username']);
-    header('Location: ' . $_SERVER['HTTP_REFERER']);
+    $session->setUser($_POST['username']);
   }
 
   // TODO: error handling

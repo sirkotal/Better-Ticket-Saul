@@ -85,3 +85,8 @@ CREATE TABLE Faq (
     faq VARCHAR PRIMARY KEY
 );
 
+-- TODO: REMOVE AFTER TESTING
+--! Test User (password: test)
+
+INSERT INTO User ('username', 'name', 'email', 'password') VALUES ('test', 'Test', 'test@email.com', 'a94a8fe5ccb19ba61c4c0873d391e987982fbbd3');
+INSERT INTO Client ('username') VALUES ('test');

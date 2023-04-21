@@ -42,9 +42,9 @@
       $stmt = $db->prepare('SELECT * FROM User WHERE username = :username AND password = :password');
       $stmt->bindValue(':username', $username);
 
-      $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+      $sha1_password = sha1($password);
 
-      $stmt->bindValue(':password', $hashed_password);
+      $stmt->bindValue(':password', $sha1_password);
       $stmt->execute();
 
       $result = $stmt->fetch();
@@ -69,9 +69,9 @@
       $stmt->bindValue(':name', $name);
       $stmt->bindValue(':email', $email);
 
-      $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+      $sha1_password = sha1($password);
 
-      $stmt->bindValue(':password', $hashed_password);
+      $stmt->bindValue(':password', $sha1_password);
       $stmt->execute();
 
       $stmt = $db->prepare('INSERT INTO Client (username) VALUES (:username)');

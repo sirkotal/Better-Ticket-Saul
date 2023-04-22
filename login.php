@@ -16,7 +16,7 @@
       <label>
         Password <input type="password" name="password">
       </label>
-      <button formaction="#" formmethod="post">Login</button>
+      <button formaction="/actions/action_login.php" formmethod="post">Login</button>
     </form>
   </section>
   <?php outputFooter() ?>

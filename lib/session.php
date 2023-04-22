@@ -12,23 +12,42 @@
      * @return bool true if the user is logged in, false otherwise
      */
     public function isLoggedIn(): bool {
-      return isset($_SESSION['user_id']);
+      return isset($_SESSION['user']);
     }
 
     /**
-     * Log the user out by destroying the session
+     * Log the user out by unsetting the user in the session
      */
     public function logout(): void {
-      session_destroy();
+      unset($_SESSION['user']);
     }
 
     /**
-     * Set the user id in the session
+     * Set the user in the session
      * 
-     * @param int $user_id the user id
+     * @param string $user_username the user username
      */
-    public function setUserId(int $user_id): void {
-      $_SESSION['user_id'] = $user_id;
+    public function setUser(string $user_username): void {
+      $_SESSION['user'] = $user_username;
+    }
+
+    /**
+     * Set an error in the session
+     * 
+     * @param string $errorType the error type
+     * @param string $errorMessage the error message
+     */
+    public function setError(string $errorType, string $errorMessage): void {
+      $_SESSION[$errorType] = $errorMessage;
+    }
+
+    /**
+     * Unset an error in the session
+     * 
+     * @param string $errorType the error type
+     */
+    public function unsetError(string $errorType): void {
+      unset($_SESSION[$errorType]);
     }
   }
 ?>

@@ -191,7 +191,7 @@
     }
   }
 
-  class Agent extends User {
+  class Agent extends Client {
     public function __construct(string $username, string $password) {
       if (!User::isAgent($username)) {
         throw new Exception('User is not an agent');
@@ -201,7 +201,7 @@
     }
   }
 
-  class Admin extends User {
+  class Admin extends Agent {
     public function __construct(string $username, string $password) {
       if (!User::isAdmin($username)) {
         throw new Exception('User is not an admin');

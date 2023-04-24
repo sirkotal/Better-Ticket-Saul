@@ -33,7 +33,7 @@
   $session = new Session(); ?>
   <header>
     <div class="container">
-      <img src="/assets/logo.svg" id= "logo" alt="logo" />
+      <img src="/assets/logo.svg" id= "logo" alt="logo" width="130" height = "100" />
       <div id="signup">
         <?php if ($session->isLoggedIn()) { ?>
           <!-- Add a action to logout -->

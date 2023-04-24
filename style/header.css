@@ -12,10 +12,19 @@
 body > header {
     background-color: var(--color-header);
     padding: 1rem 0 0 1rem;
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    grid-template-rows: auto 1fr;
 }
 
 body > header > h1 {
+    grid-row: 1 / span 2;
+    grid-column: 2;
     text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    margin-bottom: 1rem;
 }
 
 body > header > h1 > a {
@@ -24,22 +33,22 @@ body > header > h1 > a {
 }
 
 #logo {
+    grid-row: 1;
+    grid-column: 1;
     display: block;
     text-align: left;
-    width: 12%;
-}
-
-.container {
-    display: flex;
-    flex-direction: column;
-    align-items: start;
-    justify-content: flex-start;
+    margin-left: 0.9rem;
+    padding-right: 1rem;
 }
 
 #signup {
-    padding-top: 0.3rem;
+    grid-row: 2;
+    grid-column: 1;
+    padding-top: 0.5rem;
     display: block;
     align-self: auto;
+    font-size: large;
+    font-weight: 500;
 }
 
 #signup > * {
@@ -65,8 +74,12 @@ body > header > h1 > a {
     padding-right: 0;
 }
 
+#menu {
+    grid-row: 2;
+    grid-column: 2;
+}
+
 #menu > ul {
-    background-color: #2a2f33;
     text-align: right;
     list-style-type: none;
     display: flex;
@@ -85,8 +98,50 @@ body > header > h1 > a {
     padding-top: 0.15rem;
     flex: 1;
     border-bottom: 0.2rem solid purple;
+    transition: 0.3s;
 }
 
-#menu > ul > li:hover {
+#menu > ul > li > a {
+    color: white;
+    text-decoration: none;
+}
+
+#menu ul li:nth-child(1) {
+    border-color: red;
+}
+
+#menu ul li:nth-child(1):hover {
     background-color: red;
+}
+
+#menu ul li:nth-child(2) {
+    border-color: purple;
+}
+
+#menu ul li:nth-child(2):hover {
+    background-color: purple;
+}
+
+#menu ul li:nth-child(3) {
+    border-color: gold;
+}
+
+#menu ul li:nth-child(3):hover {
+    background-color: gold;
+}
+
+#menu ul li:nth-child(4) {
+    border-color: green;
+}
+
+#menu ul li:nth-child(4):hover {
+    background-color: green;
+}
+
+#menu ul li:nth-child(5) {
+    border-color: orange;
+}
+
+#menu ul li:nth-child(5):hover {
+    background-color: orange;
 }

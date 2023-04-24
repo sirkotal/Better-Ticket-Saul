@@ -7,10 +7,10 @@
 
   //? maybe change throws to something else
 
-  enum TicketStatus: int {
-    case Open = 0;
-    case InProgress = 1;
-    case Closed = 2;
+  abstract class TicketStatus {
+    const Open = 0;
+    const InProgress = 1;
+    const Closed = 2;
   }
 
   class Ticket {

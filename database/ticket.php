@@ -6,13 +6,18 @@
   require_once(__DIR__ . '/department.php');
 
   //? maybe change throws to something else
-  // TODO: add a enum to represent the status
+
+  enum TicketStatus: int {
+    case Open = 0;
+    case InProgress = 1;
+    case Closed = 2;
+  }
 
   class Ticket {
     private int $id;
     private string $text;
     private int $date;
-    private string $status;
+    private TicketStatus $status;
     private int|null $priority;
     private Client $client;
     private Agent|null $agent;
@@ -49,7 +54,7 @@
 
       $client_username = $client->getUsername();
       $date = time();
-      $status = 'Open';
+      $status = TicketStatus::Open;
 
       $stmt = $db->prepare('INSERT INTO Ticket (text, date, status, client) VALUES (:text, :date, :status, :client)');
       $stmt->bindParam(':text', $text);
@@ -214,18 +219,18 @@
     /**
      * Returns the ticket's status.
      * 
-     * @return string The ticket's status.
+     * @return TicketStatus The ticket's status.
      */
-    public function getStatus(): string {
+    public function getStatus(): TicketStatus {
       return $this->status;
     }
 
     /**
      * Returns the ticket's priority.
      * 
-     * @return int The ticket's priority.
+     * @return int The ticket's priority. (can be null)
      */
-    public function getPriority(): int {
+    public function getPriority(): int|null {
       return $this->priority;
     }
 
@@ -238,23 +243,21 @@
       return $this->client;
     }
 
-    //? do something when agent and department are null
-
     /**
      * Returns the ticket's agent.
      *  
-     * @return Agent The ticket's agent.
+     * @return Agent The ticket's agent. (can be null)
      */
-    public function getAgent(): Agent {
+    public function getAgent(): Agent|null {
       return $this->agent;
     }
 
     /**
      * Returns the ticket's department.
      * 
-     * @return Department The ticket's department.
+     * @return Department The ticket's department. (can be null)
      */
-    public function getDepartment(): Department {
+    public function getDepartment(): Department|null {
       return $this->department;
     }
   }

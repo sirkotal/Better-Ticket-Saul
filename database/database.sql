@@ -57,7 +57,7 @@ CREATE TABLE Ticket (
     idTicket INTEGER PRIMARY KEY AUTOINCREMENT,
     text VARCHAR,
     date INTEGER,	
-    status VARCHAR(10),
+    status INTEGER,
     priority INTEGER CHECK(priority >=1),
     client REFERENCES Client(username),
     agent REFERENCES Agent(username),

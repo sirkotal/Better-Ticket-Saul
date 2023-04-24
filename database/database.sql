@@ -58,9 +58,10 @@ CREATE TABLE Ticket (
     text VARCHAR,
     date INTEGER,	
     status VARCHAR(10),
-    priority INTEGER NOT NULL CHECK(priority >=1),
+    priority INTEGER CHECK(priority >=1),
     client REFERENCES Client(username),
-    idAgentDeparment REFERENCES AgentDepartment(idAgentDeparment)   
+    agent REFERENCES Agent(username),
+    department REFERENCES Department(name),
 );
 
 CREATE TABLE Hashtag (

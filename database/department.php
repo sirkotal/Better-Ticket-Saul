@@ -86,6 +86,26 @@
     }
 
     /**
+     * Check if an agent is in the department
+     * 
+     * @param Agent $agent The agent to check
+     * @param Department $department The department to check
+     * 
+     * @return bool true if the agent is in the department, false otherwise
+     */
+    public static function isAgentFromDepartment(Agent $agent, Department $department): bool {
+      $db = getDatabaseConnection();
+
+      $stmt = $db->prepare('SELECT * FROM AgentDepartment WHERE agent = :agent AND department = :department');
+      $stmt->bindValue(':agent', $agent->getUsername());
+      $stmt->bindValue(':department', $department->getName());
+      $stmt->execute();
+
+      $result = $stmt->fetch();
+      return $result !== false;
+    }
+
+    /**
      * Remove an agent from the department
      * 
      * @param Agent $agent The agent to remove

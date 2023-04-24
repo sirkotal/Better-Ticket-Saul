@@ -20,6 +20,24 @@
     }
 
     /**
+     * Check if a hashtag exists (finds a hashtag with the given name)
+     * 
+     * @param string $hashtag The hashtag
+     * 
+     * @return bool true if the hashtag exists, false otherwise
+     */
+    public static function exists(string $hashtag): bool {
+      $db = getDatabaseConnection();
+
+      $stmt = $db->prepare('SELECT * FROM Hashtag WHERE hashtag = :hashtag');
+      $stmt->bindValue(':hashtag', $hashtag);
+      $stmt->execute();
+
+      $result = $stmt->fetch();
+      return $result !== false;
+    }
+
+    /**
      * Get all the hashtags
      * 
      * @return array The hashtags
@@ -59,7 +77,9 @@
         return $h !== $hashtag;
       });
 
-      // TODO: when creating ticket model, remove hashtag from ticket if is deleted here
+      $stmt = $db->prepare('DELETE FROM TicketHashtag WHERE hashtag = :hashtag');
+      $stmt->bindValue(':hashtag', $hashtag);
+      $stmt->execute();
     }
   }
 ?>

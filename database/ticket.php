@@ -4,6 +4,7 @@
   require_once(__DIR__ . '/connection.php');
   require_once(__DIR__ . '/user.php');
   require_once(__DIR__ . '/department.php');
+  require_once(__DIR__ . '/hashtag.php');
 
   //? maybe change throws to something else
 
@@ -22,6 +23,7 @@
     private Client $client;
     private Agent|null $agent;
     private Department|null $department;
+    private array $hashtags;
 
     public function __construct(int $id) {
       $db = getDatabaseConnection();
@@ -40,6 +42,16 @@
       $this->client = new Client($result['client']);
       $this->agent = $result['agent'] !== null ? new Agent($result['agent']) : null;
       $this->department = $result['department'] !== null ? new Department($result['department']) : null;
+
+      $stmt = $db->prepare('SELECT * FROM TicketHashtag WHERE ticket = :ticket');
+      $stmt->bindParam(':ticket', $id);
+      $stmt->execute();
+
+      $result = $stmt->fetchAll();
+
+      $this->hashtags = array_map(function ($row) {
+        return $row['hashtag'];
+      }, $result);
     }
 
     /**
@@ -47,9 +59,10 @@
      * 
      * @param string $text The ticket's text.
      * @param Client $client The ticket's client.
+     * @param array $ticket_hashtags The ticket's hashtags.
      * @param Department $department The ticket's department. (optional)
      */
-    public static function create(string $text, Client $client, Department $department = null): void {
+    public static function create(string $text, Client $client, array $ticket_hashtags, Department $department = null): void {
       $db = getDatabaseConnection();
 
       $client_username = $client->getUsername();
@@ -63,14 +76,25 @@
       $stmt->bindParam(':client', $client_username);
       $stmt->execute();
 
+      $ticket_id = $db->lastInsertId(); //! needs testing
+
       if ($department !== null) {
-        $ticket_id = $db->lastInsertId(); //! needs testing
         $department_name = $department->getName();
 
         $stmt = $db->prepare('UPDATE Ticket SET department = :department WHERE idTicket = :id');
         $stmt->bindParam(':department', $department_name);
         $stmt->bindParam(':id', $ticket_id);
         $stmt->execute();
+      }
+
+      if (!empty($ticket_hashtags)) {
+        $stmt = $db->prepare('INSERT INTO TicketHashtag (ticket, hashtag) VALUES (:ticket, :hashtag)');
+
+        foreach ($ticket_hashtags as $hashtag) {
+          $stmt->bindParam(':ticket', $ticket_id);
+          $stmt->bindParam(':hashtag', $hashtag);
+          $stmt->execute();
+        }
       }
     }
 
@@ -187,6 +211,46 @@
       $stmt->execute();
 
       $this->priority = $priority;
+    }
+
+    /**
+     * Adds a hashtag to the ticket.
+     * 
+     * @param string $hashtag The hashtag to add.
+     */
+    public function addHashtag(string $hashtag): void {
+      if (!Hashtag::exists($hashtag)) {
+        throw new Exception('The hashtag does not exist.');
+      }
+
+      $db = getDatabaseConnection();
+
+      $stmt = $db->prepare('INSERT INTO TicketHashtag (ticket, hashtag) VALUES (:ticket, :hashtag)');
+      $stmt->bindParam(':ticket', $this->id);
+      $stmt->bindParam(':hashtag', $hashtag);
+      $stmt->execute();
+
+      $this->hashtags[] = $hashtag;
+    }
+
+    /**
+     * Removes a hashtag from the ticket.
+     * 
+     * @param string $hashtag The hashtag to remove.
+     */
+    public function removeHashtag(string $hashtag): void {
+      if (!in_array($hashtag, $this->hashtags)) {
+        throw new Exception('The ticket does not have the hashtag.');
+      }
+
+      $db = getDatabaseConnection();
+
+      $stmt = $db->prepare('DELETE FROM TicketHashtag WHERE ticket = :ticket AND hashtag = :hashtag');
+      $stmt->bindParam(':ticket', $this->id);
+      $stmt->bindParam(':hashtag', $hashtag);
+      $stmt->execute();
+
+      $this->hashtags = array_diff($this->hashtags, [$hashtag]);
     }
 
     /**

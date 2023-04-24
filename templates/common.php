@@ -15,6 +15,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trouble Ticket Management System</title>
+    <link href="style/header.css" rel="stylesheet">
+    <link href="style/footer.css" rel="stylesheet">
 
     <?php foreach ($stylesheets as $stylesheet) { ?>
       <link rel="stylesheet" href="<?= $stylesheet ?>">
@@ -30,7 +32,6 @@
 <?php function outputHeader(): void {
   $session = new Session(); ?>
   <header>
-    <div class="container">
       <img src="/assets/logo.svg" id= "logo" alt="logo" width="130" height = "100" />
       <div id="signup">
         <?php if ($session->isLoggedIn()) { ?>
@@ -40,7 +41,6 @@
           <a href="/register.php">Register</a>
           <a href="/login.php">Login</a>
         <?php } ?>
-      </div>
     </div>
     <h1><a href="/index.php">Trouble Ticket Management System</a></h1>
     <nav id="menu">

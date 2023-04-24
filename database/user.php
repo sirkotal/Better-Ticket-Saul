@@ -2,6 +2,7 @@
   declare (strict_types = 1);
 
   require_once(__DIR__ . '/connection.php');
+  require_once(__DIR__ . '/department.php');
 
   abstract class User {
     //? maybe private?
@@ -9,11 +10,7 @@
     protected string $name;
     protected string $email;
 
-    public function __construct(string $username, string $password) {
-      if (!User::isValid($username, $password)) {
-        throw new Exception('User does not exist');
-      }
-
+    public function __construct(string $username) {
       $this->username = $username;
 
       $db = getDatabaseConnection();
@@ -186,28 +183,69 @@
   }
 
   class Client extends User {
-    public function __construct(string $username, string $password) {
-      parent::__construct($username, $password);
+    public function __construct(string $username) {
+      parent::__construct($username);
     }
   }
 
   class Agent extends Client {
-    public function __construct(string $username, string $password) {
+    private array $departments;
+
+    public function __construct(string $username) {
       if (!User::isAgent($username)) {
         throw new Exception('User is not an agent');
       }
       
-      parent::__construct($username, $password);
+      parent::__construct($username);
+
+      $db = getDatabaseConnection();
+
+      $stmt = $db->prepare('SELECT * FROM AgentDepartment WHERE username = :username');
+      $stmt->bindValue(':username', $username);
+      $stmt->execute();
+
+      $result = $stmt->fetchAll();
+
+      $this->departments = array_map(function ($row) {
+        return new Department($row['department']);
+      }, $result);
+    }
+
+    /**
+     * Remove a department from the agent
+     * 
+     * @param Department $department The department to remove
+     * @param bool $exec_query If true, the query will be executed (default: true)
+     */
+    public function removeDepartment(Department $department, bool $exec_query = true): void {
+      if (!in_array($department, $this->departments)) {
+        throw new Exception('Agent is not in the department');
+      }
+      
+      if ($exec_query) {
+        $db = getDatabaseConnection();
+
+        $stmt = $db->prepare('DELETE FROM AgentDepartment WHERE username = :username AND department = :department');
+        $stmt->bindValue(':username', $this->username);
+        $stmt->bindValue(':department', $department->getName());
+        $stmt->execute();
+      }
+
+      $this->departments = array_filter($this->departments, function ($d) use ($department) {
+        return $d->getName() !== $department->getName();
+      });
+
+      $department->removeAgent($this, false);
     }
   }
 
   class Admin extends Agent {
-    public function __construct(string $username, string $password) {
+    public function __construct(string $username) {
       if (!User::isAdmin($username)) {
         throw new Exception('User is not an admin');
       }
 
-      parent::__construct($username, $password);
+      parent::__construct($username);
     }
   }
 ?>

@@ -15,20 +15,23 @@
     die();
   }
 
+  $username = $_POST['username'];
+  $password = $_POST['password'];
+
   require_once(__DIR__ . '/../database/user.php');
 
-  if (!User::exists($_POST['username'])) {
+  if (!User::exists($username)) {
     $session->setError('error-login', 'User does not exist');
     header('Location: ' . $_SERVER['HTTP_REFERER']);
     die();
   }
 
-  if (!User::isValid($_POST['username'], $_POST['password'])) {
+  if (!User::isValid($username, $password)) {
     $session->setError('error-login', 'Invalid password');
     header('Location: ' . $_SERVER['HTTP_REFERER']);
     die();
   }
 
-  $session->setUser($_POST['username']);
+  $session->setUser($username);
   header('Location: /');
 ?>

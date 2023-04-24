@@ -25,7 +25,7 @@ body > header > h1 > a {
     width: 12%;
 }
 
-body > header > h1, body > header > #logo {
+body > header > h1, #logo {
     display: inline-block;
     vertical-align: middle;
 }
@@ -56,4 +56,13 @@ body > header > h1, body > header > #logo {
 #signup > :last-child {
     border: none;
     padding-right: 0;
+}
+
+#menu > ul {
+    text-align: right;
+    list-style-type: none;
+}
+
+#menu > ul > li {
+    display: inline-block;
 }

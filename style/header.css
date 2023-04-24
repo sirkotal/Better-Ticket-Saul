@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap');
 
 :root {
-    --color-header: rgb(100, 149, 237);
+    --color-header: #b8dbe4;
 }
 
 * {
@@ -40,13 +40,14 @@ body > header > h1 > a {
     display: block;
     text-align: left;
     padding-right: 1rem;
+    margin-bottom: 1rem;
 }
 
 #signup {
     grid-row: 1;
     grid-column: 3;
     padding-right: 0.8rem;
-    margin-top: 1rem;
+    margin-top: 2.7rem;
     display: block;
     align-self: auto;
     font-size: large;
@@ -62,6 +63,7 @@ body > header > h1 > a {
 #signup > a {
     color: white;
     padding: 0 1rem 0 1rem;
+    text-transform: uppercase;
 }
 
 #signup > a:hover {
@@ -96,16 +98,19 @@ body > header > h1 > a {
 
 #menu > ul > li {
     text-align: center;
+    background-color: darkgray;
     padding-right: 0.5rem;
     padding-left: 0.5rem;
-    padding-top: 0.15rem;
+    padding-top: 0.4rem;
+    padding-bottom: 0.2rem;
     flex: 1;
     border-bottom: 0.2rem solid purple;
     transition: 0.3s;
+    transition-timing-function: ease-in-out;
 }
 
 #menu > ul > li > a {
-    color: white;
+    color: whitesmoke;
     text-decoration: none;
 }
 

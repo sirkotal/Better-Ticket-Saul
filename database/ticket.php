@@ -24,6 +24,7 @@
     private Agent|null $agent;
     private Department|null $department;
     private array $hashtags;
+    private array $replies;
 
     public function __construct(int $id) {
       $db = getDatabaseConnection();
@@ -51,6 +52,16 @@
 
       $this->hashtags = array_map(function ($row) {
         return $row['hashtag'];
+      }, $result);
+
+      $stmt = $db->prepare('SELECT * FROM TicketReply WHERE ticket = :ticket');
+      $stmt->bindParam(':ticket', $id);
+      $stmt->execute();
+
+      $result = $stmt->fetchAll();
+
+      $this->replies = array_map(function ($row) {
+        return new TicketReply($row['idTicketReply']);
       }, $result);
     }
 
@@ -323,6 +334,24 @@
      */
     public function getDepartment(): Department|null {
       return $this->department;
+    }
+
+    /**
+     * Returns the ticket's hashtags.
+     * 
+     * @return array The ticket's hashtags.
+     */
+    public function getHashtags(): array {
+      return $this->hashtags;
+    }
+
+    /**
+     * Returns the ticket's replies.
+     * 
+     * @return array The ticket's replies.
+     */
+    public function getReplies(): array {
+      return $this->replies;
     }
   }
 ?>

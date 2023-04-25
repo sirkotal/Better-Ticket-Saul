@@ -47,10 +47,10 @@ CREATE TABLE Reply (
     idReply INTEGER PRIMARY KEY,
     reply VARCHAR, 
     date INTEGER,
-    attachment VARCHAR,
+    -- attachment VARCHAR,
     idTicket INTEGER REFERENCES Ticket(idTicket),
-    client REFERENCES Client(username),
-    idAgentDeparment REFERENCES AgentDepartment(idAgentDeparment) 
+    agent REFERENCES Agent(username),
+    department REFERENCES Department(name)
 );
 
 CREATE TABLE Ticket (
@@ -61,7 +61,7 @@ CREATE TABLE Ticket (
     priority INTEGER CHECK(priority >=1),
     client REFERENCES Client(username),
     agent REFERENCES Agent(username),
-    department REFERENCES Department(name),
+    department REFERENCES Department(name)
 );
 
 CREATE TABLE Hashtag (

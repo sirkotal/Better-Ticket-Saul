@@ -75,11 +75,11 @@ CREATE TABLE TicketHashtag (
 
 CREATE TABLE TicketLog (
     idTicketlog INTEGER PRIMARY KEY,
-    date INTEGER,
     change VARCHAR,
+    date INTEGER,
     idTicket REFERENCES Ticket(idTicket),
-    idAgentDeparment REFERENCES AgentDepartment(idAgentDeparment)
-     
+    agent REFERENCES Agent(username),
+    department REFERENCES Department(name)
 );
 
 CREATE TABLE Faq (

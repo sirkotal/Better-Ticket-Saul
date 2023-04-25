@@ -25,6 +25,7 @@
     private Department|null $department;
     private array $hashtags;
     private array $replies;
+    private array $logs;
 
     public function __construct(int $id) {
       $db = getDatabaseConnection();
@@ -62,6 +63,16 @@
 
       $this->replies = array_map(function ($row) {
         return new TicketReply($row['idTicketReply']);
+      }, $result);
+
+      $stmt = $db->prepare('SELECT * FROM TicketLog WHERE ticket = :ticket');
+      $stmt->bindParam(':ticket', $id);
+      $stmt->execute();
+
+      $result = $stmt->fetchAll();
+
+      $this->logs = array_map(function ($row) {
+        return new TicketLog($row['idTicketLog']);
       }, $result);
     }
 
@@ -352,6 +363,15 @@
      */
     public function getReplies(): array {
       return $this->replies;
+    }
+
+    /**
+     * Returns the ticket's logs.
+     * 
+     * @return array The ticket's logs.
+     */
+    public function getLogs(): array {
+      return $this->logs;
     }
   }
 ?>

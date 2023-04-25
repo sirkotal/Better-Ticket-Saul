@@ -18,6 +18,8 @@
     
     <link href="/style/header.css" rel="stylesheet">
     <link href="/style/footer.css" rel="stylesheet">
+    <link href="/style/register.css" rel="stylesheet">
+    <link href="/style/login.css" rel="stylesheet">
     <script src="/script/hamburger.js" defer></script>
 
     <?php foreach ($stylesheets as $stylesheet) { ?>

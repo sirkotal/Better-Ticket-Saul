@@ -75,18 +75,14 @@ header {
     font-size: 1.1em;
 }
 
-#signup {
+#header-right {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
     justify-content: center;
-
-    position: relative;
-
-    padding: 0 1em;
 }
 
-#signup > button {
+#header-right > button {
     background-color: var(--color-header);
     border: 1px solid black;
     border-radius: 25px;
@@ -94,11 +90,11 @@ header {
     margin: 0.25rem;
 }
 
-#signup > button:hover {
+#header-right > button:hover {
     background-color: #f8ebda;
 }
 
-#signup > button > a {
+#header-right > button > a {
     color: black;
     font-weight: bold;
     font-size: 1.1em;
@@ -127,10 +123,27 @@ header {
     rotate: -45deg;
 }
 
-#hamburger-menu {
+.header-options {
+    font-size: 1.1em;
+    font-weight: bold;
+
+    padding: .25em;
+    margin: 0 5rem;
+
+    background: none;
+    border: none;
+}
+
+.dropdown {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dropdown-menu {
     position: absolute;
-    top: calc(100% - 1.25rem);
-    right: .75rem;
+    top: calc(100% + .5rem);
     width: 10rem;
     padding: .75rem;
     background-color: rgba(227, 210, 186, 0.4);
@@ -144,7 +157,7 @@ header {
     transition: opacity 100ms, transform 100ms;
 }
 
-#hamburger-menu.expanded {
+.dropdown-menu.expanded {
     pointer-events: auto;
 
     opacity: 1;
@@ -152,11 +165,11 @@ header {
     transition: opacity 100ms, transform 100ms;
 }
 
-#hamburger-menu > ul {
+.dropdown-menu > ul {
     list-style-type: none;
 }
 
-#hamburger-menu > ul > li {
+.dropdown-menu > ul > li {
     padding: 0.5rem;
 
     display: flex;
@@ -164,7 +177,7 @@ header {
     justify-content: center;
 }
 
-#hamburger-menu > ul > li > a {
+.dropdown-menu > ul > li > a {
     color: black;
     text-decoration: none;
 }

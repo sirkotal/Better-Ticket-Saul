@@ -20,7 +20,7 @@
     <link href="/style/footer.css" rel="stylesheet">
     <link href="/style/register.css" rel="stylesheet">
     <link href="/style/login.css" rel="stylesheet">
-    <script src="/script/hamburger.js" defer></script>
+    <script src="/script/dropdown.js" defer></script>
 
     <?php foreach ($stylesheets as $stylesheet) { ?>
       <link rel="stylesheet" href="<?= $stylesheet ?>">
@@ -46,22 +46,33 @@
           </ul>
         </nav>
       </div>
-      <div id="signup">
+      <div id="header-right">
         <?php if ($session->isLoggedIn()) { ?>
-          <button id="hamburger-button">
+          <div class="dropdown">
+            <button id="ticket-button" class="header-options">Ticket</button>
+            <div id="ticket-menu" class="dropdown-menu">
+              <ul>
+                <li><a href="/create_ticket.php">Submit Ticket</a></li>
+                <li><a href="/view_ticket.php">View Tickets</a></li>
+              </ul>
+            </div>
+          </div>
+          <button><a href="/actions/action_logout.php">Logout</a></button>
+          <!-- use this for mobile (add the div needed for position: relative) -->
+          <!-- <button id="hamburger-button">
             <svg class="hamburger" viewBox="0 0 100 100" width="25">
               <rect class="line top" width="80" height="10" x="10" y="25" rx="5" />
               <rect class="line middle" width="80" height="10" x="10" y="45" rx="5" />
               <rect class="line bottom" width="80" height="10" x="10" y="65" rx="5" />
             </svg>
           </button>
-          <div id="hamburger-menu">
+          <div id="hamburger-menu" class="dropdown-menu">
             <ul>
               <li><a href="/create_ticket.php">Submit Ticket</a></li>
               <li><a href="/view_ticket.php">View Tickets</a></li>
               <li><a href="/actions/action_logout.php">Logout</a></li>
             </ul>
-          </div>
+          </div> -->
         <?php } else { ?>
           <button><a href="/login.php">Login</a></button>
           <button><a href="/register.php">Register</a></button>

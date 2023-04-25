@@ -15,8 +15,10 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trouble Ticket Management System</title>
-    <link href="style/header.css" rel="stylesheet">
-    <link href="style/footer.css" rel="stylesheet">
+    
+    <link href="/style/header.css" rel="stylesheet">
+    <link href="/style/footer.css" rel="stylesheet">
+    <script src="/script/hamburger.js" defer></script>
 
     <?php foreach ($stylesheets as $stylesheet) { ?>
       <link rel="stylesheet" href="<?= $stylesheet ?>">
@@ -32,21 +34,29 @@
 <?php function outputHeader(): void {
   $session = new Session(); ?>
   <header>
-      <img src="/assets/logo.svg" id= "logo" alt="logo" width="130" height = "100" />
+      <div id="title-and-logo">
+        <a href="/"><img src="/assets/logo.svg" id= "logo" alt="logo" width="100" height = "100" /></a>
+        <h1><a href="/">Trouble Ticket Management System</a></h1>
+      </div>
       <div id="signup">
         <?php if ($session->isLoggedIn()) { ?>
-          <!-- Add a action to logout -->
-          <a href="/actions/action_logout.php">Logout</a>
+          <button><a href="/actions/action_logout.php">Logout</a></button>
+          <button id="menu-button">
+            <svg class="hamburger" viewBox="0 0 100 100" width="25">
+              <rect class="line top" width="80" height="10" x="10" y="25" rx="5" />
+              <rect class="line middle" width="80" height="10" x="10" y="45" rx="5" />
+              <rect class="line bottom" width="80" height="10" x="10" y="65" rx="5" />
+            </svg>
+          </button>
         <?php } else { ?>
-          <a href="/register.php">Register</a>
-          <a href="/login.php">Login</a>
+          <button><a href="/login.php">Login</a></button>
+          <button><a href="/register.php">Register</a></button>
         <?php } ?>
       </div>
-      <h1><a href="/index.php">Trouble Ticket Management System</a></h1>
   </header>
   <nav id="menu">
     <ul>
-      <li><a href="/index.php">Home</a></li>
+      <li><a href="/">Home</a></li>
       <li><a href="/create_ticket.php">Submit Ticket</a></li>
       <li><a href="/view_ticket.php">View Tickets</a></li>
       <li><a href="#">FAQs</a></li>

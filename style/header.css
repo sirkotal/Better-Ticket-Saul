@@ -137,6 +137,7 @@ header {
     backdrop-filter: blur(1px);
     border-radius: 10px;
     overflow: hidden;
+    pointer-events: none;
 
     opacity: 0;
     transform: translateY(-10px);
@@ -144,6 +145,8 @@ header {
 }
 
 #hamburger-menu.expanded {
+    pointer-events: auto;
+
     opacity: 1;
     transform: translateY(0);
     transition: opacity 100ms, transform 100ms;

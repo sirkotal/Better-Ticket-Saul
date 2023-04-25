@@ -34,35 +34,38 @@
 <?php function outputHeader(): void {
   $session = new Session(); ?>
   <header>
-      <div id="title-and-logo">
-        <a href="/"><img src="/assets/logo.svg" id= "logo" alt="logo" width="100" height = "100" /></a>
+      <div id="header-left">
+        <a href="/" id="logo"><img src="/assets/logo.svg" alt="logo" width="100" height = "100" /></a>
         <h1><a href="/">Trouble Ticket Management System</a></h1>
+        <nav id="menu">
+          <ul>
+            <li><a href="#">FAQs</a></li>
+            <li><a href="#">Contact Us</a></li>
+          </ul>
+        </nav>
       </div>
       <div id="signup">
         <?php if ($session->isLoggedIn()) { ?>
-          <button><a href="/actions/action_logout.php">Logout</a></button>
-          <button id="menu-button">
+          <button id="hamburger-button">
             <svg class="hamburger" viewBox="0 0 100 100" width="25">
               <rect class="line top" width="80" height="10" x="10" y="25" rx="5" />
               <rect class="line middle" width="80" height="10" x="10" y="45" rx="5" />
               <rect class="line bottom" width="80" height="10" x="10" y="65" rx="5" />
             </svg>
           </button>
+          <div id="hamburger-menu">
+            <ul>
+              <li><a href="/create_ticket.php">Submit Ticket</a></li>
+              <li><a href="/view_ticket.php">View Tickets</a></li>
+              <li><a href="/actions/action_logout.php">Logout</a></li>
+            </ul>
+          </div>
         <?php } else { ?>
           <button><a href="/login.php">Login</a></button>
           <button><a href="/register.php">Register</a></button>
         <?php } ?>
       </div>
   </header>
-  <nav id="menu">
-    <ul>
-      <li><a href="/">Home</a></li>
-      <li><a href="/create_ticket.php">Submit Ticket</a></li>
-      <li><a href="/view_ticket.php">View Tickets</a></li>
-      <li><a href="#">FAQs</a></li>
-      <li><a href="#">Contact Us</a></li>
-    </ul>
-  </nav>
   
 <?php } ?>
 

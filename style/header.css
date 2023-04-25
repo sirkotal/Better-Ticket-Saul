@@ -20,24 +20,59 @@ header {
     justify-content: space-between;
 }
 
-#title-and-logo {
-    display: flex;
-    flex-direction: row;
+#header-left {
+    display: grid;
+    grid-template-columns: 100px 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 0 0.5rem;
     align-items: center;
-    justify-content: space-between;
 }
 
 #logo {
-    margin-right: .5em;
+    width: 100px;
+
+    grid-row-start: 1;
+    grid-row-end: 3;
 }
 
-#title-and-logo > h1 {
+#header-left > h1 {
     text-align: center;
 }
 
-#title-and-logo > h1 > a {
+#header-left > h1 > a {
     color: black;
     font-weight: bold;
+}
+
+#menu {
+    display: flex;
+    justify-content: center;
+}
+
+#menu > ul {
+    display: flex;
+
+    list-style-type: none;
+}
+
+#menu > ul > li {
+    padding: .5em .75em;
+}
+
+#menu > ul > li:hover {
+    background-color: #f8ebda80;
+    backdrop-filter: blur(1px);
+
+    border-radius: 10px;
+}
+
+#menu > ul > li > a {
+    color: var(--color-header);
+    text-decoration: none;
+    text-shadow: black 0 1px, black 0 -1px, black -1px 0, black 1px 0;
+
+    font-weight: bold;
+    font-size: 1.1em;
 }
 
 #signup {
@@ -45,6 +80,8 @@ header {
     flex-direction: column;
     align-items: center;
     justify-content: center;
+
+    position: relative;
 
     padding: 0 1em;
 }
@@ -67,95 +104,64 @@ header {
     font-size: 1.1em;
 }
 
-#menu-button .line {
-    transition: transform 300ms ease-in 300ms, rotate 300ms ease-in, opacity 0ms 300ms;
+#hamburger-button .line {
+    transition: transform 100ms ease-in 100ms, rotate 100ms ease-in, opacity 0ms 100ms;
     transform-origin: center;
 }
 
-#menu-button.expanded .line {
-    transition: transform 300ms ease-in, rotate 300ms ease-in 300ms, opacity 0ms 300ms;
+#hamburger-button.expanded .line {
+    transition: transform 100ms ease-in, rotate 100ms ease-in 100ms, opacity 0ms 100ms;
 }
 
-#menu-button.expanded .top {
+#hamburger-button.expanded .top {
     transform: translateY(20px);
     rotate: 45deg;
 }
 
-#menu-button.expanded .middle {
+#hamburger-button.expanded .middle {
     opacity: 0;
 }
 
-#menu-button.expanded .bottom {
+#hamburger-button.expanded .bottom {
     transform: translateY(-20px);
     rotate: -45deg;
 }
 
-#menu > ul {
-    text-align: right;
+#hamburger-menu {
+    position: absolute;
+    top: calc(100% - 1.25rem);
+    right: .75rem;
+    width: 10rem;
+    padding: .75rem;
+    background-color: rgba(227, 210, 186, 0.4);
+    backdrop-filter: blur(1px);
+    border-radius: 10px;
+    overflow: hidden;
+
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 100ms, transform 100ms;
+}
+
+#hamburger-menu.expanded {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 100ms, transform 100ms;
+}
+
+#hamburger-menu > ul {
     list-style-type: none;
+}
+
+#hamburger-menu > ul > li {
+    padding: 0.5rem;
+
     display: flex;
-    flex-direction: row;
-    align-content: flex-end;
-    max-width: 100%;
-    margin-left: auto;
-    margin-right: 0;
-    margin-bottom: 0;
+    align-items: center;
+    justify-content: center;
 }
 
-#menu > ul > li {
-    text-align: center;
-    background-color: darkgray;
-    padding-right: 0.5rem;
-    padding-left: 0.5rem;
-    padding-top: 0.4rem;
-    padding-bottom: 0.2rem;
-    flex: 1;
-    border-bottom: 0.2rem solid purple;
-    transition: 0.3s;
-    transition-timing-function: ease-in-out;
-}
-
-#menu > ul > li > a {
-    color: whitesmoke;
+#hamburger-menu > ul > li > a {
+    color: black;
     text-decoration: none;
-}
-
-#menu ul li:nth-child(1) {
-    border-color: red;
-}
-
-#menu ul li:nth-child(1):hover {
-    background-color: red;
-}
-
-#menu ul li:nth-child(2) {
-    border-color: purple;
-}
-
-#menu ul li:nth-child(2):hover {
-    background-color: purple;
-}
-
-#menu ul li:nth-child(3) {
-    border-color: gold;
-}
-
-#menu ul li:nth-child(3):hover {
-    background-color: gold;
-}
-
-#menu ul li:nth-child(4) {
-    border-color: green;
-}
-
-#menu ul li:nth-child(4):hover {
-    background-color: green;
-}
-
-#menu ul li:nth-child(5) {
-    border-color: orange;
-}
-
-#menu ul li:nth-child(5):hover {
-    background-color: orange;
 }

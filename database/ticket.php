@@ -131,6 +131,20 @@
       $stmt = $db->prepare('DELETE FROM Ticket WHERE idTicket = :id');
       $stmt->bindParam(':id', $id);
       $stmt->execute();
+
+      //? maybe add a cascade delete to the database
+
+      $stmt = $db->prepare('DELETE FROM TicketHashtag WHERE idTicket = :ticket');
+      $stmt->bindParam(':ticket', $id);
+      $stmt->execute();
+
+      $stmt = $db->prepare('DELETE FROM TicketReply WHERE idTicket = :ticket');
+      $stmt->bindParam(':ticket', $id);
+      $stmt->execute();
+
+      $stmt = $db->prepare('DELETE FROM TicketLog WHERE idTicket = :ticket');
+      $stmt->bindParam(':ticket', $id);
+      $stmt->execute();
     }
 
     /**

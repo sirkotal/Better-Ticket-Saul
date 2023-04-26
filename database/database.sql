@@ -83,5 +83,7 @@ CREATE TABLE TicketLog (
 );
 
 CREATE TABLE Faq (
-    faq VARCHAR PRIMARY KEY
+    faqId INTEGER PRIMARY KEY AUTOINCREMENT,
+    question VARCHAR,
+    answer VARCHAR
 );

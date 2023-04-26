@@ -2,8 +2,7 @@
   declare (strict_types = 1);
 
   if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    // header('Location: /');
-    echo 'not post';
+    header('Location: /');
     die();
   }
 

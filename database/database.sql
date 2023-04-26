@@ -47,20 +47,21 @@ CREATE TABLE Reply (
     idReply INTEGER PRIMARY KEY,
     reply VARCHAR, 
     date INTEGER,
-    attachment VARCHAR,
+    -- attachment VARCHAR,
     idTicket INTEGER REFERENCES Ticket(idTicket),
-    client REFERENCES Client(username),
-    idAgentDeparment REFERENCES AgentDepartment(idAgentDeparment) 
+    agent REFERENCES Agent(username),
+    department REFERENCES Department(name)
 );
 
 CREATE TABLE Ticket (
     idTicket INTEGER PRIMARY KEY AUTOINCREMENT,
     text VARCHAR,
     date INTEGER,	
-    status VARCHAR(10),
-    priority INTEGER NOT NULL CHECK(priority >=1),
+    status INTEGER,
+    priority INTEGER CHECK(priority >=1),
     client REFERENCES Client(username),
-    idAgentDeparment REFERENCES AgentDepartment(idAgentDeparment)   
+    agent REFERENCES Agent(username),
+    department REFERENCES Department(name)
 );
 
 CREATE TABLE Hashtag (
@@ -74,13 +75,15 @@ CREATE TABLE TicketHashtag (
 
 CREATE TABLE TicketLog (
     idTicketlog INTEGER PRIMARY KEY,
-    date INTEGER,
     change VARCHAR,
+    date INTEGER,
     idTicket REFERENCES Ticket(idTicket),
-    idAgentDeparment REFERENCES AgentDepartment(idAgentDeparment)
-     
+    agent REFERENCES Agent(username),
+    department REFERENCES Department(name)
 );
 
 CREATE TABLE Faq (
-    faq VARCHAR PRIMARY KEY
+    faqId INTEGER PRIMARY KEY AUTOINCREMENT,
+    question VARCHAR,
+    answer VARCHAR
 );

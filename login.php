@@ -11,10 +11,10 @@
     <h1>Login</h1>
     <form>
       <label>
-        Username <input type="text" name="username">
+        <input type="text" name="username"> <p>Username</p> 
       </label>
       <label>
-        Password <input type="password" name="password">
+        <input type="password" name="password"> <p>Password</p> 
       </label>
       <button formaction="/actions/action_login.php" formmethod="post">Login</button>
     </form>

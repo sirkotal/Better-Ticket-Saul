@@ -41,10 +41,16 @@
     width: 100%;
 }
 
-#register input:focus {
-    background-color: var(--highlight);
-    color: white;
-    transition: 0.5s;
+#register form label {
+    display: flex;
+    flex-direction: column-reverse;
+}
+
+#register input:focus + p {
+    color: #e3d1b8;
+    transform: scale(1.05);
+    transition: 0.3s;
+    transition-timing-function: ease-in-out;
 }
 
 #register button {

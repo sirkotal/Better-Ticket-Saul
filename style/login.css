@@ -41,10 +41,16 @@
     width: 100%;
 }
 
-#login input:focus {
-    background-color: var(--highlight);
-    color: white;
-    transition: 0.5s;
+#login form label {
+    display: flex;
+    flex-direction: column-reverse;
+}
+
+#login input:focus + p {
+    color: #e3d1b8;
+    transform: scale(1.05);
+    transition: 0.3s;
+    transition-timing-function: ease-in-out;
 }
 
 #login button {

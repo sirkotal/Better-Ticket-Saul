@@ -11,16 +11,16 @@
     <h1>Register</h1>
     <form>
       <label>
-        Username <input type="text" name="username">
+        <input type="text" name="username"> <p>Username</p>
       </label>
       <label>
-        Name <input type="text" name="name">
+        <input type="text" name="name"> <p>Name</p> 
       </label>
       <label>
-        E-mail <input type="email" name="email">
+        <input type="email" name="email"> <p>E-mail</p> 
       </label>
       <label>
-        Password <input type="password" name="password">
+        <input type="password" name="password"> <p>Password</p> 
       </label>
       <button formaction="/actions/action_register.php" formmethod="post">Register</button>
     </form>

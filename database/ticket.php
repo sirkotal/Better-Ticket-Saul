@@ -8,17 +8,12 @@
 
   //? maybe change throws to something else
 
-  abstract class TicketStatus {
-    const Open = 0;
-    const InProgress = 1;
-    const Closed = 2;
-  }
-
   class Ticket {
     private int $id;
+    private string $title;
     private string $text;
     private int $date;
-    private TicketStatus $status;
+    private string $status;
     private int|null $priority;
     private Client $client;
     private Agent|null $agent;
@@ -37,6 +32,7 @@
       $result = $stmt->fetch();
 
       $this->id = $result['idTicket'];
+      $this->title = $result['title'];
       $this->text = $result['text'];
       $this->date = $result['date'];
       $this->status = $result['status'];
@@ -79,19 +75,21 @@
     /**
      * Creates a new ticket.
      * 
+     * @param string $title The ticket's title.
      * @param string $text The ticket's text.
      * @param Client $client The ticket's client.
      * @param array $ticket_hashtags The ticket's hashtags.
      * @param Department $department The ticket's department. (optional)
      */
-    public static function create(string $text, Client $client, array $ticket_hashtags, Department $department = null): void {
+    public static function create(string $title, string $text, Client $client, array $ticket_hashtags, Department $department = null): void {
       $db = getDatabaseConnection();
 
       $client_username = $client->getUsername();
       $date = time();
-      $status = TicketStatus::Open;
+      $status = 'Open';
 
-      $stmt = $db->prepare('INSERT INTO Ticket (text, date, status, client) VALUES (:text, :date, :status, :client)');
+      $stmt = $db->prepare('INSERT INTO Ticket (title, text, date, status, client) VALUES (:title, :text, :date, :status, :client)');
+      $stmt->bindParam(':title', $title);
       $stmt->bindParam(':text', $text);
       $stmt->bindParam(':date', $date);
       $stmt->bindParam(':status', $status);
@@ -319,9 +317,9 @@
     /**
      * Returns the ticket's status.
      * 
-     * @return TicketStatus The ticket's status.
+     * @return string The ticket's status.
      */
-    public function getStatus(): TicketStatus {
+    public function getStatus(): string {
       return $this->status;
     }
 

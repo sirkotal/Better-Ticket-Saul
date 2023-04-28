@@ -56,7 +56,7 @@ CREATE TABLE Ticket (
     text VARCHAR,
     date INTEGER,
     status VARCHAR,
-    priority INTEGER CHECK(priority >=1),
+    priority VARCHAR,
     client REFERENCES Client(username),
     agent REFERENCES Agent(username),
     department REFERENCES Department(name)

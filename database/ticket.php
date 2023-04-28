@@ -14,7 +14,7 @@
     private string $text;
     private int $date;
     private string $status;
-    private int|null $priority;
+    private string|null $priority;
     private Client $client;
     private Agent|null $agent;
     private Department|null $department;
@@ -234,9 +234,9 @@
     /**
      * Sets the ticket's priority.
      * 
-     * @param int $priority The ticket's priority.
+     * @param string $priority The ticket's priority.
      */
-    public function setPriority(int $priority): void {
+    public function setPriority(string $priority): void {
       $db = getDatabaseConnection();
 
       $stmt = $db->prepare('UPDATE Ticket SET priority = :priority WHERE idTicket = :id');
@@ -326,9 +326,9 @@
     /**
      * Returns the ticket's priority.
      * 
-     * @return int The ticket's priority. (can be null)
+     * @return string The ticket's priority. (can be null)
      */
-    public function getPriority(): int|null {
+    public function getPriority(): string|null {
       return $this->priority;
     }
 

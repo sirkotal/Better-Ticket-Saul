@@ -73,6 +73,9 @@ CREATE TABLE TicketHashtag (
 
 CREATE TABLE TicketLog (
     idTicketLog INTEGER PRIMARY KEY AUTOINCREMENT,
+    change VARCHAR,
+    date INTEGER,
+    idTicket REFERENCES Ticket(idTicket),
     agent REFERENCES Agent(username),
     department REFERENCES Department(name)
 );

@@ -2,6 +2,7 @@
 
 :root {
     --color-header: #e3d1b8;
+    --font-title: 'Poppins', Arial, Helvetica, sans-serif;
 }
 
 * {
@@ -14,131 +15,83 @@
 header {
     background-color: #ffffff;
     background-image: url('/assets/header_bg.svg');
-    padding: 1em;
-
+    padding: 0.5rem 1rem;
     display: flex;
-    justify-content: space-between;
+    justify-content: left;
+    align-items: center;
+    gap: 1rem;
+    font-family: var(--font-title);
+    font-weight: bold;
+    height: 75px;
 }
 
-#header-left {
-    display: grid;
-    grid-template-columns: 100px 1fr;
-    grid-template-rows: 1fr 1fr;
-    gap: 0 0.5rem;
-    align-items: center;
+body > header > h1 {
+    padding-bottom: 0.5rem;
+    margin: 0 2rem;
+    width: 20%;
+    color: black;
+    font-weight: bold;
+    font-family: 'Times New Roman', Times, serif;
 }
 
 #logo {
-    width: 100px;
-
-    grid-row-start: 1;
-    grid-row-end: 3;
-}
-
-#header-left > h1 {
-    text-align: center;
-}
-
-#header-left > h1 > a {
-    color: black;
-    font-weight: bold;
-}
-
-#menu {
-    display: flex;
-    justify-content: center;
+    padding-left: 2rem;
 }
 
 #menu > ul {
     display: flex;
-
     list-style-type: none;
+    margin-left: 8rem;
+    gap: 1rem;
 }
 
-#menu > ul > li {
-    padding: .5em .75em;
-}
-
-#menu > ul > li:hover {
-    background-color: #f8ebda80;
-    backdrop-filter: blur(1px);
-
-    border-radius: 10px;
+#menu > ul > li {   
+    flex: 2 1 auto;
+    padding: 1rem 2rem 1rem 2rem;
+    font-size: large;
 }
 
 #menu > ul > li > a {
-    color: var(--color-header);
-    text-decoration: none;
-    text-shadow: black 0 1px, black 0 -1px, black -1px 0, black 1px 0;
-
-    font-weight: bold;
-    font-size: 1.1em;
+    color: #7a7979;
 }
 
-#header-right {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
+
+#menu a::after , #ticket-button::after{
+    content: '';
+    display: block;
+    width: 0;
+    margin-top: 0.1rem;
+    height: 0.15rem;
+    background: black;
+    transition: width .3s;
 }
 
-#header-right > button {
-    background-color: var(--color-header);
-    border: 1px solid black;
-    border-radius: 25px;
-    padding: 0.5rem 1rem;
-    margin: 0.25rem;
-}
 
-#header-right > button:hover {
-    background-color: #f8ebda;
-}
-
-#header-right > button > a {
+#menu a:hover, .dropdown #ticket-button:hover {
     color: black;
-    font-weight: bold;
-    font-size: 1.1em;
 }
 
-#hamburger-button .line {
-    transition: transform 100ms ease-in 100ms, rotate 100ms ease-in, opacity 0ms 100ms;
-    transform-origin: center;
+#menu a:hover::after , #ticket-button:hover::after{
+    width: 100%;
+    transition: width .3s;
 }
 
-#hamburger-button.expanded .line {
-    transition: transform 100ms ease-in, rotate 100ms ease-in 100ms, opacity 0ms 100ms;
-}
-
-#hamburger-button.expanded .top {
-    transform: translateY(20px);
-    rotate: 45deg;
-}
-
-#hamburger-button.expanded .middle {
-    opacity: 0;
-}
-
-#hamburger-button.expanded .bottom {
-    transform: translateY(-20px);
-    rotate: -45deg;
-}
-
-.header-options {
-    font-size: 1.1em;
-    font-weight: bold;
-
-    padding: .25em;
-    margin: 0 5rem;
-
-    background: none;
-    border: none;
-}
 
 .dropdown {
     position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.dropdown #ticket-button{
+    color: #7a7979;
+    padding: 1rem 2rem 1rem 2rem;
+    font-size: large;
+    font-weight: bold;
+    border: none;
+    background: local;
+    font-family: var(--font-title);
 }
 
 .dropdown-menu {
@@ -151,7 +104,6 @@ header {
     border-radius: 10px;
     overflow: hidden;
     pointer-events: none;
-
     opacity: 0;
     transform: translateY(-10px);
     transition: opacity 100ms, transform 100ms;
@@ -159,7 +111,6 @@ header {
 
 .dropdown-menu.expanded {
     pointer-events: auto;
-
     opacity: 1;
     transform: translateY(0);
     transition: opacity 100ms, transform 100ms;
@@ -171,7 +122,6 @@ header {
 
 .dropdown-menu > ul > li {
     padding: 0.5rem;
-
     display: flex;
     align-items: center;
     justify-content: center;

@@ -476,6 +476,15 @@
         'role' => 'client',
       ];
     }
+
+    /**
+     * Get all the tickets of the client
+     * 
+     * @return array Array of tickets
+     */
+    public function getAllTickets(): array {
+      return Ticket::getTicketsByClient($this);
+    }
   }
 
   class Agent extends Client {

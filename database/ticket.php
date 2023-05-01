@@ -225,6 +225,28 @@
     }
 
     /**
+     * Get the tickets of a client.
+     * 
+     * @param Client $client The client.
+     * @return array The tickets.
+     */
+    public static function getTicketsByClient(Client $client): array {
+      $db = getDatabaseConnection();
+
+      $client_username = $client->getUsername();
+
+      $stmt = $db->prepare('SELECT idTicket FROM Ticket WHERE client = :client');
+      $stmt->bindParam(':client', $client_username);
+      $stmt->execute();
+
+      $result = $stmt->fetchAll();
+
+      return array_map(function ($row) {
+        return new Ticket($row['idTicket']);
+      }, $result);
+    }
+
+    /**
      * Assigns an agent to the ticket.
      * 
      * @param Agent $agent The agent to assign.

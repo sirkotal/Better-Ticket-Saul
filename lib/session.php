@@ -36,9 +36,13 @@
     /**
      * Get the user in the session
      * 
-     * @return User the user
+     * @return User|null the user if it exists, null otherwise
      */
-    public function getUser(): User {
+    public function getUser(): User|null {
+      if (!isset($_SESSION['user'])) {
+        return null;
+      }
+
       return User::getUserById($_SESSION['user']);
     }
 

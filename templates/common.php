@@ -77,7 +77,7 @@
             <div id="ticket-menu" class="dropdown-menu">
               <ul>
                 <li><a href="/create_ticket.php">Submit Ticket</a></li>
-                <li><a href="/view_ticket.php">View Tickets</a></li>
+                <li><a href="/list_tickets.php">View Tickets</a></li>
                 <li><a href="/edit_profile.php">Edit Profile</a></li>
               </ul>
             </div>

@@ -1,0 +1,18 @@
+#saul {
+    display: block;
+    margin-left: 0;
+    margin-right: 0;
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+}
+
+#saul:hover {
+    cursor: pointer;
+    opacity: 0.6;
+    transition: 1s;
+}
+
+#saul-container > h2 {
+    position: absolute;
+}

@@ -95,6 +95,6 @@
 
 <?php function outputFooter(): void { ?>
   <footer>
-    <p>&copy; 2023 The LDTS Group || All Rights Reserved</p>
+    <p>&copy; 2023 Better Ticket Saul || All Rights Reserved</p>
   </footer>
 <?php } ?>

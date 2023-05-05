@@ -33,14 +33,14 @@
         $ticket_id = $ticket->getId();
         $ticket_title = $ticket->getTitle();
         $ticket_text = $ticket->getText();
-        $ticket_date = $ticket->getDate(); // TODO: format date
+        $ticket_date = $ticket->getDate();
         $ticket_status = $ticket->getStatus();
         $ticket_department = $ticket->getDepartment() === null ? 'No department' : $ticket->getDepartment()->getName(); ?>
         
         <div class="ticket" data-id="<?= $ticket_id ?>">
           <h2 class="title"><?= $ticket_title ?></h2>
-          <p class="text"><?= $ticket_title ?></p>
-          <p class="date"><?= $ticket_date ?></p>
+          <p class="text"><?= $ticket_text ?></p>
+          <p class="date"><?= date('F j Y', $ticket_date) ?></p>
           <p class="status"><?= $ticket_status ?></p>
           <p class="department"><?= $ticket_department ?></p>
         </div>

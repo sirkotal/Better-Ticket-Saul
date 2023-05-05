@@ -29,6 +29,7 @@
 		<h2>Is it better to call Saul?</h2>
 		<p>Yes...yes it is.</p>
 	</section>
+  </main>
   <?php outputFooter() ?>
 </body>
 </html>

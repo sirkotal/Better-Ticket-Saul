@@ -43,8 +43,8 @@
         <nav id="menu" class="menu">
           <ul>
             <li><a href="/index.php">Home</a></li>
-            <li><a href="#">FAQs</a></li>
-            <li><a href="#">Contact</a></li>
+            <li><a href="/faq.php">FAQs</a></li>
+            <li><a href="/contact.php">Contact Us</a></li>
           </ul>
         </nav>
         <button id="hamburger-button">

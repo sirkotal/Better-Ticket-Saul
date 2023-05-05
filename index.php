@@ -42,7 +42,7 @@
       </p>
     </section>
     <section>
-      <h3><a href="#">Contact Us</a></h3>
+      <h3><a href="contact.php">Contact Us</a></h3>
       <p>
         If you need to reach out to us for any reason, please use the contact information provided below or
         fill out the contact form. We will get back to you as soon as possible.

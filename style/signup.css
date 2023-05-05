@@ -1,0 +1,69 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap');
+
+:root {
+    --color-header: #e3d1b8;
+    --font-title: 'Poppins', Arial, Helvetica, sans-serif;
+}
+
+#sign{
+    flex-grow: 2; 
+    padding: 0 2rem 0 20rem;
+    display: flex;
+    list-style-type: none;
+    gap: 1rem;
+}
+
+#sign button {   
+    flex: 2 1 auto;
+    font-size: large;
+    font-weight: bold;
+    padding: 1rem 2rem;
+    font-family: var(--font-title);
+    background: #e6e0d9;
+    border: 2px solid black;
+    border-radius:10% / 50%;
+}
+
+#sign a{
+    color: black;
+}
+
+#sign #signup {
+    border: 2px solid black;
+    border-radius:10% / 50%;
+    transition: margin-left 500ms;
+}
+
+
+#sign #signin {
+    background-color: #e6e0d9;
+    border: 2px solid black;
+    border-radius:10% / 50%;
+    transition: margin-right 500ms;
+}
+
+#sign #signup:hover, #sign #signin:hover {
+    background-color: #d8bd96;
+}
+
+#logout{
+    flex-grow: 1;
+    margin-right: 2rem;
+    margin-left: 15rem; 
+    font-size: large;
+    font-weight: bold;
+    padding: 1rem 2rem;
+    font-family: var(--font-title);
+    background: #e6e0d9;
+    border: 2px solid black;
+    border-radius:10% / 50%;
+}
+
+#logout a {
+    color: black;
+
+}
+
+#logout:hover {
+    background-color: #d8bd96;
+}

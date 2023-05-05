@@ -9,7 +9,7 @@
     public function __construct() {
       $db = getDatabaseConnection();
 
-      $stmt = $db->prepare('SELECT * FROM FAQ');
+      $stmt = $db->prepare('SELECT * FROM Faq');
       $stmt->execute();
 
       $result = $stmt->fetchAll();
@@ -41,7 +41,7 @@
     public function addQuestion(string $question, string $anwser): void {
       $db = getDatabaseConnection();
 
-      $stmt = $db->prepare('INSERT INTO FAQ (question, answer) VALUES (:question, :answer)');
+      $stmt = $db->prepare('INSERT INTO Faq (question, answer) VALUES (:question, :answer)');
       $stmt->bindValue(':question', $question);
       $stmt->bindValue(':answer', $anwser);
       $stmt->execute();
@@ -61,7 +61,7 @@
     public function removeQuestion(int $id): void {
       $db = getDatabaseConnection();
 
-      $stmt = $db->prepare('DELETE FROM FAQ WHERE faqId = :id');
+      $stmt = $db->prepare('DELETE FROM Faq WHERE faqId = :id');
       $stmt->bindValue(':id', $id);
       $stmt->execute();
 

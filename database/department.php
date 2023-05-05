@@ -25,7 +25,7 @@
       $result = $stmt->fetchAll();
 
       $this->agents = array_map(function ($row) {
-        return new Agent($row['agent']['username']);
+        return new Agent($row['agent']);
       }, $result);
     }
 

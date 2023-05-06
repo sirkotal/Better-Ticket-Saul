@@ -79,6 +79,24 @@
     }
 
     /**
+     * Returns all tickets.
+     * 
+     * @return array An array of all tickets.
+     */
+    public static function getAllTickets(): array {
+      $db = getDatabaseConnection();
+
+      $stmt = $db->prepare('SELECT idTicket FROM Ticket');
+      $stmt->execute();
+
+      $result = $stmt->fetchAll();
+
+      return array_map(function ($row) {
+        return new Ticket($row['idTicket']);
+      }, $result);
+    }
+
+    /**
      * Creates a new ticket.
      * 
      * @param string $title The ticket's title.
@@ -300,6 +318,15 @@
      */
     public function getId(): int {
       return $this->id;
+    }
+
+    /**
+     * Returns the ticket's title.
+     * 
+     * @return string The ticket's title.
+     */
+    public function getTitle(): string {
+      return $this->title;
     }
 
     /**

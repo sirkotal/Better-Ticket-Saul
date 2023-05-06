@@ -29,7 +29,9 @@
 
       API::sendGetResponse(HttpStatus::OK, $body);
       return;
-    case RequestMethod::POST: // TODO: Add authentication
+    case RequestMethod::POST:
+      API::getSessionAuth(); // don't need the session, just need to check if logged in
+
       $json_data = file_get_contents('php://input');
       $data = json_decode($json_data, true);
 

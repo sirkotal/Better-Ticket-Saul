@@ -2,6 +2,7 @@
   declare (strict_types = 1);
 
   require_once(__DIR__ . '/http_status.php');
+  require_once(__DIR__ . '/session.php');
 
   class RequestMethod {
     const GET = 'GET';
@@ -28,6 +29,15 @@
       http_response_code($status);
       header('Content-Type: application/json');
       echo json_encode(['error' => $message]);
+    }
+
+    static function getSessionAuth(): Session {
+      $session = new Session();
+      if (!$session->isLoggedIn()) {
+        API::sendError(HttpStatus::UNAUTHORIZED, 'You are not logged in');
+        die();
+      }
+      return $session;
     }
   }
 ?>

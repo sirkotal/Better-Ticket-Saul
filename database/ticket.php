@@ -31,6 +31,10 @@
 
       $result = $stmt->fetch();
 
+      if (!$result) {
+        throw new Exception('Ticket not found');
+      }
+
       $this->id = $result['idTicket'];
       $this->title = $result['title'];
       $this->text = $result['text'];

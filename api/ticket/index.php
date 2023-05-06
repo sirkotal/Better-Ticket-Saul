@@ -8,6 +8,45 @@
 
   switch ($_SERVER['REQUEST_METHOD']) {
     case RequestMethod::GET:
+      $url = parse_url($_SERVER['REQUEST_URI']);
+      $parts = explode('/', $url['path']);
+
+      if (count($parts) > 4) {
+        API::sendError(HttpStatus::BAD_REQUEST, 'Endpoint not found');
+        return;
+      }
+
+      // get ticket by id
+      if ($parts[3]) {
+        if (!is_numeric($parts[3])) {
+          API::sendError(HttpStatus::BAD_REQUEST, 'Invalid field types');
+          return;
+        }
+
+        try {
+          $ticket = new Ticket((int) $parts[3]);
+        } catch (Exception $e) {
+          API::sendError(HttpStatus::NOT_FOUND, 'Ticket not found');
+          return;
+        }
+
+        $body = [
+          'id' => $ticket->getId(),
+          'title' => $ticket->getTitle(),
+          'text' => $ticket->getText(),
+          'date' => $ticket->getDate(),
+          'status' => $ticket->getStatus(),
+          'priority' => $ticket->getPriority(),
+          'client' => $ticket->getClient()->getName(),
+          'agent' => $ticket->getAgent() ? $ticket->getAgent()->getName() : null,
+          'department' => $ticket->getDepartment() ? $ticket->getDepartment()->getName() : null,
+          'hashtags' => $ticket->getHashtags()
+        ];
+
+        API::sendGetResponse(HttpStatus::OK, $body);
+        return;
+      }
+
       $tickets = Ticket::getAllTickets();
 
       $body = [];

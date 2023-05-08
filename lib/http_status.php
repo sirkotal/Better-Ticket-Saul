@@ -2,7 +2,7 @@
   declare(strict_types=1);
 
   //* Using a class instead of a enum for backwards compatibility.
-  class HTTPStatus {
+  abstract class HTTPStatus {
     const OK = 200;
     const CREATED = 201;
     const ACCEPTED = 202;

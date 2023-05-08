@@ -124,7 +124,7 @@
       $stmt->bindParam(':client', $client_username);
       $stmt->execute();
 
-      $ticket_id = $db->lastInsertId(); //! needs testing
+      $ticket_id = $db->lastInsertId();
 
       if ($department !== null) {
         $department_name = $department->getName();

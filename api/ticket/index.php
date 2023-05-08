@@ -74,6 +74,11 @@
       $json_data = file_get_contents('php://input');
       $data = json_decode($json_data, true);
 
+      if (empty($data)) {
+        API::sendError(HttpStatus::BAD_REQUEST, 'Body is empty');
+        return;
+      }
+
       if (!array_key_exists('title', $data) || !array_key_exists('text', $data) || !array_key_exists('client', $data)) {
         API::sendError(HttpStatus::BAD_REQUEST, 'Missing required fields');
         return;

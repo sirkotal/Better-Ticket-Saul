@@ -4,7 +4,7 @@
   require_once(__DIR__ . '/http_status.php');
   require_once(__DIR__ . '/session.php');
 
-  class RequestMethod {
+  abstract class RequestMethod {
     const GET = 'GET';
     const POST = 'POST';
     const PUT = 'PUT';
@@ -20,6 +20,12 @@
     }
 
     static function sendPostResponse(int $status, array $body) {
+      http_response_code($status);
+      header('Content-Type: application/json');
+      echo json_encode($body);
+    }
+
+    static function sendDeleteResponse(int $status, array $body) {
       http_response_code($status);
       header('Content-Type: application/json');
       echo json_encode($body);

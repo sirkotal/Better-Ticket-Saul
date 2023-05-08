@@ -33,6 +33,22 @@
     }
 
     /**
+     * Get a question by id
+     * 
+     * @param int $id The id of the question
+     * @return array The question
+     */
+    public function getQuestionById(int $id): array {
+      $index = array_search($id, array_column($this->questions, 'id'), true);
+
+      if ($index === false) {
+        throw new Exception('Question not found');
+      }
+
+      return $this->questions[$index];
+    }
+
+    /**
      * Add a question
      * 
      * @param string $question The question
@@ -47,7 +63,7 @@
       $stmt->execute();
 
       $this->questions[] = [
-        'id' => $db->lastInsertId(), //! needs testing
+        'id' => $db->lastInsertId(),
         'question' => $question,
         'answer' => $anwser
       ];
@@ -57,9 +73,16 @@
      * Remove a question
      * 
      * @param int $id The id of the question
+     * @return array The removed question
      */
-    public function removeQuestion(int $id): void {
+    public function removeQuestion(int $id): array {
       $db = getDatabaseConnection();
+
+      try {
+        $question = FAQ::getQuestionById($id);
+      } catch (Exception $e) {
+        throw new Exception('Question not found');
+      }
 
       $stmt = $db->prepare('DELETE FROM Faq WHERE faqId = :id');
       $stmt->bindValue(':id', $id);
@@ -68,6 +91,8 @@
       $this->questions = array_filter($this->questions, function ($question) use ($id) {
         return $question['id'] !== $id;
       });
+
+      return $question;
     }
   }
 ?>

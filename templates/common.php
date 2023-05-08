@@ -28,6 +28,7 @@
     <link href="/style/layout.css" rel="stylesheet">
     <link href="/style/home.css" rel="stylesheet">
     <link href="/style/departments.css" rel="stylesheet">
+    <link href="/style/list_tickets.css" rel="stylesheet">
     <script src="/script/dropdown.js" defer></script>
     <script src="/script/switch.js" defer></script>
     <script src="/script/editprofile.js" defer></script>

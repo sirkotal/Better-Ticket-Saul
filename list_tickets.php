@@ -25,9 +25,8 @@
 <?php outputHead() ?>
 <body>
   <?php outputHeader() ?>
-  <h1>My Tickets:</h1>
   <div id="tickets">
-    
+    <h1>My Tickets:</h1>
     <?php
       foreach ($tickets as $ticket) { //? refactor this to a different file
         $ticket_id = $ticket->getId();
@@ -39,9 +38,8 @@
         
         <div class="ticket" data-id="<?= $ticket_id ?>">
           <h2 class="title"><?= $ticket_title ?></h2>
-          <p class="text"><?= $ticket_text ?></p>
           <p class="date"><?= date('F j Y', $ticket_date) ?></p>
-          <p class="status"><?= $ticket_status ?></p>
+          <p class="status" data-color='#008000'><?= $ticket_status ?></p>
           <p class="department"><?= $ticket_department ?></p>
         </div>
     <?php } ?>

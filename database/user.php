@@ -200,14 +200,14 @@
 
       $db = getDatabaseConnection();
 
-      $stmt = $db->prepare('SELECT * FROM AgentDepartment WHERE username = :username');
-      $stmt->bindValue(':username', $username);
+      $stmt = $db->prepare('SELECT * FROM AgentDepartment WHERE agent = :agent');
+      $stmt->bindValue(':agent', $username);
       $stmt->execute();
 
       $result = $stmt->fetchAll();
 
       $this->departments = array_map(function ($row) {
-        return new Department($row['department']);
+        return $row['department'];
       }, $result);
     }
 
@@ -225,8 +225,8 @@
       if ($exec_query) {
         $db = getDatabaseConnection();
 
-        $stmt = $db->prepare('DELETE FROM AgentDepartment WHERE username = :username AND department = :department');
-        $stmt->bindValue(':username', $this->username);
+        $stmt = $db->prepare('DELETE FROM AgentDepartment WHERE agent = :agent AND department = :department');
+        $stmt->bindValue(':agent', $this->username);
         $stmt->bindValue(':department', $department->getName());
         $stmt->execute();
       }

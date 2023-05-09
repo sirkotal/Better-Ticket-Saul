@@ -16,8 +16,8 @@
     private string $status;
     private string|null $priority;
     private Client $client;
-    private Agent|null $agent;
-    private Department|null $department;
+    private Agent|null $agent = null;
+    private Department|null $department = null;
     private array $hashtags;
     private array $replies;
     private array $logs;
@@ -38,10 +38,16 @@
       $this->status = $result['status'];
       $this->priority = $result['priority'];
       $this->client = new Client($result['client']);
-      $this->agent = $result['agent'] !== null ? new Agent($result['agent']) : null;
-      $this->department = $result['department'] !== null ? new Department($result['department']) : null;
 
-      $stmt = $db->prepare('SELECT * FROM TicketHashtag WHERE ticket = :ticket');
+      if ($result['agent'] !== null) {
+        $this->agent = new Agent($result['agent']);
+      }
+
+      if ($result['department'] !== null) {
+        $this->department = new Department($result['department']);
+      }
+
+      $stmt = $db->prepare('SELECT * FROM TicketHashtag WHERE idTicket = :ticket');
       $stmt->bindParam(':ticket', $id);
       $stmt->execute();
 
@@ -51,7 +57,7 @@
         return $row['hashtag'];
       }, $result);
 
-      $stmt = $db->prepare('SELECT * FROM TicketReply WHERE ticket = :ticket');
+      $stmt = $db->prepare('SELECT * FROM TicketReply WHERE idTicket = :ticket');
       $stmt->bindParam(':ticket', $id);
       $stmt->execute();
 
@@ -61,7 +67,7 @@
         return new TicketReply($row['idTicketReply']);
       }, $result);
 
-      $stmt = $db->prepare('SELECT * FROM TicketLog WHERE ticket = :ticket');
+      $stmt = $db->prepare('SELECT * FROM TicketLog WHERE idTicket = :ticket');
       $stmt->bindParam(':ticket', $id);
       $stmt->execute();
 
@@ -108,7 +114,7 @@
       }
 
       if (!empty($ticket_hashtags)) {
-        $stmt = $db->prepare('INSERT INTO TicketHashtag (ticket, hashtag) VALUES (:ticket, :hashtag)');
+        $stmt = $db->prepare('INSERT INTO TicketHashtag (idTicket, hashtag) VALUES (:ticket, :hashtag)');
 
         foreach ($ticket_hashtags as $hashtag) {
           $stmt->bindParam(':ticket', $ticket_id);
@@ -259,7 +265,7 @@
 
       $db = getDatabaseConnection();
 
-      $stmt = $db->prepare('INSERT INTO TicketHashtag (ticket, hashtag) VALUES (:ticket, :hashtag)');
+      $stmt = $db->prepare('INSERT INTO TicketHashtag (idTicket, hashtag) VALUES (:ticket, :hashtag)');
       $stmt->bindParam(':ticket', $this->id);
       $stmt->bindParam(':hashtag', $hashtag);
       $stmt->execute();
@@ -279,7 +285,7 @@
 
       $db = getDatabaseConnection();
 
-      $stmt = $db->prepare('DELETE FROM TicketHashtag WHERE ticket = :ticket AND hashtag = :hashtag');
+      $stmt = $db->prepare('DELETE FROM TicketHashtag WHERE idTicket = :ticket AND hashtag = :hashtag');
       $stmt->bindParam(':ticket', $this->id);
       $stmt->bindParam(':hashtag', $hashtag);
       $stmt->execute();

@@ -42,7 +42,7 @@
     public static function create(string $reply, Ticket $ticket, Agent $agent, Department $department): void {
       $db = getDatabaseConnection();
 
-      $stmt = $db->prepare('INSERT INTO TicketReply (reply, date, ticket, agent, department) VALUES (:reply, :date, :ticket, :agent, :department)');
+      $stmt = $db->prepare('INSERT INTO TicketReply (reply, date, idTicket, agent, department) VALUES (:reply, :date, :ticket, :agent, :department)');
       $stmt->bindValue(':reply', $reply);
       $stmt->bindValue(':date', time());
       $stmt->bindValue(':ticket', $ticket->getId());

@@ -40,7 +40,7 @@ CREATE TABLE Department (
     name VARCHAR(25) PRIMARY KEY
 );
 
-CREATE TABLE Reply (
+CREATE TABLE TicketReply (
     idReply INTEGER PRIMARY KEY AUTOINCREMENT,
     reply VARCHAR,
     date INTEGER,

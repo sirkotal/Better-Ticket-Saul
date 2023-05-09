@@ -39,7 +39,7 @@
         <div class="ticket" data-id="<?= $ticket_id ?>">
           <h2 class="title"><?= $ticket_title ?></h2>
           <p class="date"><?= date('F j Y', $ticket_date) ?></p>
-          <p class="status" data-color='#008000'><?= $ticket_status ?></p>
+          <p> Status:<span class="status" data-color='#008000'><?= $ticket_status ?></span>
           <p class="department"><?= $ticket_department ?></p>
         </div>
     <?php } ?>

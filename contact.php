@@ -7,7 +7,7 @@
 <?php outputHead() ?>
 <body>
   <?php outputHeader() ?>
-  <main id="faq">
+  <section id="contact">
     <h1>Contact Us</h1>
     <form>
       <label>
@@ -20,11 +20,11 @@
         <input type="text" name="subject" required> <p>Subject</p> 
       </label>
       <label>
-        <input type="textarea" name="message" required> <p>Message</p> 
+        <textarea name="message" required></textarea> <p>Message</p> 
       </label>
       <button type="submit">Submit</button>
     </form>
-  </main>
+  </section>
   <?php outputFooter() ?>
 </body>
 </html>

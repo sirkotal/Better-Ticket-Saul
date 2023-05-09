@@ -21,6 +21,10 @@
 
       $result = $stmt->fetch();
 
+      if ($result === false) {
+        throw new Exception('User not found');
+      }
+
       $this->name = $result['name'];
       $this->email = $result['email'];
     }
@@ -114,6 +118,25 @@
       $result = $stmt->execute();
 
       return $result;
+    }
+
+    public static function getAllUsers(): array {
+      $db = getDatabaseConnection();
+
+      $stmt = $db->prepare('SELECT * FROM User');
+      $stmt->execute();
+
+      $result = $stmt->fetchAll();
+
+      return array_map(function($row) {
+        if (User::isAgent($row['username'])) {
+          return new Agent($row['username']);
+        } else if (User::isAdmin($row['username'])) {
+          return new Admin($row['username']);
+        } else {
+          return new Client($row['username']);
+        }
+      }, $result);
     }
 
     /**
@@ -236,6 +259,15 @@
       });
 
       $department->removeAgent($this, false);
+    }
+
+    /**
+     * Get the agent departments
+     * 
+     * @return array The agent departments
+     */
+    public function getDepartments(): array {
+      return $this->departments;
     }
   }
 

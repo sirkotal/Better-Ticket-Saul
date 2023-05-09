@@ -105,6 +105,18 @@
       return $result !== false;
     }
 
+    public static function getAllDepartments(): array {
+      $db = getDatabaseConnection();
+
+      $stmt = $db->prepare('SELECT * FROM Department');
+      $stmt->execute();
+
+      $result = $stmt->fetchAll();
+      return array_map(function ($row) {
+        return new Department($row['name']);
+      }, $result);
+    }
+
     /**
      * Remove an agent from the department
      * 

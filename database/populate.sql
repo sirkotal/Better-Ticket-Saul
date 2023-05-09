@@ -30,9 +30,11 @@ INSERT INTO USER (username, name, email, password) VALUES
 
 INSERT INTO Client (username) VALUES ('test_client');
 INSERT INTO Client (username) VALUES ('test_agent');
+INSERT INTO Client (username) VALUES ('test_agent_2');
 INSERT INTO Client (username) VALUES ('test_admin');
 
 INSERT INTO Agent (username) VALUES ('test_agent');
+INSERT INTO Agent (username) VALUES ('test_agent_2');
 INSERT INTO Agent (username) VALUES ('test_admin');
 
 INSERT INTO Admin (username) VALUES ('test_admin');

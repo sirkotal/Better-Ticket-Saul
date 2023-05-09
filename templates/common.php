@@ -23,6 +23,7 @@
     <link href="/style/signup.css" rel="stylesheet">
     <link href="/style/responsive.css" rel="stylesheet">
     <link href="/style/contact.css" rel="stylesheet">
+    <link href="/style/faq.css" rel="stylesheet">
     <script src="/script/dropdown.js" defer></script>
 
     <?php foreach ($stylesheets as $stylesheet) { ?>

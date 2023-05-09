@@ -1,0 +1,35 @@
+:root {
+    --highlight: #f8ebda80;
+}
+
+#faq {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    padding: 2rem;
+    height: 100%;
+}
+
+#faq-header {
+    text-align: center;
+    color: black;
+    font-weight: bold;
+    padding-top: 0.3rem;
+}
+
+#faq .question {
+    width: 80%;
+    background-color: var(--highlight);
+    box-sizing: border-box;
+    border: 2px solid black;
+    border-radius: 4px;
+    padding: 1.5rem;
+}
+
+#faq .question p {
+    padding-top: 0.3rem;
+    font-size: large;
+    font-style: italic;
+}

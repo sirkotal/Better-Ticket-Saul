@@ -7,8 +7,8 @@
 <?php outputHead() ?>
 <body>
   <?php outputHeader() ?>
+  <h1 id="faq-header">Frequently Asked Questions</h1>
   <main id="faq">
-	<h1>Frequently Asked Questions</h1>
 	<section class="question">
 		<h2>What is Lorem Ipsum?</h2>
 		<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc suscipit faucibus nisi, in ultrices nulla feugiat vel.</p>

@@ -16,7 +16,7 @@
 
       $this->questions = array_map(function ($row) {
         return [
-          'id' => $row['faqId'],
+          'id' => $row['id'],
           'question' => $row['question'],
           'answer' => $row['answer']
         ];
@@ -78,13 +78,14 @@
     public function removeQuestion(int $id): array {
       $db = getDatabaseConnection();
 
+      // Check if the question exists
       try {
         $question = FAQ::getQuestionById($id);
       } catch (Exception $e) {
         throw new Exception('Question not found');
       }
 
-      $stmt = $db->prepare('DELETE FROM Faq WHERE faqId = :id');
+      $stmt = $db->prepare('DELETE FROM Faq WHERE id = :id');
       $stmt->bindValue(':id', $id);
       $stmt->execute();
 

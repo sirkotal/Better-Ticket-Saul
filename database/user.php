@@ -11,13 +11,13 @@
     protected string $name;
     protected string $email;
 
-    public function __construct(string $username) {
-      $this->username = $username;
+    public function __construct(int $id) {
+      $this->id = $id;
 
       $db = getDatabaseConnection();
 
-      $stmt = $db->prepare('SELECT * FROM User WHERE username = :username');
-      $stmt->bindValue(':username', $username);
+      $stmt = $db->prepare('SELECT * FROM User WHERE id = :id');
+      $stmt->bindValue(':id', $id);
       $stmt->execute();
 
       $result = $stmt->fetch();
@@ -26,7 +26,7 @@
         throw new Exception('User not found');
       }
 
-      $this->id = $result['id'];
+      $this->username = $result['username'];
       $this->name = $result['name'];
       $this->email = $result['email'];
     }
@@ -35,7 +35,6 @@
      * Check if a user exists (finds a user with the given username)
      * 
      * @param string $username The user username
-     * 
      * @return bool true if the user exists, false otherwise
      */
     public static function exists(string $username): bool {
@@ -54,7 +53,6 @@
      * Check if an email is already in use
      * 
      * @param string $email The email
-     * 
      * @return bool true if the email is already in use, false otherwise
      */
     public static function emailExists(string $email): bool {
@@ -175,15 +173,14 @@
     /**
      * Check if the user is an agent
      * 
-     * @param string $username The user username
-     * 
+     * @param int $userId The user id
      * @return bool true if the user is an agent, false otherwise
      */
-    public static function isAgent(string $username): bool {
+    public static function isAgent(int $userId): bool {
       $db = getDatabaseConnection();
 
-      $stmt = $db->prepare('SELECT * FROM Agent WHERE username = :username');
-      $stmt->bindValue(':username', $username);
+      $stmt = $db->prepare('SELECT * FROM Agent WHERE userId = :userId');
+      $stmt->bindValue(':userId', $userId);
       $stmt->execute();
 
       $result = $stmt->fetch();
@@ -194,15 +191,14 @@
     /**
      * Check if the user is an admin
      * 
-     * @param string $username The user username
-     * 
+     * @param int $userId The user id
      * @return bool true if the user is an admin, false otherwise
      */
-    public static function isAdmin(string $username): bool {
+    public static function isAdmin(int $userId): bool {
       $db = getDatabaseConnection();
 
-      $stmt = $db->prepare('SELECT * FROM Admin WHERE username = :username');
-      $stmt->bindValue(':username', $username);
+      $stmt = $db->prepare('SELECT * FROM Admin WHERE userId = :userId');
+      $stmt->bindValue(':userId', $userId);
       $stmt->execute();
 
       $result = $stmt->fetch();
@@ -248,31 +244,31 @@
   }
 
   class Client extends User {
-    public function __construct(string $username) {
-      parent::__construct($username);
+    public function __construct(int $userId) {
+      parent::__construct($userId);
     }
   }
 
   class Agent extends Client {
     private array $departments;
 
-    public function __construct(string $username) {
-      if (!User::isAgent($username)) {
+    public function __construct(int $userId) {
+      if (!User::isAgent($userId)) {
         throw new Exception('User is not an agent');
       }
       
-      parent::__construct($username);
+      parent::__construct($userId);
 
       $db = getDatabaseConnection();
 
-      $stmt = $db->prepare('SELECT * FROM AgentDepartment WHERE agent = :agent');
-      $stmt->bindValue(':agent', $username);
+      $stmt = $db->prepare('SELECT * FROM AgentDepartment WHERE agentId = :agentId');
+      $stmt->bindValue(':agentId', $this->id);
       $stmt->execute();
 
       $result = $stmt->fetchAll();
 
       $this->departments = array_map(function ($row) {
-        return $row['department'];
+        return $row['departmentId'];
       }, $result);
     }
 
@@ -280,7 +276,7 @@
      * Remove a department from the agent
      * 
      * @param Department $department The department to remove
-     * @param bool $exec_query If true, the query will be executed (default: true)
+     * @param bool $exec_query If true, the query will be executed, if not just removes from the class array (default: true)
      */
     public function removeDepartment(Department $department, bool $exec_query = true): void {
       if (!in_array($department, $this->departments)) {
@@ -308,18 +304,24 @@
      * 
      * @return array The agent departments
      */
-    public function getDepartments(): array {
-      return $this->departments;
+    public function getDepartments(): array { //! for now its like this, but it should be an array of Department objects
+      $departments = [];
+
+      foreach ($this->departments as $department) {
+        $departments[] = new Department($department);
+      }
+
+      return $departments;
     }
   }
 
   class Admin extends Agent {
-    public function __construct(string $username) {
-      if (!User::isAdmin($username)) {
+    public function __construct(int $userId) {
+      if (!User::isAdmin($userId)) {
         throw new Exception('User is not an admin');
       }
 
-      parent::__construct($username);
+      parent::__construct($userId);
     }
   }
 ?>

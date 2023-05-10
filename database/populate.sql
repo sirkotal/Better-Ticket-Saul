@@ -28,16 +28,16 @@ INSERT INTO USER (username, name, email, password) VALUES
 
 -- Add roles to users
 
-INSERT INTO Client (username) VALUES ('test_client');
-INSERT INTO Client (username) VALUES ('test_agent');
-INSERT INTO Client (username) VALUES ('test_agent_2');
-INSERT INTO Client (username) VALUES ('test_admin');
+INSERT INTO Client (userId) VALUES (1); -- test_client
+INSERT INTO Client (userId) VALUES (2); -- test_agent
+INSERT INTO Client (userId) VALUES (3); -- test_agent_2
+INSERT INTO Client (userId) VALUES (4); -- test_admin
 
-INSERT INTO Agent (username) VALUES ('test_agent');
-INSERT INTO Agent (username) VALUES ('test_agent_2');
-INSERT INTO Agent (username) VALUES ('test_admin');
+INSERT INTO Agent (userId) VALUES (2); -- test_agent
+INSERT INTO Agent (userId) VALUES (3); -- test_agent_2
+INSERT INTO Agent (userId) VALUES (4); -- test_admin
 
-INSERT INTO Admin (username) VALUES ('test_admin');
+INSERT INTO Admin (userId) VALUES (4); -- test_admin
 
 -- Create departments
 
@@ -47,10 +47,10 @@ INSERT INTO Department (name) VALUES ('Billing');
 
 -- Add agents to departments
 
-INSERT INTO AgentDepartment (agent, department) VALUES
-    ('test_agent', 'Sales'),
-    ('test_agent', 'Support'),
-    ('test_agent_2', 'Billing');
+INSERT INTO AgentDepartment (agentId, departmentId) VALUES
+    (2, 1), -- test_agent in Sales
+    (2, 2), -- test_agent in Support
+    (3, 3); -- test_agent_2 in Billing
 
 -- Create Hashtags
 
@@ -75,21 +75,26 @@ INSERT INTO Faq (question, answer) VALUES
 
 -- Create Tickets
 
-INSERT INTO Ticket (title, text, date, status, client) VALUES
+INSERT INTO Ticket (title, text, date, status, clientId) VALUES
     (
         'Sold my car and did not get paid',
         'I sold my car to a guy named Tuco Salamanca and he did not pay me. I want my money back.',
         1682731073,
         'Open',
-        'test_client'
+        1 -- test_client
     );
 
-INSERT INTO Ticket (title, text, date, status, client, department) VALUES
+INSERT INTO Ticket (title, text, date, status, clientId, departmentId) VALUES
     (
         'I want to buy a car',
         'I want to buy a car, but it needs to be in cash. I have $100,000 in cash.',
         1682731073,
         'Open',
-        'test_client',
-        'Sales'
+        1, -- test_client
+        1 -- Sales
     );
+
+INSERT INTO TicketHashtag (hashtagId, ticketId) VALUES
+    (1, 1), -- #test
+    (2, 1), -- #lalo
+    (3, 1); -- #tuco

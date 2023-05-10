@@ -24,6 +24,34 @@
 
       API::sendGetResponse(HttpStatus::OK, $body);
       return;
+    case RequestMethod::POST:
+      $json_data = file_get_contents('php://input');
+      $data = json_decode($json_data, true);
+
+      if (!array_key_exists('name', $data)) {
+        API::sendError(HttpStatus::BAD_REQUEST, 'Missing required field');
+        return;
+      }
+
+      if (count($data) > 1) {
+        API::sendError(HttpStatus::BAD_REQUEST, 'Too many fields');
+        return;
+      }
+
+      $name = $data['name'];
+
+      if (Department::exists($name)) {
+        API::sendError(HttpStatus::BAD_REQUEST, 'Department already exists');
+        return;
+      }
+
+      $department = Department::create($name);
+      $body = [
+        'name' => $department->getName()
+      ];
+
+      API::sendPostResponse(HttpStatus::CREATED, $body);
+      return;
     default:
       API::sendError(HttpStatus::METHOD_NOT_ALLOWED, 'Method not allowed');
       return;

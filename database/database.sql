@@ -20,69 +20,71 @@ CREATE TABLE User (
 );
 
 CREATE TABLE Client (
-    username REFERENCES User(username)
+    userId REFERENCES User(id) ON DELETE CASCADE
 );
 
 CREATE TABLE Agent (
-    username REFERENCES Client(username)
+    userId REFERENCES Client(id) ON DELETE CASCADE
 );
 
 CREATE TABLE Admin (
-    username REFERENCES Agent(username)
-);
-
-CREATE TABLE AgentDepartment (
-    idAgentDeparment INTEGER PRIMARY KEY AUTOINCREMENT,
-    agent REFERENCES Agent(username),
-    department REFERENCES Department(name)
+    userId REFERENCES Agent(id) ON DELETE CASCADE
 );
 
 CREATE TABLE Department (
-    name VARCHAR(25) PRIMARY KEY
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name VARCHAR(25)
 );
 
-CREATE TABLE TicketReply (
-    idReply INTEGER PRIMARY KEY AUTOINCREMENT,
-    reply VARCHAR,
-    date INTEGER,
-    -- attachment VARCHAR,
-    idTicket INTEGER REFERENCES Ticket(idTicket),
-    agent REFERENCES Agent(username),
-    department REFERENCES Department(name)
+CREATE TABLE AgentDepartment (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    agentId REFERENCES Agent(userId) ON DELETE CASCADE,
+    departmentId REFERENCES Department(id) ON DELETE CASCADE
 );
 
 CREATE TABLE Ticket (
-    idTicket INTEGER PRIMARY KEY AUTOINCREMENT,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
     title VARCHAR,
     text VARCHAR,
     date INTEGER,
     status VARCHAR,
     priority VARCHAR,
-    client REFERENCES Client(username),
-    agent REFERENCES Agent(username),
-    department REFERENCES Department(name)
+    clientId REFERENCES Client(userId) ON DELETE SET NULL,
+    agentId REFERENCES Agent(userId) ON DELETE SET NULL,
+    departmentId REFERENCES Department(id) ON DELETE SET NULL
 );
 
-CREATE TABLE Hashtag (
-    hashtag VARCHAR PRIMARY KEY
-);
-
-CREATE TABLE TicketHashtag (
-    hashtag REFERENCES Hashtag(hashtag),
-    idTicket REFERENCES Ticket(idTicket)
+CREATE TABLE TicketReply (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    reply VARCHAR,
+    date INTEGER,
+    -- attachment VARCHAR,
+    ticketId INTEGER REFERENCES Ticket(id) ON DELETE CASCADE,
+    agentId REFERENCES Agent(username) ON DELETE SET NULL,
+    departmentId REFERENCES Department(name) ON DELETE SET NULL
 );
 
 CREATE TABLE TicketLog (
-    idTicketLog INTEGER PRIMARY KEY AUTOINCREMENT,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
     change VARCHAR,
     date INTEGER,
-    idTicket REFERENCES Ticket(idTicket),
-    agent REFERENCES Agent(username),
-    department REFERENCES Department(name)
+    ticketId REFERENCES Ticket(id) ON DELETE CASCADE,
+    agentId REFERENCES Agent(userId) ON DELETE SET NULL,
+    departmentId REFERENCES Department(id) ON DELETE SET NULL
+);
+
+CREATE TABLE Hashtag (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    hashtag VARCHAR
+);
+
+CREATE TABLE TicketHashtag (
+    hashtagId REFERENCES Hashtag(id) ON DELETE CASCADE,
+    ticketId REFERENCES Ticket(id) ON DELETE CASCADE
 );
 
 CREATE TABLE Faq (
-    faqId INTEGER PRIMARY KEY AUTOINCREMENT,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
     question VARCHAR,
     answer VARCHAR
 );

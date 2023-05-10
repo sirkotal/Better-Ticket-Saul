@@ -17,18 +17,18 @@
     public function __construct(int $id) {
       $db = getDatabaseConnection();
 
-      $stmt = $db->prepare('SELECT * FROM TicketReply WHERE idTicketReply = :id');
+      $stmt = $db->prepare('SELECT * FROM TicketReply WHERE id = :id');
       $stmt->bindParam(':id', $id);
       $stmt->execute();
 
       $result = $stmt->fetch();
 
-      $this->id = $result['idTicketReply'];
+      $this->id = $result['id'];
       $this->reply = $result['reply'];
       $this->date = $result['date'];
-      $this->ticket = new Ticket($result['idTicket']);
-      $this->agent = new Agent($result['agent']);
-      $this->department = new Department($result['department']);
+      $this->ticket = new Ticket($result['ticketId']);
+      $this->agent = new Agent($result['agentId']);
+      $this->department = new Department($result['departmentId']);
     }
 
     /**
@@ -42,12 +42,12 @@
     public static function create(string $reply, Ticket $ticket, Agent $agent, Department $department): void {
       $db = getDatabaseConnection();
 
-      $stmt = $db->prepare('INSERT INTO TicketReply (reply, date, idTicket, agent, department) VALUES (:reply, :date, :ticket, :agent, :department)');
+      $stmt = $db->prepare('INSERT INTO TicketReply (reply, date, ticketId, agentId, departmentId) VALUES (:reply, :date, :ticket, :agent, :department)');
       $stmt->bindValue(':reply', $reply);
       $stmt->bindValue(':date', time());
       $stmt->bindValue(':ticket', $ticket->getId());
-      $stmt->bindValue(':agent', $agent->getUsername());
-      $stmt->bindValue(':department', $department->getName());
+      $stmt->bindValue(':agent', $agent->getId());
+      $stmt->bindValue(':department', $department->getId());
       $stmt->execute();
     }
 
@@ -59,7 +59,7 @@
     public static function delete(int $id): void {
       $db = getDatabaseConnection();
 
-      $stmt = $db->prepare('DELETE FROM TicketReply WHERE idTicketReply = :id');
+      $stmt = $db->prepare('DELETE FROM TicketReply WHERE id = :id');
       $stmt->bindParam(':id', $id);
       $stmt->execute();
     }

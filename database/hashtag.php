@@ -14,16 +14,15 @@
 
       $result = $stmt->fetchAll();
 
-      $this->hashtags = array_map(function ($row) {
-        return $row['hashtag'];
-      }, $result);
+      foreach ($result as $row) {
+        $this->hashtags[$row['id']] = $row['hashtag'];
+      }
     }
 
     /**
      * Check if a hashtag exists (finds a hashtag with the given name)
      * 
      * @param string $hashtag The hashtag
-     * 
      * @return bool true if the hashtag exists, false otherwise
      */
     public static function exists(string $hashtag): bool {
@@ -38,15 +37,6 @@
     }
 
     /**
-     * Get all the hashtags
-     * 
-     * @return array The hashtags
-     */
-    public function getHashtags(): array {
-      return $this->hashtags;
-    }
-
-    /**
      * Add a hashtag
      * 
      * @param string $hashtag The hashtag
@@ -58,28 +48,41 @@
       $stmt->bindValue(':hashtag', $hashtag);
       $stmt->execute();
 
-      $this->hashtags[] = $hashtag;
+      $this->hashtags[$db->lastInsertId()] = $hashtag;
     }
 
     /**
      * Remove a hashtag
      * 
-     * @param string $hashtag The hashtag
+     * @param int $id The hashtag id
      */
-    public function removeHashtag(string $hashtag): void {
+    public function removeHashtag(int $id): void {
       $db = getDatabaseConnection();
 
-      $stmt = $db->prepare('DELETE FROM Hashtag WHERE hashtag = :hashtag');
-      $stmt->bindValue(':hashtag', $hashtag);
+      $stmt = $db->prepare('DELETE FROM Hashtag WHERE id = :id');
+      $stmt->bindValue(':id', $id);
       $stmt->execute();
 
-      $this->hashtags = array_filter($this->hashtags, function ($h) use ($hashtag) {
-        return $h !== $hashtag;
-      });
+      unset($this->hashtags[$id]);
+    }
 
-      $stmt = $db->prepare('DELETE FROM TicketHashtag WHERE hashtag = :hashtag');
-      $stmt->bindValue(':hashtag', $hashtag);
-      $stmt->execute();
+    /**
+     * Get a hashtag by id
+     * 
+     * @param int $id The hashtag id
+     * @return string The hashtag
+     */
+    public function getHashtagById(int $id): string {
+      return $this->hashtags[$id];
+    }
+
+    /**
+     * Get all the hashtags
+     * 
+     * @return array The hashtags
+     */
+    public function getHashtags(): array {
+      return $this->hashtags;
     }
   }
 ?>

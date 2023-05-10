@@ -31,14 +31,14 @@ function ticketDropdown(button, menu) {
 function signEffect(login, register, sign_div) {
     if (login !== null){
         login.addEventListener('mouseenter', () => {
+          login.style.marginLeft = '3rem';
           login.style.marginRight = '-3rem';
-          sign_div.style.gap = '0';
           login.style.zIndex = '1';
           register.style.zIndex = '0';
         })
         login.addEventListener('mouseleave', () => {
           login.style.marginRight = '0';
-          sign_div.style.gap = '1rem';
+          login.style.marginLeft = '0';
           login.style.zIndex = '0';
           register.style.zIndex = '1';
         })
@@ -46,11 +46,11 @@ function signEffect(login, register, sign_div) {
     if (register !== null){
       register.addEventListener('mouseenter', () => {
           register.style.marginLeft = '-3rem';
-          sign_div.style.gap = '0';
+          register.style.marginRight = '3rem';
       })
       register.addEventListener('mouseleave', () => {
           register.style.marginLeft = '0';
-          sign_div.style.gap = '1rem';
+          register.style.marginRight = '0';
       })
     }
 }
@@ -67,7 +67,6 @@ const login_button = document.querySelector('#signin');
 const register_button = document.querySelector('#signup');
 const sign_div = document.querySelector('#sign');
 signEffect(login_button, register_button, sign_div);
-
 
 
 

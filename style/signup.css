@@ -6,15 +6,14 @@
 }
 
 #sign{
-    flex-grow: 2; 
-    padding: 0 2rem 0 20rem;
+    margin-left: auto;
     display: flex;
     list-style-type: none;
     gap: 1rem;
 }
 
-#sign button {   
-    flex: 2 1 auto;
+#sign button { 
+    flex-grow: 1;
     font-size: large;
     font-weight: bold;
     padding: 1rem 2rem;
@@ -24,14 +23,15 @@
     border-radius:10% / 50%;
 }
 
-#sign a{
+#sign a, #logout a{
     color: black;
+    padding: 1rem 2rem;
 }
 
 #sign #signup {
     border: 2px solid black;
     border-radius:10% / 50%;
-    transition: margin-left 500ms;
+    transition: margin-right 500ms, margin-left 500ms;
 }
 
 
@@ -39,7 +39,7 @@
     background-color: #e6e0d9;
     border: 2px solid black;
     border-radius:10% / 50%;
-    transition: margin-right 500ms;
+    transition: margin-right 500ms, margin-left 500ms;
 }
 
 #sign #signup:hover, #sign #signin:hover {
@@ -47,9 +47,8 @@
 }
 
 #logout{
-    flex-grow: 1;
-    margin-right: 2rem;
-    margin-left: 15rem; 
+    width: 15rem;
+    margin-left: auto;
     font-size: large;
     font-weight: bold;
     padding: 1rem 2rem;
@@ -57,11 +56,6 @@
     background: #e6e0d9;
     border: 2px solid black;
     border-radius:10% / 50%;
-}
-
-#logout a {
-    color: black;
-
 }
 
 #logout:hover {

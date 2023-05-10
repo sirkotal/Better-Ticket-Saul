@@ -6,6 +6,7 @@
 
   abstract class User {
     //? maybe private?
+    protected int $id;
     protected string $username;
     protected string $name;
     protected string $email;
@@ -25,6 +26,7 @@
         throw new Exception('User not found');
       }
 
+      $this->id = $result['id'];
       $this->name = $result['name'];
       $this->email = $result['email'];
     }
@@ -118,6 +120,11 @@
       $stmt->execute();
     }
 
+    /**
+     * Get all users from the database
+     * 
+     * @return array Array of users
+     */
     public static function getAllUsers(): array {
       $db = getDatabaseConnection();
 
@@ -135,6 +142,34 @@
           return new Client($row['username']);
         }
       }, $result);
+    }
+
+    /**
+     * Get user by id
+     * 
+     * @param int $id The user id
+     * @return User The user
+     */
+    public static function getUserById(int $id): User {
+      $db = getDatabaseConnection();
+
+      $stmt = $db->prepare('SELECT * FROM User WHERE id = :id');
+      $stmt->bindValue(':id', $id);
+      $stmt->execute();
+
+      $result = $stmt->fetch();
+
+      if ($result === false) {
+        throw new Exception('User not found');
+      }
+
+      if (User::isAdmin($result['username'])) {
+        return new Admin($result['username']);
+      } else if (User::isAgent($result['username'])) {
+        return new Agent($result['username']);
+      } else {
+        return new Client($result['username']);
+      }
     }
 
     /**
@@ -173,6 +208,15 @@
       $result = $stmt->fetch();
 
       return $result !== false;
+    }
+
+    /**
+     * Get the user id
+     * 
+     * @return int User id
+     */
+    public function getId(): int {
+      return $this->id;
     }
 
     /**

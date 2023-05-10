@@ -15,31 +15,36 @@
         return;
       }
 
-      // get user by username
+      // get user by id
       if ($parts[3]) {
-        $username = $parts[3];
+        $id = $parts[3];
 
-        if (!User::exists($username)) {
+        if (!is_numeric($id)) {
+          API::sendError(HttpStatus::BAD_REQUEST, 'Invalid id');
+          return;
+        }
+
+        try {
+          $user = User::getUserById((int) $id);
+        } catch (Exception $e) {
           API::sendError(HttpStatus::NOT_FOUND, 'User not found');
           return;
         }
 
         $isAgent = false;
-        if (User::isAdmin($username)) {
+        if (User::isAdmin($user->getUsername())) {
           $isAgent = true;
           $role = 'admin';
-          $user = new Admin($username);
-        } else if (User::isAgent($username)) {
+        } else if (User::isAgent($user->getUsername())) {
           $isAgent = true;
           $role = 'agent';
-          $user = new Agent($username);
         } else {
           $role = 'client';
-          $user = new Client($username);
         }
 
         $body = [
-          'username' => $username,
+          'id' => $user->getId(),
+          'username' => $user->getUsername(),
           'name' => $user->getName(),
           'email' => $user->getEmail(),
           'role' => $role
@@ -58,6 +63,7 @@
 
       foreach ($users as $user) {
         $body[] = [
+          'id' => $user->getId(),
           'username' => $user->getUsername(),
           'name' => $user->getName(),
           'email' => $user->getEmail(),

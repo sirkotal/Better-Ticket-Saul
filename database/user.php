@@ -100,7 +100,7 @@
      * @param string $email The user email
      * @param string $password The user password
      */
-    public static function create(string $username, string $name, string $email, string $password): bool {
+    public static function create(string $username, string $name, string $email, string $password): void {
       $db = getDatabaseConnection();
 
       $stmt = $db->prepare('INSERT INTO User (username, name, email, password) VALUES (:username, :name, :email, :password)');
@@ -115,9 +115,7 @@
 
       $stmt = $db->prepare('INSERT INTO Client (username) VALUES (:username)');
       $stmt->bindValue(':username', $username);
-      $result = $stmt->execute();
-
-      return $result;
+      $stmt->execute();
     }
 
     public static function getAllUsers(): array {

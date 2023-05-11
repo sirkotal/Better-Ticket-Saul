@@ -20,14 +20,14 @@
       $db = getDatabaseConnection();
 
       $stmt = $db->prepare('SELECT * FROM Department WHERE id = :id');
-      $stmt->bindValue(':id', $id);
+      $stmt->bindValue(':id', $id, PDO::PARAM_INT);
       $stmt->execute();
       
       $result = $stmt->fetch();
       $this->name = $result['name'];
 
       $stmt = $db->prepare('SELECT * FROM AgentDepartment WHERE departmentId = :departmentId');
-      $stmt->bindValue(':departmentId', $id);
+      $stmt->bindValue(':departmentId', $id, PDO::PARAM_INT);
       $stmt->execute();
 
       $result = $stmt->fetchAll();
@@ -48,7 +48,7 @@
 
       if (is_int($key)) {
         $stmt = $db->prepare('SELECT * FROM Department WHERE id = :id');
-        $stmt->bindValue(':id', $key);
+        $stmt->bindValue(':id', $key, PDO::PARAM_INT);
       } else {
         $stmt = $db->prepare('SELECT * FROM Department WHERE name = :name');
         $stmt->bindValue(':name', $key);
@@ -84,25 +84,18 @@
      * Delete a department
      * 
      * @param int $id The department id
-     * @return array The deleted department info
+     * @return array The deleted department info ready to be json encoded
      */
     public static function delete(int $id): array {
       if (!Department::exists($id)) {
         throw new Exception('Department does not exist');
       }
 
-      $department = new Department($id);
-
-      $info = [
-        'id' => $department->getId(),
-        'name' => $department->getName(),
-        'agents' => $department->getAgents()
-      ];
-
+      $info = Department::parseJsonInfo(new Department($id));
       $db = getDatabaseConnection();
 
       $stmt = $db->prepare('DELETE FROM Department WHERE id = :id');
-      $stmt->bindValue(':id', $id);
+      $stmt->bindValue(':id', $id, PDO::PARAM_INT);
       $stmt->execute();
 
       return $info;
@@ -119,8 +112,8 @@
       $db = getDatabaseConnection();
 
       $stmt = $db->prepare('SELECT * FROM AgentDepartment WHERE agentId = :agentId AND departmentId = :departmentId');
-      $stmt->bindValue(':agentId', $agent->getId());
-      $stmt->bindValue(':departmentId', $department->getId());
+      $stmt->bindValue(':agentId', $agent->getId(), PDO::PARAM_INT);
+      $stmt->bindValue(':departmentId', $department->getId(), PDO::PARAM_INT);
       $stmt->execute();
 
       $result = $stmt->fetch();
@@ -145,6 +138,22 @@
     }
 
     /**
+     * Parse a department info to an array ready to be json encoded
+     * 
+     * @param Department $department The department to parse
+     * @return array The parsed department info
+     */
+    public static function parseJsonInfo(Department $department): array {
+      return [
+        'id' => $department->getId(),
+        'name' => $department->getName(),
+        'agentsIds' => array_map(function ($agent) {
+          return $agent->getId();
+        }, $department->getAgents())
+      ];
+    }
+
+    /**
      * Remove an agent from the department
      * 
      * @param Agent $agent The agent to remove
@@ -159,8 +168,8 @@
         $db = getDatabaseConnection();
 
         $stmt = $db->prepare('DELETE FROM AgentDepartment WHERE agentId = :agentId AND departmentId = :departmentId');
-        $stmt->bindValue(':agentId', $agent->getId());
-        $stmt->bindValue(':departmentId', $this->id);
+        $stmt->bindValue(':agentId', $agent->getId(), PDO::PARAM_INT);
+        $stmt->bindValue(':departmentId', $this->id, PDO::PARAM_INT);
         $stmt->execute();
       }
 
@@ -184,8 +193,8 @@
       $db = getDatabaseConnection();
 
       $stmt = $db->prepare('INSERT INTO AgentDepartment (agentId, departmentId) VALUES (:agentId, :departmentId)');
-      $stmt->bindValue(':agentId', $agent->getId());
-      $stmt->bindValue(':departmentId', $this->id);
+      $stmt->bindValue(':agentId', $agent->getId(), PDO::PARAM_INT);
+      $stmt->bindValue(':departmentId', $this->id, PDO::PARAM_INT);
       $stmt->execute();
 
       $this->agents[] = $agent;

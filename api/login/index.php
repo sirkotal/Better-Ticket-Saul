@@ -14,8 +14,7 @@
         return;
       }
 
-      $json_data = file_get_contents('php://input');
-      $data = json_decode($json_data, true);
+      $data = API::getJsonInput();
 
       if (!array_key_exists('username', $data) || !array_key_exists('password', $data)) {
         API::sendError(HttpStatus::BAD_REQUEST, 'Missing required fields');

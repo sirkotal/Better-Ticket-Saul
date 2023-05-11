@@ -8,8 +8,7 @@
 
   switch ($_SERVER['REQUEST_METHOD']) {
     case RequestMethod::POST:
-      $json_data = file_get_contents('php://input');
-      $data = json_decode($json_data, true);
+      $data = API::getJsonInput();
 
       if (!empty($data)) {
         API::sendError(HttpStatus::BAD_REQUEST, 'Too many fields');

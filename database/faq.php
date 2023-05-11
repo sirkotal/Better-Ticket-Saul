@@ -14,13 +14,28 @@
 
       $result = $stmt->fetchAll();
 
-      $this->questions = array_map(function ($row) {
-        return [
-          'id' => $row['id'],
+      foreach ($result as $row) {
+        $this->questions[(int) $row['id']] = [
           'question' => $row['question'],
           'answer' => $row['answer']
         ];
-      }, $result);
+      }
+    }
+
+    /**
+     * Parse a faq info to an array ready to be json encoded
+     * 
+     * @param int $faqId The id of the question
+     * @return array The parsed faq info
+     */
+    public static function parseJsonInfo(int $faqId): array {
+      $faq = new FAQ();
+      
+      return [
+        'id' => $faqId,
+        'question' => $faq->getQuestionById($faqId)['question'],
+        'answer' => $faq->getQuestionById($faqId)['answer']
+      ];
     }
 
     /**
@@ -39,13 +54,11 @@
      * @return array The question
      */
     public function getQuestionById(int $id): array {
-      $index = array_search($id, array_column($this->questions, 'id'), true);
-
-      if ($index === false) {
+      if (!isset($this->questions[$id])) {
         throw new Exception('Question not found');
       }
 
-      return $this->questions[$index];
+      return $this->questions[$id];
     }
 
     /**
@@ -63,42 +76,38 @@
       $stmt->bindValue(':answer', $anwser);
       $stmt->execute();
 
+      $questionId = $db->lastInsertId();
+
       $question = [
-        'id' => $db->lastInsertId(),
         'question' => $question,
         'answer' => $anwser
       ];
 
-      $this->questions[] = $question;
-
-      return $question;
+      $this->questions[$questionId] = $question;
+      return FAQ::parseJsonInfo((int) $questionId);
     }
 
     /**
      * Remove a question
      * 
      * @param int $id The id of the question
-     * @return array The removed question
+     * @return array The removed question info
      */
     public function removeQuestion(int $id): array {
       $db = getDatabaseConnection();
 
-      // Check if the question exists
-      try {
-        $question = FAQ::getQuestionById($id);
-      } catch (Exception $e) {
+      if (!isset($this->questions[$id])) {
         throw new Exception('Question not found');
       }
 
+      $info = FAQ::parseJsonInfo($id);
+
       $stmt = $db->prepare('DELETE FROM Faq WHERE id = :id');
-      $stmt->bindValue(':id', $id);
+      $stmt->bindValue(':id', $id, PDO::PARAM_INT);
       $stmt->execute();
 
-      $this->questions = array_filter($this->questions, function ($question) use ($id) {
-        return $question['id'] !== $id;
-      });
-
-      return $question;
+      unset($this->questions[$id]);
+      return $info;
     }
   }
 ?>

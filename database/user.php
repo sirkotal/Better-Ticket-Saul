@@ -5,7 +5,6 @@
   require_once(__DIR__ . '/department.php');
 
   abstract class User {
-    //? maybe private?
     protected int $id;
     protected string $username;
     protected string $name;
@@ -17,7 +16,7 @@
       $db = getDatabaseConnection();
 
       $stmt = $db->prepare('SELECT * FROM User WHERE id = :id');
-      $stmt->bindValue(':id', $id);
+      $stmt->bindValue(':id', $id, PDO::PARAM_INT);
       $stmt->execute();
 
       $result = $stmt->fetch();
@@ -42,7 +41,7 @@
 
       if (is_int($key)) {
         $stmt = $db->prepare('SELECT * FROM User WHERE id = :id');
-        $stmt->bindValue(':id', $key);
+        $stmt->bindValue(':id', $key, PDO::PARAM_INT);
       } else {
         $stmt = $db->prepare('SELECT * FROM User WHERE username = :username');
         $stmt->bindValue(':username', $key);
@@ -122,7 +121,7 @@
       $userId = (int) $db->lastInsertId();
 
       $stmt = $db->prepare('INSERT INTO Client (userId) VALUES (:userId)');
-      $stmt->bindValue(':userId', $userId);
+      $stmt->bindValue(':userId', $userId, PDO::PARAM_INT);
       $stmt->execute();
 
       return User::getUserById($userId);
@@ -166,7 +165,7 @@
       $db = getDatabaseConnection();
 
       $stmt = $db->prepare('DELETE FROM User WHERE id = :userId');
-      $stmt->bindValue(':userId', $userId);
+      $stmt->bindValue(':userId', $userId, PDO::PARAM_INT);
       $stmt->execute();
 
       return $info;
@@ -200,7 +199,7 @@
       $db = getDatabaseConnection();
 
       $stmt = $db->prepare('SELECT * FROM User WHERE id = :id');
-      $stmt->bindValue(':id', $id);
+      $stmt->bindValue(':id', $id, PDO::PARAM_INT);
       $stmt->execute();
 
       $result = $stmt->fetch();
@@ -228,7 +227,7 @@
       $db = getDatabaseConnection();
 
       $stmt = $db->prepare('SELECT * FROM Agent WHERE userId = :userId');
-      $stmt->bindValue(':userId', $userId);
+      $stmt->bindValue(':userId', $userId, PDO::PARAM_INT);
       $stmt->execute();
 
       $result = $stmt->fetch();
@@ -245,14 +244,21 @@
     public static function isAdmin(int $userId): bool {
       $db = getDatabaseConnection();
 
-      $stmt = $db->prepare('SELECT * FROM Admin WHERE userId = :userId');
-      $stmt->bindValue(':userId', $userId);
+      $stmt = $db->prepare('SELECT userId FROM Admin WHERE userId = :userId');
+      $stmt->bindValue(':userId', $userId, PDO::PARAM_INT);
       $stmt->execute();
 
       $result = $stmt->fetch();
 
       return $result !== false;
     }
+
+    /**
+     * Parse a user info to an array ready to be json encoded
+     * 
+     * @return array The parsed user info
+     */
+    abstract public function parseJsonInfo(): array;
 
     /**
      * Get the user id
@@ -295,10 +301,20 @@
     public function __construct(int $userId) {
       parent::__construct($userId);
     }
+
+    public function parseJsonInfo(): array {
+      return [
+        'id' => $this->id,
+        'username' => $this->username,
+        'name' => $this->name,
+        'email' => $this->email,
+        'role' => 'client',
+      ];
+    }
   }
 
   class Agent extends Client {
-    private array $departments;
+    protected array $departments; //* just the ids, try to get the object
 
     public function __construct(int $userId) {
       if (!User::isAgent($userId)) {
@@ -310,7 +326,7 @@
       $db = getDatabaseConnection();
 
       $stmt = $db->prepare('SELECT * FROM AgentDepartment WHERE agentId = :agentId');
-      $stmt->bindValue(':agentId', $this->id);
+      $stmt->bindValue(':agentId', $this->id, PDO::PARAM_INT);
       $stmt->execute();
 
       $result = $stmt->fetchAll();
@@ -318,6 +334,17 @@
       $this->departments = array_map(function ($row) {
         return $row['departmentId'];
       }, $result);
+    }
+
+    public function parseJsonInfo(): array {
+      return [
+        'id' => $this->id,
+        'username' => $this->username,
+        'name' => $this->name,
+        'email' => $this->email,
+        'role' => 'agent',
+        'departmentsIds' => $this->departments,
+      ];
     }
 
     /**
@@ -334,14 +361,20 @@
       if ($exec_query) {
         $db = getDatabaseConnection();
 
-        $stmt = $db->prepare('DELETE FROM AgentDepartment WHERE agent = :agent AND department = :department');
-        $stmt->bindValue(':agent', $this->username);
-        $stmt->bindValue(':department', $department->getName());
+        $stmt = $db->prepare('DELETE FROM AgentDepartment WHERE agentId = :agentId AND departmentId = :departmentId');
+        $stmt->bindValue(':agentId', $this->id, PDO::PARAM_INT);
+        $stmt->bindValue(':department', $department->getId(), PDO::PARAM_INT);
         $stmt->execute();
       }
 
+      /* //! Uncomment when departments are objects
       $this->departments = array_filter($this->departments, function ($d) use ($department) {
-        return $d->getName() !== $department->getName();
+        return $d->getId() !== $department->getId();
+      });
+      */
+
+      $this->departments = array_filter($this->departments, function ($id) use ($department) {
+        return $id !== $department->getId();
       });
 
       $department->removeAgent($this, false);
@@ -370,6 +403,17 @@
       }
 
       parent::__construct($userId);
+    }
+
+    public function parseJsonInfo(): array {
+      return [
+        'id' => $this->id,
+        'username' => $this->username,
+        'name' => $this->name,
+        'email' => $this->email,
+        'role' => 'admin',
+        'departmentsIds' => $this->departments,
+      ];
     }
   }
 ?>

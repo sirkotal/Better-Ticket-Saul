@@ -3,6 +3,7 @@
 
   require_once(__DIR__ . '/../../lib/http_status.php');
   require_once(__DIR__ . '/../../lib/api.php');
+  require_once(__DIR__ . '/../../lib/session.php');
   require_once(__DIR__ . '/../../database/ticket.php');
   require_once(__DIR__ . '/../../database/user.php');
 
@@ -30,49 +31,27 @@
           return;
         }
 
-        $body = [
-          'id' => $ticket->getId(),
-          'title' => $ticket->getTitle(),
-          'text' => $ticket->getText(),
-          'date' => $ticket->getDate(),
-          'status' => $ticket->getStatus(),
-          'priority' => $ticket->getPriority(),
-          'client' => $ticket->getClient()->getName(),
-          'agent' => $ticket->getAgent() ? $ticket->getAgent()->getName() : null,
-          'department' => $ticket->getDepartment() ? $ticket->getDepartment()->getName() : null,
-          'hashtags' => $ticket->getHashtags()
-        ];
-
-        API::sendGetResponse(HttpStatus::OK, $body);
+        API::sendGetResponse(HttpStatus::OK, $ticket->parseJsonInfo());
         return;
       }
 
       $tickets = Ticket::getAllTickets();
 
       $body = [];
-
       foreach ($tickets as $ticket) {
-        $body[] = [
-          'id' => $ticket->getId(),
-          'title' => $ticket->getTitle(),
-          'text' => $ticket->getText(),
-          'date' => $ticket->getDate(),
-          'status' => $ticket->getStatus(),
-          'priority' => $ticket->getPriority(),
-          'client' => $ticket->getClient()->getName(),
-          'agent' => $ticket->getAgent() ? $ticket->getAgent()->getName() : null,
-          'department' => $ticket->getDepartment() ? $ticket->getDepartment()->getName() : null,
-          'hashtags' => $ticket->getHashtags()
-        ];
+        $body[] = $ticket->parseJsonInfo();
       }
 
       API::sendGetResponse(HttpStatus::OK, $body);
       return;
     case RequestMethod::POST:
-      API::getSessionAuth(); // don't need the session, just need to check if logged in
+      $session = new Session();
+      if (!$session->isLoggedIn()) {
+        API::sendError(HttpStatus::UNAUTHORIZED, 'You are not logged in');
+        return;
+      }
 
-      $json_data = file_get_contents('php://input');
-      $data = json_decode($json_data, true);
+      $data = API::getJsonInput();
 
       if (empty($data)) {
         API::sendError(HttpStatus::BAD_REQUEST, 'Body is empty');
@@ -120,9 +99,9 @@
       $hashtags = isset($data['hashtags']) ? $data['hashtags'] : [];
       $department = isset($data['department']) ? $data['department'] : null;
 
-      Ticket::create($data['title'], $data['text'], new Client($data['client']), $hashtags, $department);
+      $ticket = Ticket::create($data['title'], $data['text'], new Client($data['client']), $hashtags, $department);
 
-      API::sendPostResponse(HttpStatus::CREATED, ['message' => 'Ticket created']);
+      API::sendPostResponse(HttpStatus::CREATED, ['message' => 'Ticket created', 'body' => $ticket->parseJsonInfo()]);
       return;
     default:
       API::sendError(HttpStatus::METHOD_NOT_ALLOWED, 'Method not allowed');

@@ -20,7 +20,7 @@
       $db = getDatabaseConnection();
 
       $stmt = $db->prepare('SELECT * FROM TicketLog WHERE id = :id');
-      $stmt->bindParam(':id', $id);
+      $stmt->bindValue(':id', $id, PDO::PARAM_INT);
       $stmt->execute();
 
       $result = $stmt->fetch();
@@ -47,10 +47,10 @@
 
       $stmt = $db->prepare('INSERT INTO TicketLog (change, date, ticketId, agentId, departmentId) VALUES (:change, :date, :idTicket, :agent, :department)');
       $stmt->bindValue(':change', $change);
-      $stmt->bindValue(':date', time());
-      $stmt->bindValue(':idTicket', $ticket->getId());
-      $stmt->bindValue(':agent', $agent->getId());
-      $stmt->bindValue(':department', $department->getId());
+      $stmt->bindValue(':date', time(), PDO::PARAM_INT);
+      $stmt->bindValue(':idTicket', $ticket->getId(), PDO::PARAM_INT);
+      $stmt->bindValue(':agent', $agent->getId(), PDO::PARAM_INT);
+      $stmt->bindValue(':department', $department->getId(), PDO::PARAM_INT);
       $stmt->execute();
 
       return new TicketLog((int) $db->lastInsertId());
@@ -76,7 +76,7 @@
       $db = getDatabaseConnection();
 
       $stmt = $db->prepare('DELETE FROM TicketLog WHERE id = :id');
-      $stmt->bindParam(':id', $id);
+      $stmt->bindValue(':id', $id, PDO::PARAM_INT);
       $stmt->execute();
 
       return $info;

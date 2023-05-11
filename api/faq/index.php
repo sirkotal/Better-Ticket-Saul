@@ -25,19 +25,13 @@
         }
 
         try {
-          $question = $faq->getQuestionById((int) $parts[3]);
+          $faq->getQuestionById((int) $parts[3]);
         } catch (Exception $e) {
           API::sendError(HttpStatus::NOT_FOUND, 'Question not found');
           return;
         }
 
-        $body = [
-          'id' => $question['id'],
-          'question' => $question['question'],
-          'answer' => $question['answer']
-        ];
-
-        API::sendGetResponse(HttpStatus::OK, $body);
+        API::sendGetResponse(HttpStatus::OK, FAQ::parseJsonInfo((int) $parts[3]));
         return;
       }
 
@@ -46,18 +40,15 @@
       $body = [];
 
       foreach ($questions as $question) {
-        $body[] = [
-          'id' => $question['id'],
-          'question' => $question['question'],
-          'answer' => $question['answer']
-        ];
+        $index = array_search($question, $questions);
+        
+        $body[] = FAQ::parseJsonInfo($index);
       }
 
       API::sendGetResponse(HttpStatus::OK, $body);
       return;
     case RequestMethod::POST:
-      $json_data = file_get_contents('php://input');
-      $data = json_decode($json_data, true);
+      $data = API::getJsonInput();
 
       if (empty($data)) {
         API::sendError(HttpStatus::BAD_REQUEST, 'Body is empty');
@@ -79,9 +70,9 @@
         return;
       }
 
-      $faq->addQuestion($data['question'], $data['answer']);
+      $body = $faq->addQuestion($data['question'], $data['answer']);
 
-      API::sendPostResponse(HttpStatus::CREATED, ['message' => 'Question added to FAQ']);
+      API::sendPostResponse(HttpStatus::CREATED, ['message' => 'Question added to FAQ', 'body' => $body]);
       return;
     case RequestMethod::DELETE:
       $url = parse_url($_SERVER['REQUEST_URI']);
@@ -98,7 +89,7 @@
       }
 
       try {
-        $question = $faq->removeQuestion((int) $parts[3]);
+        $body = $faq->removeQuestion((int) $parts[3]);
       } catch (Exception $e) {
         API::sendError(HttpStatus::NOT_FOUND, 'Question not found');
         return;
@@ -106,7 +97,7 @@
 
       API::sendDeleteResponse(HttpStatus::OK, [
         'message' => 'Question removed from FAQ',
-        'question' => $question
+        'body' => $body
       ]);
       return;
     default:

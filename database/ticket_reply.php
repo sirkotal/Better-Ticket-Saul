@@ -18,7 +18,7 @@
       $db = getDatabaseConnection();
 
       $stmt = $db->prepare('SELECT * FROM TicketReply WHERE id = :id');
-      $stmt->bindParam(':id', $id);
+      $stmt->bindValue(':id', $id, PDO::PARAM_INT);
       $stmt->execute();
 
       $result = $stmt->fetch();
@@ -45,7 +45,7 @@
 
       $stmt = $db->prepare('INSERT INTO TicketReply (reply, date, ticketId, agentId, departmentId) VALUES (:reply, :date, :ticket, :agent, :department)');
       $stmt->bindValue(':reply', $reply);
-      $stmt->bindValue(':date', time());
+      $stmt->bindValue(':date', time(), PDO::PARAM_INT);
       $stmt->bindValue(':ticket', $ticket->getId());
       $stmt->bindValue(':agent', $agent->getId());
       $stmt->bindValue(':department', $department->getId());
@@ -74,7 +74,7 @@
       $db = getDatabaseConnection();
 
       $stmt = $db->prepare('DELETE FROM TicketReply WHERE id = :id');
-      $stmt->bindParam(':id', $id);
+      $stmt->bindValue(':id', $id, PDO::PARAM_INT);
       $stmt->execute();
 
       return $info;

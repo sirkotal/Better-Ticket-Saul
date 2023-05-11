@@ -11,22 +11,13 @@
       $body = [];
 
       foreach ($departments as $department) {
-        $agent_names = [];
-        foreach ($department->getAgents() as $agent) {
-          $agent_names[] = $agent->getUsername();
-        }
-
-        $body[] = [
-          'name' => $department->getName(),
-          'agents' => $agent_names
-        ];
+        $body[] = Department::parseJsonInfo($department);
       }
 
       API::sendGetResponse(HttpStatus::OK, $body);
       return;
     case RequestMethod::POST:
-      $json_data = file_get_contents('php://input');
-      $data = json_decode($json_data, true);
+      $data = API::getJsonInput();
 
       if (!array_key_exists('name', $data)) {
         API::sendError(HttpStatus::BAD_REQUEST, 'Missing required field');
@@ -46,9 +37,7 @@
       }
 
       $department = Department::create($name);
-      $body = [
-        'name' => $department->getName()
-      ];
+      $body = Department::parseJsonInfo($department);
 
       API::sendPostResponse(HttpStatus::CREATED, $body);
       return;

@@ -26,7 +26,7 @@
       $db = getDatabaseConnection();
 
       $stmt = $db->prepare('SELECT * FROM Ticket WHERE id = :id');
-      $stmt->bindParam(':id', $id);
+      $stmt->bindValue(':id', $id, PDO::PARAM_INT);
       $stmt->execute();
 
       $result = $stmt->fetch();
@@ -51,10 +51,8 @@
         $this->department = new Department($result['departmentId']);
       }
 
-      //! why it only works with the concat?
-      $stmt = $db->prepare('SELECT * FROM TicketHashtag WHERE ticketId = ' . $id);
-      // $stmt = $db->prepare('SELECT * FROM TicketHashtag WHERE ticketId = :ticketId');
-      // $stmt->bindParam(':ticketId', $id);
+      $stmt = $db->prepare('SELECT * FROM TicketHashtag WHERE ticketId = :ticketId');
+      $stmt->bindValue(':ticketId', $id, PDO::PARAM_INT);
       $stmt->execute();
 
       $result = $stmt->fetchAll();
@@ -64,8 +62,8 @@
         $this->hashtags[] = $hashtags->getHashtagById($row['hashtagId']);
       }
 
-      $stmt = $db->prepare('SELECT * FROM TicketReply WHERE ticketId = :ticket');
-      $stmt->bindParam(':ticket', $id);
+      $stmt = $db->prepare('SELECT * FROM TicketReply WHERE ticketId = :ticketId');
+      $stmt->bindValue(':ticketId', $id, PDO::PARAM_INT);
       $stmt->execute();
 
       $result = $stmt->fetchAll();
@@ -74,8 +72,8 @@
         return new TicketReply($row['id']);
       }, $result);
 
-      $stmt = $db->prepare('SELECT * FROM TicketLog WHERE ticketId = :ticket');
-      $stmt->bindParam(':ticket', $id);
+      $stmt = $db->prepare('SELECT * FROM TicketLog WHERE ticketId = :ticketId');
+      $stmt->bindValue(':ticketId', $id, PDO::PARAM_INT);
       $stmt->execute();
 
       $result = $stmt->fetchAll();
@@ -116,31 +114,25 @@
     public static function create(string $title, string $text, Client $client, array $ticket_hashtags, Department $department = null): Ticket {
       $db = getDatabaseConnection();
 
-      $client_id = $client->getId();
-      $date = time();
-      $status = 'Open';
-
       $stmt = $db->prepare('INSERT INTO Ticket (title, text, date, status, clientId) VALUES (:title, :text, :date, :status, :clientId)');
-      $stmt->bindParam(':title', $title);
-      $stmt->bindParam(':text', $text);
-      $stmt->bindParam(':date', $date);
-      $stmt->bindParam(':status', $status);
-      $stmt->bindParam(':clientId', $client_id);
+      $stmt->bindValue(':title', $title);
+      $stmt->bindValue(':text', $text);
+      $stmt->bindValue(':date', time(), PDO::PARAM_INT);
+      $stmt->bindValue(':status', 'Open');
+      $stmt->bindValue(':clientId', $client->getId(), PDO::PARAM_INT);
       $stmt->execute();
 
       $ticket_id = (int) $db->lastInsertId();
 
       if ($department !== null) {
-        $department_name = $department->getName();
-
         $stmt = $db->prepare('UPDATE Ticket SET departmentId = :departmentId WHERE id = :id');
-        $stmt->bindParam(':departmentId', $department_name);
-        $stmt->bindParam(':id', $ticket_id);
+        $stmt->bindValue(':departmentId', $department->getId(), PDO::PARAM_INT);
+        $stmt->bindValue(':id', $ticket_id, PDO::PARAM_INT);
         $stmt->execute();
       }
 
       if (!empty($ticket_hashtags)) {
-        $stmt = $db->prepare('INSERT INTO TicketHashtag (ticketId, hashtagId) VALUES (:ticket, :hashtag)');
+        $stmt = $db->prepare('INSERT INTO TicketHashtag (ticketId, hashtagId) VALUES (:ticketId, :hashtagId)');
 
         //! check if we can get the hashtag id from the frontend
         $hashtags = new Hashtag();
@@ -149,8 +141,8 @@
           // TODO: test later
           $hashtag_id = array_search($hashtag, $hashtags) + 1;
 
-          $stmt->bindParam(':ticket', $ticket_id);
-          $stmt->bindParam(':hashtag', $hashtag_id);
+          $stmt->bindValue(':ticketId', $ticket_id, PDO::PARAM_INT);
+          $stmt->bindValue(':hashtagId', $hashtag_id, PDO::PARAM_INT);
           $stmt->execute();
         }
       }
@@ -166,39 +158,47 @@
      */
     public static function delete(int $id): array {
       $ticket = new Ticket($id);
+      $info = $ticket->parseJsonInfo();
+      
+      $db = getDatabaseConnection();
 
+      $stmt = $db->prepare('DELETE FROM Ticket WHERE id = :id');
+      $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+      $stmt->execute();
+
+      return $info;
+    }
+
+    /**
+     * Parse a user info to an array ready to be json encoded
+     * 
+     * @return array The parsed user info.
+     */
+    public function parseJsonInfo(): array {
       $repliesIds = [];
-      foreach ($ticket->getReplies() as $reply) {
+      foreach ($this->replies as $reply) {
         $repliesIds[] = $reply->getId();
       }
 
       $logsIds = [];
-      foreach ($ticket->getLogs() as $log) {
+      foreach ($this->logs as $log) {
         $logsIds[] = $log->getId();
       }
 
-      $info = [
-        'id' => $ticket->getId(),
-        'title' => $ticket->getTitle(),
-        'text' => $ticket->getText(),
-        'date' => $ticket->getDate(),
-        'status' => $ticket->getStatus(),
-        'priority' => $ticket->getPriority(),
-        'clientId' => $ticket->getClient()->getId(),
-        'agentId' => $ticket->getAgent()->getId(),
-        'departmentId' => $ticket->getDepartment()->getId(),
-        'hashtags' => $ticket->getHashtags(),
+      return [
+        'id' => $this->id,
+        'title' => $this->title,
+        'text' => $this->text,
+        'date' => $this->date,
+        'status' => $this->status,
+        'priority' => $this->priority,
+        'clientId' => $this->client->getId(),
+        'agentId' => $this->agent ? $this->agent->getId() : null,
+        'departmentId' => $this->department ? $this->department->getId() : null,
+        'hashtags' => $this->hashtags,
         'repliesIds' => $repliesIds,
         'logsIds' => $logsIds
       ];
-      
-      $db = getDatabaseConnection();
-
-      $stmt = $db->prepare('DELETE FROM Ticket WHERE ticketId = :id');
-      $stmt->bindParam(':id', $id);
-      $stmt->execute();
-
-      return $info;
     }
 
     /**
@@ -223,9 +223,9 @@
 
       $agent_id = $agent->getId();
 
-      $stmt = $db->prepare('UPDATE Ticket SET agentId = :agentId WHERE ticketId = :id');
-      $stmt->bindParam(':agentId', $agent_id);
-      $stmt->bindParam(':id', $this->id);
+      $stmt = $db->prepare('UPDATE Ticket SET agentId = :agentId WHERE id = :id');
+      $stmt->bindValue(':agentId', $agent_id, PDO::PARAM_INT);
+      $stmt->bindValue(':id', $this->id, PDO::PARAM_INT);
       $stmt->execute();
 
       $this->agent = $agent;
@@ -249,9 +249,9 @@
 
       $department_id = $department->getId();
 
-      $stmt = $db->prepare('UPDATE Ticket SET departmentId = :departmentId WHERE ticketId = :id');
-      $stmt->bindParam(':departmentId', $department_id);
-      $stmt->bindParam(':id', $this->id);
+      $stmt = $db->prepare('UPDATE Ticket SET departmentId = :departmentId WHERE id = :id');
+      $stmt->bindValue(':departmentId', $department_id, PDO::PARAM_INT);
+      $stmt->bindValue(':id', $this->id, PDO::PARAM_INT);
       $stmt->execute();
 
       $this->department = $department;
@@ -265,8 +265,8 @@
     public function removeAgent(): void {
       $db = getDatabaseConnection();
 
-      $stmt = $db->prepare('UPDATE Ticket SET agentId = NULL WHERE ticketId = :id');
-      $stmt->bindParam(':id', $this->id);
+      $stmt = $db->prepare('UPDATE Ticket SET agentId = NULL WHERE id = :id');
+      $stmt->bindValue(':id', $this->id, PDO::PARAM_INT);
       $stmt->execute();
 
       $this->agent = null;
@@ -280,8 +280,8 @@
     public function removeDepartment(): void {
       $db = getDatabaseConnection();
 
-      $stmt = $db->prepare('UPDATE Ticket SET departmentId = NULL WHERE ticketId = :id');
-      $stmt->bindParam(':id', $this->id);
+      $stmt = $db->prepare('UPDATE Ticket SET departmentId = NULL WHERE id = :id');
+      $stmt->bindValue(':id', $this->id, PDO::PARAM_INT);
       $stmt->execute();
 
       $this->department = null;
@@ -295,9 +295,9 @@
     public function setPriority(string|null $priority): void {
       $db = getDatabaseConnection();
 
-      $stmt = $db->prepare('UPDATE Ticket SET priority = :priority WHERE ticketId = :id');
-      $stmt->bindParam(':priority', $priority);
-      $stmt->bindParam(':id', $this->id);
+      $stmt = $db->prepare('UPDATE Ticket SET priority = :priority WHERE id = :id');
+      $stmt->bindValue(':priority', $priority);
+      $stmt->bindValue(':id', $this->id, PDO::PARAM_INT);
       $stmt->execute();
 
       $this->priority = $priority;
@@ -325,9 +325,9 @@
         throw new Exception('The ticket already has the hashtag.');
       }
 
-      $stmt = $db->prepare('INSERT INTO TicketHashtag (ticketId, hashtagId) VALUES (:ticket, :hashtag)');
-      $stmt->bindParam(':ticket', $this->id);
-      $stmt->bindParam(':hashtag', $hashtag_id);
+      $stmt = $db->prepare('INSERT INTO TicketHashtag (ticketId, hashtagId) VALUES (:ticketId, :hashtagId)');
+      $stmt->bindValue(':ticketId', $this->id, PDO::PARAM_INT);
+      $stmt->bindValue(':hashtagId', $hashtag_id, PDO::PARAM_INT);
       $stmt->execute();
 
       $this->hashtags[] = $hashtag;
@@ -351,9 +351,9 @@
       $hashtags = $hashtags->getHashtags();
       $hashtag_id = array_search($hashtag, $hashtags) + 1;
 
-      $stmt = $db->prepare('DELETE FROM TicketHashtag WHERE ticketId = :ticket AND hashtagId = :hashtag');
-      $stmt->bindParam(':ticket', $this->id);
-      $stmt->bindParam(':hashtag', $hashtag_id);
+      $stmt = $db->prepare('DELETE FROM TicketHashtag WHERE ticketId = :ticketId AND hashtagId = :hashtagId');
+      $stmt->bindValue(':ticketId', $this->id, PDO::PARAM_INT);
+      $stmt->bindValue(':hashtagId', $hashtag_id, PDO::PARAM_INT);
       $stmt->execute();
 
       $this->hashtags = array_diff($this->hashtags, [$hashtag]);

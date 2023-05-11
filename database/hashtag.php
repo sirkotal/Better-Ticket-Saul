@@ -67,7 +67,7 @@
       $db = getDatabaseConnection();
 
       $stmt = $db->prepare('DELETE FROM Hashtag WHERE id = :id');
-      $stmt->bindValue(':id', $id);
+      $stmt->bindValue(':id', $id, PDO::PARAM_INT);
       $stmt->execute();
 
       $info = [

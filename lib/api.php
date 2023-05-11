@@ -37,13 +37,11 @@
       echo json_encode(['error' => $message]);
     }
 
-    static function getSessionAuth(): Session {
-      $session = new Session();
-      if (!$session->isLoggedIn()) {
-        API::sendError(HttpStatus::UNAUTHORIZED, 'You are not logged in');
-        die();
-      }
-      return $session;
+    static function getJsonInput(): array {
+      $input = file_get_contents('php://input');
+      $json = json_decode($input, true);
+
+      return $json;
     }
   }
 ?>

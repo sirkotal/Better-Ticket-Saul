@@ -16,7 +16,7 @@
       }
 
       // get user by id
-      if ($parts[3]) {
+      if (isset($parts[3])) {
         $id = $parts[3];
 
         if (!is_numeric($id)) {
@@ -31,30 +31,7 @@
 
         $user = User::getUserById((int) $id);
 
-        $isAgent = false;
-        if (User::isAdmin($user->getId())) {
-          $isAgent = true;
-          $role = 'admin';
-        } else if (User::isAgent($user->getId())) {
-          $isAgent = true;
-          $role = 'agent';
-        } else {
-          $role = 'client';
-        }
-
-        $body = [
-          'id' => $user->getId(),
-          'username' => $user->getUsername(),
-          'name' => $user->getName(),
-          'email' => $user->getEmail(),
-          'role' => $role
-        ];
-
-        if ($isAgent) {
-          $body['departments'] = $user->getDepartments();
-        }
-
-        API::sendGetResponse(HttpStatus::OK, $body);
+        API::sendGetResponse(HttpStatus::OK, $user->parseJsonInfo());
         return;
       }
 
@@ -62,24 +39,7 @@
       $body = [];
 
       foreach ($users as $user) {
-        $body[] = [
-          'id' => $user->getId(),
-          'username' => $user->getUsername(),
-          'name' => $user->getName(),
-          'email' => $user->getEmail(),
-        ];
-
-        if (User::isAdmin($user->getUsername())) {
-          $body[count($body) - 1]['role'] = 'admin';
-        } else if (User::isAgent($user->getUsername())) {
-          $body[count($body) - 1]['role'] = 'agent';
-        } else {
-          $body[count($body) - 1]['role'] = 'client';
-        }
-
-        if (User::isAgent($user->getUsername())) {
-          $body[count($body) - 1]['departments'] = $user->getDepartments();
-        }
+        $body[] = $user->parseJsonInfo();
       }
       
       API::sendGetResponse(HttpStatus::OK, $body);

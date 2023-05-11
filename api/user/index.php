@@ -24,18 +24,18 @@
           return;
         }
 
-        try {
-          $user = User::getUserById((int) $id);
-        } catch (Exception $e) {
+        if (User::exists((int) $id) === false) {
           API::sendError(HttpStatus::NOT_FOUND, 'User not found');
           return;
         }
 
+        $user = User::getUserById((int) $id);
+
         $isAgent = false;
-        if (User::isAdmin($user->getUsername())) {
+        if (User::isAdmin($user->getId())) {
           $isAgent = true;
           $role = 'admin';
-        } else if (User::isAgent($user->getUsername())) {
+        } else if (User::isAgent($user->getId())) {
           $isAgent = true;
           $role = 'agent';
         } else {

@@ -40,30 +40,42 @@
      * Add a hashtag
      * 
      * @param string $hashtag The hashtag
+     * @return array Added hashtag
      */
-    public function addHashtag(string $hashtag): void {
+    public function addHashtag(string $hashtag): array {
       $db = getDatabaseConnection();
 
       $stmt = $db->prepare('INSERT INTO Hashtag (hashtag) VALUES (:hashtag)');
       $stmt->bindValue(':hashtag', $hashtag);
       $stmt->execute();
 
-      $this->hashtags[$db->lastInsertId()] = $hashtag;
+      $id = $db->lastInsertId();
+      $this->hashtags[$id] = $hashtag;
+
+      return [
+        $id => $hashtag
+      ];
     }
 
     /**
      * Remove a hashtag
      * 
      * @param int $id The hashtag id
+     * @return array Removed hashtag
      */
-    public function removeHashtag(int $id): void {
+    public function removeHashtag(int $id): array {
       $db = getDatabaseConnection();
 
       $stmt = $db->prepare('DELETE FROM Hashtag WHERE id = :id');
       $stmt->bindValue(':id', $id);
       $stmt->execute();
 
+      $info = [
+        $id => $this->hashtags[$id]
+      ];
       unset($this->hashtags[$id]);
+
+      return $info;
     }
 
     /**

@@ -53,8 +53,9 @@
      * 
      * @param string $question The question
      * @param string $anwser The answer
+     * @return array The added question
      */
-    public function addQuestion(string $question, string $anwser): void {
+    public function addQuestion(string $question, string $anwser): array {
       $db = getDatabaseConnection();
 
       $stmt = $db->prepare('INSERT INTO Faq (question, answer) VALUES (:question, :answer)');
@@ -62,11 +63,15 @@
       $stmt->bindValue(':answer', $anwser);
       $stmt->execute();
 
-      $this->questions[] = [
+      $question = [
         'id' => $db->lastInsertId(),
         'question' => $question,
         'answer' => $anwser
       ];
+
+      $this->questions[] = $question;
+
+      return $question;
     }
 
     /**

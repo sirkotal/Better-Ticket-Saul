@@ -38,8 +38,9 @@
      * @param Ticket $ticket The ticket to reply to.
      * @param Agent $agent The agent that replied.
      * @param Department $department The department of the agent.
+     * @return TicketReply The created ticket reply.
      */
-    public static function create(string $reply, Ticket $ticket, Agent $agent, Department $department): void {
+    public static function create(string $reply, Ticket $ticket, Agent $agent, Department $department): TicketReply {
       $db = getDatabaseConnection();
 
       $stmt = $db->prepare('INSERT INTO TicketReply (reply, date, ticketId, agentId, departmentId) VALUES (:reply, :date, :ticket, :agent, :department)');
@@ -49,19 +50,34 @@
       $stmt->bindValue(':agent', $agent->getId());
       $stmt->bindValue(':department', $department->getId());
       $stmt->execute();
+
+      return new TicketReply((int) $db->lastInsertId());
     }
 
     /**
      * Deletes a ticket reply.
      * 
      * @param int $id The reply's id.
+     * @return array The deleted ticket reply info.
      */
-    public static function delete(int $id): void {
+    public static function delete(int $id): array {
+      $ticketReply = new TicketReply($id);
+      $info = [
+        'id' => $ticketReply->getId(),
+        'reply' => $ticketReply->getReply(),
+        'date' => $ticketReply->getDate(),
+        'ticketId' => $ticketReply->getTicket()->getId(),
+        'agentId' => $ticketReply->getAgent()->getId(),
+        'departmentId' => $ticketReply->getDepartment()->getId()
+      ];
+
       $db = getDatabaseConnection();
 
       $stmt = $db->prepare('DELETE FROM TicketReply WHERE id = :id');
       $stmt->bindParam(':id', $id);
       $stmt->execute();
+
+      return $info;
     }
 
     /**

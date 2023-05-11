@@ -34,14 +34,19 @@
     /**
      * Check if a user exists (finds a user with the given username)
      * 
-     * @param string $username The user username
+     * @param string|int $key The username or id
      * @return bool true if the user exists, false otherwise
      */
-    public static function exists(string $username): bool {
+    public static function exists(string|int $key): bool {
       $db = getDatabaseConnection();
 
-      $stmt = $db->prepare('SELECT * FROM User WHERE username = :username');
-      $stmt->bindValue(':username', $username);
+      if (is_int($key)) {
+        $stmt = $db->prepare('SELECT * FROM User WHERE id = :id');
+        $stmt->bindValue(':id', $key);
+      } else {
+        $stmt = $db->prepare('SELECT * FROM User WHERE username = :username');
+        $stmt->bindValue(':username', $key);
+      }
       $stmt->execute();
 
       $result = $stmt->fetch();
@@ -99,8 +104,9 @@
      * @param string $name The user name
      * @param string $email The user email
      * @param string $password The user password
+     * @return User The created user
      */
-    public static function create(string $username, string $name, string $email, string $password): void {
+    public static function create(string $username, string $name, string $email, string $password): User {
       $db = getDatabaseConnection();
 
       $stmt = $db->prepare('INSERT INTO User (username, name, email, password) VALUES (:username, :name, :email, :password)');
@@ -113,9 +119,57 @@
       $stmt->bindValue(':password', $sha1_password);
       $stmt->execute();
 
-      $stmt = $db->prepare('INSERT INTO Client (username) VALUES (:username)');
-      $stmt->bindValue(':username', $username);
+      $userId = (int) $db->lastInsertId();
+
+      $stmt = $db->prepare('INSERT INTO Client (userId) VALUES (:userId)');
+      $stmt->bindValue(':userId', $userId);
       $stmt->execute();
+
+      return User::getUserById($userId);
+    }
+
+    /**
+     * Delete a user from the database
+     * 
+     * @param int $userId The user id
+     * @return array The deleted user info
+     */
+    public static function delete(int $userId): array {
+      if (!User::exists($userId)) {
+        throw new Exception('User not found');
+      }
+
+      $role = 'client';
+      $isAgent = false;
+      if (User::isAdmin($userId)) {
+        $isAgent = true;
+        $role = 'admin';
+      } else if (User::isAgent($userId)) {
+        $isAgent = true;
+        $role = 'agent';
+      }
+
+      $user = User::getUserById($userId);
+
+      $info = [
+        'id' => $user->getId(),
+        'username' => $user->getUsername(),
+        'name' => $user->getName(),
+        'email' => $user->getEmail(),
+        'role' => $role,
+      ];
+
+      if ($isAgent) {
+        $info[count($info) - 1]['departments'] = $user->getDepartments();
+      }
+      
+      $db = getDatabaseConnection();
+
+      $stmt = $db->prepare('DELETE FROM User WHERE id = :userId');
+      $stmt->bindValue(':userId', $userId);
+      $stmt->execute();
+
+      return $info;
     }
 
     /**
@@ -126,19 +180,13 @@
     public static function getAllUsers(): array {
       $db = getDatabaseConnection();
 
-      $stmt = $db->prepare('SELECT * FROM User');
+      $stmt = $db->prepare('SELECT id FROM User');
       $stmt->execute();
 
       $result = $stmt->fetchAll();
 
       return array_map(function($row) {
-        if (User::isAgent($row['username'])) {
-          return new Agent($row['username']);
-        } else if (User::isAdmin($row['username'])) {
-          return new Admin($row['username']);
-        } else {
-          return new Client($row['username']);
-        }
+        return User::getUserById((int) $row['id']);
       }, $result);
     }
 
@@ -161,12 +209,12 @@
         throw new Exception('User not found');
       }
 
-      if (User::isAdmin($result['username'])) {
-        return new Admin($result['username']);
-      } else if (User::isAgent($result['username'])) {
-        return new Agent($result['username']);
+      if (User::isAdmin($result['id'])) {
+        return new Admin($result['id']);
+      } else if (User::isAgent($result['id'])) {
+        return new Agent($result['id']);
       } else {
-        return new Client($result['username']);
+        return new Client($result['id']);
       }
     }
 

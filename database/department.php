@@ -84,17 +84,28 @@
      * Delete a department
      * 
      * @param int $id The department id
+     * @return array The deleted department info
      */
-    public static function delete(int $id): void {
+    public static function delete(int $id): array {
       if (!Department::exists($id)) {
         throw new Exception('Department does not exist');
       }
+
+      $department = new Department($id);
+
+      $info = [
+        'id' => $department->getId(),
+        'name' => $department->getName(),
+        'agents' => $department->getAgents()
+      ];
 
       $db = getDatabaseConnection();
 
       $stmt = $db->prepare('DELETE FROM Department WHERE id = :id');
       $stmt->bindValue(':id', $id);
       $stmt->execute();
+
+      return $info;
     }
 
     /**

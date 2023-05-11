@@ -111,8 +111,9 @@
      * @param Client $client The ticket's client.
      * @param array $ticket_hashtags The ticket's hashtags.
      * @param Department $department The ticket's department. (optional)
+     * @return Ticket The created ticket.
      */
-    public static function create(string $title, string $text, Client $client, array $ticket_hashtags, Department $department = null): void {
+    public static function create(string $title, string $text, Client $client, array $ticket_hashtags, Department $department = null): Ticket {
       $db = getDatabaseConnection();
 
       $client_id = $client->getId();
@@ -127,7 +128,7 @@
       $stmt->bindParam(':clientId', $client_id);
       $stmt->execute();
 
-      $ticket_id = $db->lastInsertId();
+      $ticket_id = (int) $db->lastInsertId();
 
       if ($department !== null) {
         $department_name = $department->getName();
@@ -153,19 +154,51 @@
           $stmt->execute();
         }
       }
+
+      return new Ticket($ticket_id);
     }
 
     /**
      * Delete the ticket.
      * 
      * @param int $id The ticket's id.
+     * @return array The deleted ticket info.
      */
-    public static function delete(int $id): void {
+    public static function delete(int $id): array {
+      $ticket = new Ticket($id);
+
+      $repliesIds = [];
+      foreach ($ticket->getReplies() as $reply) {
+        $repliesIds[] = $reply->getId();
+      }
+
+      $logsIds = [];
+      foreach ($ticket->getLogs() as $log) {
+        $logsIds[] = $log->getId();
+      }
+
+      $info = [
+        'id' => $ticket->getId(),
+        'title' => $ticket->getTitle(),
+        'text' => $ticket->getText(),
+        'date' => $ticket->getDate(),
+        'status' => $ticket->getStatus(),
+        'priority' => $ticket->getPriority(),
+        'clientId' => $ticket->getClient()->getId(),
+        'agentId' => $ticket->getAgent()->getId(),
+        'departmentId' => $ticket->getDepartment()->getId(),
+        'hashtags' => $ticket->getHashtags(),
+        'repliesIds' => $repliesIds,
+        'logsIds' => $logsIds
+      ];
+      
       $db = getDatabaseConnection();
 
       $stmt = $db->prepare('DELETE FROM Ticket WHERE ticketId = :id');
       $stmt->bindParam(':id', $id);
       $stmt->execute();
+
+      return $info;
     }
 
     /**

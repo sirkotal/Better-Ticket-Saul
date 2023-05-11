@@ -40,8 +40,9 @@
      * @param Ticket $ticket The ticket that was changed.
      * @param Agent $agent The agent that made the change.
      * @param Department $department The department of the agent.
+     * @return TicketLog The created ticket log.
      */
-    public static function create(string $change, Ticket $ticket, Agent $agent, Department $department): void {
+    public static function create(string $change, Ticket $ticket, Agent $agent, Department $department): TicketLog {
       $db = getDatabaseConnection();
 
       $stmt = $db->prepare('INSERT INTO TicketLog (change, date, ticketId, agentId, departmentId) VALUES (:change, :date, :idTicket, :agent, :department)');
@@ -51,19 +52,34 @@
       $stmt->bindValue(':agent', $agent->getId());
       $stmt->bindValue(':department', $department->getId());
       $stmt->execute();
+
+      return new TicketLog((int) $db->lastInsertId());
     }
 
     /**
      * Deletes a ticket log.
      * 
      * @param int $id The log's id.
+     * @return array The deleted log info.
      */
-    public static function delete(int $id): void {
+    public static function delete(int $id): array {
+      $ticketLog = new TicketLog($id);
+      $info = [
+        'id' => $id,
+        'change' => $ticketLog->getChange(),
+        'date' => $ticketLog->getDate(),
+        'ticketId' => $ticketLog->getTicket()->getId(),
+        'agentId' => $ticketLog->getAgent()->getId(),
+        'departmentId' => $ticketLog->getDepartment()->getId()
+      ];
+      
       $db = getDatabaseConnection();
 
       $stmt = $db->prepare('DELETE FROM TicketLog WHERE id = :id');
       $stmt->bindParam(':id', $id);
       $stmt->execute();
+
+      return $info;
     }
 
     /**

@@ -138,31 +138,45 @@
         throw new Exception('User not found');
       }
 
-      $role = 'client';
-      $isAgent = false;
-      if (User::isAdmin($userId)) {
-        $isAgent = true;
-        $role = 'admin';
-      } else if (User::isAgent($userId)) {
-        $isAgent = true;
-        $role = 'agent';
-      }
-
-      $user = User::getUserById($userId);
-
-      $info = [
-        'id' => $user->getId(),
-        'username' => $user->getUsername(),
-        'name' => $user->getName(),
-        'email' => $user->getEmail(),
-        'role' => $role,
-      ];
-
-      if ($isAgent) {
-        $info[count($info) - 1]['departments'] = $user->getDepartments();
-      }
+      $info = User::getUserById($userId)->parseJsonInfo();
       
       $db = getDatabaseConnection();
+
+      if (User::isAdmin($userId)) {
+        $stmt = $db->prepare('DELETE FROM Admin WHERE userId = :userId');
+        $stmt->bindValue(':userId', $userId, PDO::PARAM_INT);
+        $stmt->execute();
+      }
+
+      if (User::isAgent($userId)) {
+        $stmt = $db->prepare('DELETE FROM Agent WHERE userId = :userId');
+        $stmt->bindValue(':userId', $userId, PDO::PARAM_INT);
+        $stmt->execute();
+
+        $stmt = $db->prepare('DELETE FROM AgentDepartment WHERE agentId = :userId');
+        $stmt->bindValue(':userId', $userId, PDO::PARAM_INT);
+        $stmt->execute();
+
+        $stmt = $db->prepare('UPDATE Ticket SET agentId = NULL WHERE agentId = :userId');
+        $stmt->bindValue(':userId', $userId, PDO::PARAM_INT);
+        $stmt->execute();
+
+        $stmt = $db->prepare('UPDATE TicketReply SET agentId = NULL WHERE agentId = :userId');
+        $stmt->bindValue(':userId', $userId, PDO::PARAM_INT);
+        $stmt->execute();
+
+        $stmt = $db->prepare('UPDATE TicketLog SET agentId = NULL WHERE agentId = :userId');
+        $stmt->bindValue(':userId', $userId, PDO::PARAM_INT);
+        $stmt->execute();
+      }
+
+      $stmt = $db->prepare('DELETE FROM Client WHERE userId = :userId');
+      $stmt->bindValue(':userId', $userId, PDO::PARAM_INT);
+      $stmt->execute();
+
+      $stmt = $db->prepare('UPDATE Ticket SET clientId = NULL WHERE clientId = :userId');
+      $stmt->bindValue(':userId', $userId, PDO::PARAM_INT);
+      $stmt->execute();
 
       $stmt = $db->prepare('DELETE FROM User WHERE id = :userId');
       $stmt->bindValue(':userId', $userId, PDO::PARAM_INT);

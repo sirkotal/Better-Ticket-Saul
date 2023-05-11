@@ -16,19 +16,19 @@ CREATE TABLE User (
     username VARCHAR(25),
     name VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,
-    password VARCHAR(255) NOT NULL UNIQUE
+    password VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE Client (
-    userId REFERENCES User(id) ON DELETE CASCADE
+    userId REFERENCES User(id)
 );
 
 CREATE TABLE Agent (
-    userId REFERENCES Client(id) ON DELETE CASCADE
+    userId REFERENCES Client(id)
 );
 
 CREATE TABLE Admin (
-    userId REFERENCES Agent(id) ON DELETE CASCADE
+    userId REFERENCES Agent(id)
 );
 
 CREATE TABLE Department (
@@ -38,8 +38,8 @@ CREATE TABLE Department (
 
 CREATE TABLE AgentDepartment (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    agentId REFERENCES Agent(userId) ON DELETE CASCADE,
-    departmentId REFERENCES Department(id) ON DELETE CASCADE
+    agentId REFERENCES Agent(userId),
+    departmentId REFERENCES Department(id)
 );
 
 CREATE TABLE Ticket (
@@ -49,9 +49,9 @@ CREATE TABLE Ticket (
     date INTEGER,
     status VARCHAR,
     priority VARCHAR,
-    clientId REFERENCES Client(userId) ON DELETE SET NULL,
-    agentId REFERENCES Agent(userId) ON DELETE SET NULL,
-    departmentId REFERENCES Department(id) ON DELETE SET NULL
+    clientId REFERENCES Client(userId),
+    agentId REFERENCES Agent(userId),
+    departmentId REFERENCES Department(id)
 );
 
 CREATE TABLE TicketReply (
@@ -59,18 +59,18 @@ CREATE TABLE TicketReply (
     reply VARCHAR,
     date INTEGER,
     -- attachment VARCHAR,
-    ticketId INTEGER REFERENCES Ticket(id) ON DELETE CASCADE,
-    agentId REFERENCES Agent(username) ON DELETE SET NULL,
-    departmentId REFERENCES Department(name) ON DELETE SET NULL
+    ticketId INTEGER REFERENCES Ticket(id),
+    agentId REFERENCES Agent(username),
+    departmentId REFERENCES Department(name)
 );
 
 CREATE TABLE TicketLog (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     change VARCHAR,
     date INTEGER,
-    ticketId REFERENCES Ticket(id) ON DELETE CASCADE,
-    agentId REFERENCES Agent(userId) ON DELETE SET NULL,
-    departmentId REFERENCES Department(id) ON DELETE SET NULL
+    ticketId REFERENCES Ticket(id),
+    agentId REFERENCES Agent(userId),
+    departmentId REFERENCES Department(id)
 );
 
 CREATE TABLE Hashtag (
@@ -79,8 +79,8 @@ CREATE TABLE Hashtag (
 );
 
 CREATE TABLE TicketHashtag (
-    hashtagId REFERENCES Hashtag(id) ON DELETE CASCADE,
-    ticketId REFERENCES Ticket(id) ON DELETE CASCADE
+    hashtagId REFERENCES Hashtag(id),
+    ticketId REFERENCES Ticket(id)
 );
 
 CREATE TABLE Faq (

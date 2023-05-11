@@ -49,7 +49,7 @@
       $user = User::create($data['username'], $data['name'], $data['email'], $data['password']);
       $session->setUser($data['username']);
 
-      API::sendPostResponse(HTTPStatus::CREATED, ['message' => 'User created successfully', 'body' => $user->parseJsonInfo()]);
+      API::sendResponse(HTTPStatus::CREATED, ['message' => 'User created successfully', 'body' => $user->parseJsonInfo()]);
       return;
     default:
       API::sendError(HttpStatus::METHOD_NOT_ALLOWED, 'Method not allowed');

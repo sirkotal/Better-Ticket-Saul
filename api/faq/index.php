@@ -31,7 +31,7 @@
           return;
         }
 
-        API::sendGetResponse(HttpStatus::OK, FAQ::parseJsonInfo((int) $parts[3]));
+        API::sendResponse(HttpStatus::OK, FAQ::parseJsonInfo((int) $parts[3]));
         return;
       }
 
@@ -45,7 +45,7 @@
         $body[] = FAQ::parseJsonInfo($index);
       }
 
-      API::sendGetResponse(HttpStatus::OK, $body);
+      API::sendResponse(HttpStatus::OK, $body);
       return;
     case RequestMethod::POST:
       $data = API::getJsonInput();
@@ -72,7 +72,7 @@
 
       $body = $faq->addQuestion($data['question'], $data['answer']);
 
-      API::sendPostResponse(HttpStatus::CREATED, ['message' => 'Question added to FAQ', 'body' => $body]);
+      API::sendResponse(HttpStatus::CREATED, ['message' => 'Question added to FAQ', 'body' => $body]);
       return;
     case RequestMethod::DELETE:
       $url = parse_url($_SERVER['REQUEST_URI']);
@@ -95,7 +95,7 @@
         return;
       }
 
-      API::sendDeleteResponse(HttpStatus::OK, [
+      API::sendResponse(HttpStatus::OK, [
         'message' => 'Question removed from FAQ',
         'body' => $body
       ]);

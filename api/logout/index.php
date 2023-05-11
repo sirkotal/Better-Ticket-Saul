@@ -8,13 +8,6 @@
 
   switch ($_SERVER['REQUEST_METHOD']) {
     case RequestMethod::POST:
-      $data = API::getJsonInput();
-
-      if (!empty($data)) {
-        API::sendError(HttpStatus::BAD_REQUEST, 'Too many fields');
-        return;
-      }
-
       $session = new Session();
       if (!$session->isLoggedIn()) {
         API::sendError(HttpStatus::FORBIDDEN, 'You are not logged in');
@@ -22,7 +15,7 @@
       }
 
       $session->logout();
-      API::sendPostResponse(HttpStatus::OK, ['message' => 'Logged out.']);
+      API::sendResponse(HttpStatus::OK, ['message' => 'Logged out.']);
       return;
     default:
       API::sendError(HttpStatus::METHOD_NOT_ALLOWED, 'Method not allowed');

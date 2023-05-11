@@ -15,9 +15,9 @@
     private int $date;
     private string $status;
     private string|null $priority;
-    private Client $client;
-    private Agent|null $agent = null;
-    private Department|null $department = null;
+    private Client|null $client;
+    private Agent|null $agent;
+    private Department|null $department;
     private array $hashtags = [];
     private array $replies = [];
     private array $logs = [];
@@ -41,15 +41,9 @@
       $this->date = $result['date'];
       $this->status = $result['status'];
       $this->priority = $result['priority'];
-      $this->client = new Client($result['clientId']);
-
-      if ($result['agentId'] !== null) {
-        $this->agent = new Agent($result['agentId']);
-      }
-
-      if ($result['departmentId'] !== null) {
-        $this->department = new Department($result['departmentId']);
-      }
+      $this->client = $result['clientId'] !== null ? new Client($result['clientId']) : null;
+      $this->agent = $result['agentId'] !== null ? new Agent($result['agentId']) : null;
+      $this->department = $result['departmentId'] !== null ? new Department($result['departmentId']) : null;
 
       $stmt = $db->prepare('SELECT * FROM TicketHashtag WHERE ticketId = :ticketId');
       $stmt->bindValue(':ticketId', $id, PDO::PARAM_INT);
@@ -166,6 +160,18 @@
       $stmt->bindValue(':id', $id, PDO::PARAM_INT);
       $stmt->execute();
 
+      $stmt = $db->prepare('DELETE FROM TicketReply WHERE ticketId = :ticketId');
+      $stmt->bindValue(':ticketId', $id, PDO::PARAM_INT);
+      $stmt->execute();
+
+      $stmt = $db->prepare('DELETE FROM TicketLog WHERE ticketId = :ticketId');
+      $stmt->bindValue(':ticketId', $id, PDO::PARAM_INT);
+      $stmt->execute();
+
+      $stmt = $db->prepare('DELETE FROM TicketHashtag WHERE ticketId = :ticketId');
+      $stmt->bindValue(':ticketId', $id, PDO::PARAM_INT);
+      $stmt->execute();
+
       return $info;
     }
 
@@ -192,7 +198,7 @@
         'date' => $this->date,
         'status' => $this->status,
         'priority' => $this->priority,
-        'clientId' => $this->client->getId(),
+        'clientId' => $this->client ? $this->client->getId() : null,
         'agentId' => $this->agent ? $this->agent->getId() : null,
         'departmentId' => $this->department ? $this->department->getId() : null,
         'hashtags' => $this->hashtags,

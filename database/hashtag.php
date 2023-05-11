@@ -70,6 +70,10 @@
       $stmt->bindValue(':id', $id, PDO::PARAM_INT);
       $stmt->execute();
 
+      $stmt = $db->prepare('DELETE FROM TicketHashtag WHERE hashtagId = :hashtagId');
+      $stmt->bindValue(':hashtagId', $id, PDO::PARAM_INT);
+      $stmt->execute();
+
       $info = [
         $id => $this->hashtags[$id]
       ];

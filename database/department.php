@@ -98,6 +98,23 @@
       $stmt->bindValue(':id', $id, PDO::PARAM_INT);
       $stmt->execute();
 
+      $stmt = $db->prepare('DELETE FROM AgentDepartment WHERE departmentId = :departmentId');
+      $stmt->bindValue(':departmentId', $id, PDO::PARAM_INT);
+      $stmt->execute();
+
+      $stmt = $db->prepare('UPDATE Ticket SET departmentId = NULL WHERE departmentId = :departmentId');
+      $stmt->bindValue(':departmentId', $id, PDO::PARAM_INT);
+      $stmt->execute();
+      //? should we also set the agent as null in the ticket?
+
+      $stmt = $db->prepare('UPDATE TicketReply SET departmentId = NULL WHERE departmentId = :departmentId');
+      $stmt->bindValue(':departmentId', $id, PDO::PARAM_INT);
+      $stmt->execute();
+
+      $stmt = $db->prepare('UPDATE TicketLog SET departmentId = NULL WHERE departmentId = :departmentId');
+      $stmt->bindValue(':departmentId', $id, PDO::PARAM_INT);
+      $stmt->execute();
+
       return $info;
     }
 

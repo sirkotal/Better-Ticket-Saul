@@ -13,19 +13,7 @@
   }
 
   class API {
-    static function sendGetResponse(int $status, array $body) {
-      http_response_code($status);
-      header('Content-Type: application/json');
-      echo json_encode($body);
-    }
-
-    static function sendPostResponse(int $status, array $body) {
-      http_response_code($status);
-      header('Content-Type: application/json');
-      echo json_encode($body);
-    }
-
-    static function sendDeleteResponse(int $status, array $body) {
+    static function sendResponse(int $status, array $body) {
       http_response_code($status);
       header('Content-Type: application/json');
       echo json_encode($body);

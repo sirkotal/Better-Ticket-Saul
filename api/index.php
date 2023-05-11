@@ -10,7 +10,7 @@
         'health' => 'ok'
       ];
 
-      API::sendGetResponse(HttpStatus::OK, $body);
+      API::sendResponse(HttpStatus::OK, $body);
       return;
     default:
       API::sendError(HttpStatus::METHOD_NOT_ALLOWED, 'Method not allowed');

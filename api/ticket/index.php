@@ -31,7 +31,7 @@
           return;
         }
 
-        API::sendGetResponse(HttpStatus::OK, $ticket->parseJsonInfo());
+        API::sendResponse(HttpStatus::OK, $ticket->parseJsonInfo());
         return;
       }
 
@@ -42,7 +42,7 @@
         $body[] = $ticket->parseJsonInfo();
       }
 
-      API::sendGetResponse(HttpStatus::OK, $body);
+      API::sendResponse(HttpStatus::OK, $body);
       return;
     case RequestMethod::POST:
       $session = new Session();
@@ -101,7 +101,33 @@
 
       $ticket = Ticket::create($data['title'], $data['text'], new Client($data['client']), $hashtags, $department);
 
-      API::sendPostResponse(HttpStatus::CREATED, ['message' => 'Ticket created', 'body' => $ticket->parseJsonInfo()]);
+      API::sendResponse(HttpStatus::CREATED, ['message' => 'Ticket created', 'body' => $ticket->parseJsonInfo()]);
+      return;
+    case RequestMethod::DELETE:
+      $url = parse_url($_SERVER['REQUEST_URI']);
+      $parts = explode('/', $url['path']);
+
+      if (count($parts) != 4) {
+        API::sendError(HttpStatus::BAD_REQUEST, 'Endpoint not found');
+        return;
+      }
+
+      if (!is_numeric($parts[3])) {
+        API::sendError(HttpStatus::BAD_REQUEST, 'Invalid field types');
+        return;
+      }
+
+      try {
+        $body = Ticket::delete((int) $parts[3]);
+      } catch (Exception $e) {
+        API::sendError(HttpStatus::NOT_FOUND, 'Ticket not found');
+        return;
+      }
+
+      API::sendResponse(HttpStatus::OK, [
+        'message' => 'Ticket deleted successfully',
+        'body' => $body
+      ]);
       return;
     default:
       API::sendError(HttpStatus::METHOD_NOT_ALLOWED, 'Method not allowed');

@@ -4,6 +4,8 @@
     --font-serif: 'Lora', 'Times New Roman', Times, serif;
     --font-sans: Arial, Helvetica, sans-serif;
     --font-title: 'Poppins', Arial, Helvetica, sans-serif;
+    --border-color: #d5d8da;
+    --background-color: #edeff0;
 }
 
 * {
@@ -14,10 +16,10 @@
 }
 
 #tickets > h1{
-    background-color: #edeff0;
-    border: 0.1rem solid #d5d8da;
-    border-top-left-radius: 15px;
-    border-top-right-radius: 15px;
+    background-color: var(--background-color);
+    border: 0.1rem solid var(--border-color);
+    border-top-left-radius: 0.938rem;
+    border-top-right-radius: 0.938rem;
     width: 70%;
     margin: 1rem auto auto auto;
     padding: 1rem;
@@ -29,7 +31,7 @@
 #tickets > .ticket {
     width: 70%;
     margin: auto;
-    border: 0.1rem solid #d5d8da;
+    border: 0.1rem solid var(--border-color);
     border-top: none;
     padding: 1rem;
     display: grid;
@@ -47,7 +49,7 @@
 }
 
 .ticket .status {
-    border-radius: 15px;
+    border-radius: 0.938rem;
     color: white;
     padding: 0.25rem 0.75rem 0.25rem 0.75rem;
     margin: 0.25rem 0.5rem 0.25rem 0.25rem;
@@ -85,8 +87,5 @@
 
 
 .ticket:hover {
-    background-color: #edeff0;
+    background-color: var(--background-color);
 }
-
-
-

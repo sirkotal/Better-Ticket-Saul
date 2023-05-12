@@ -11,12 +11,15 @@
       $session = new Session();
       if (!$session->isLoggedIn()) {
         API::sendError(HttpStatus::FORBIDDEN, 'You are not logged in');
-        return;
+        die();
       }
 
       $session->logout();
       API::sendResponse(HttpStatus::OK, ['message' => 'Logged out.']);
-      return;
+      die();
+    case RequestMethod::OPTIONS:
+      API::corsSetup(RequestMethod::POST, RequestMethod::OPTIONS);
+      die();
     default:
       API::sendError(HttpStatus::METHOD_NOT_ALLOWED, 'Method not allowed');
   }

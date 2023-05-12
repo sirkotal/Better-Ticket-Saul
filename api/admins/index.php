@@ -12,24 +12,24 @@
 
       if (count($parts) != 4) {
         API::sendError(HttpStatus::BAD_REQUEST, 'Endpoint not found');
-        return;
+        die();
       }
 
       if (!is_numeric($parts[3])) {
         API::sendError(HttpStatus::BAD_REQUEST, 'Invalid field types');
-        return;
+        die();
       }
 
       try {
         $user = User::getUserById((int) $parts[3]);
       } catch (Exception $e) {
         API::sendError(HttpStatus::NOT_FOUND, 'User not found');
-        return;
+        die();
       }
 
       if (User::isAdmin($user->getId())) {
         API::sendError(HttpStatus::BAD_REQUEST, 'User is already an admin');
-        return;
+        die();
       }
 
       $user = User::makeAdmin($user->getId());
@@ -38,31 +38,31 @@
         'message' => 'User is now an admin',
         'body' => $user->parseJsonInfo()
       ]);
-      return;
+      die();
     case RequestMethod::DELETE:
       $url = parse_url($_SERVER['REQUEST_URI']);
       $parts = explode('/', $url['path']);
 
       if (count($parts) != 4) {
         API::sendError(HttpStatus::BAD_REQUEST, 'Endpoint not found');
-        return;
+        die();
       }
 
       if (!is_numeric($parts[3])) {
         API::sendError(HttpStatus::BAD_REQUEST, 'Invalid field types');
-        return;
+        die();
       }
 
       try {
         $user = User::getUserById((int) $parts[3]);
       } catch (Exception $e) {
         API::sendError(HttpStatus::NOT_FOUND, 'User not found');
-        return;
+        die();
       }
 
       if (!User::isAdmin($user->getId())) {
         API::sendError(HttpStatus::BAD_REQUEST, 'User is not an admin');
-        return;
+        die();
       }
 
       $user = User::demoteAdmin($user->getId());
@@ -71,9 +71,12 @@
         'message' => 'User is no longer an admin',
         'body' => $user->parseJsonInfo()
       ]);
-      return;
+      die();
+    case RequestMethod::OPTIONS:
+      API::corsSetup(RequestMethod::POST, RequestMethod::DELETE, RequestMethod::OPTIONS);
+      die();
     default:
       API::sendError(HttpStatus::METHOD_NOT_ALLOWED, 'Method not allowed');
-      return;
+      die();
   }
 ?>

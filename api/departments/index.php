@@ -12,20 +12,20 @@
 
       if (count($parts) > 4) {
         API::sendError(HttpStatus::BAD_REQUEST, 'Endpoint not found');
-        return;
+        die();
       }
 
       // get department by id
       if (isset($parts[3])) {
         if (!is_numeric($parts[3])) {
           API::sendError(HttpStatus::BAD_REQUEST, 'Invalid field types');
-          return;
+          die();
         }
 
         $department = new Department((int) $parts[3]);
 
         API::sendResponse(HttpStatus::OK, Department::parseJsonInfo($department));
-        return;
+        die();
       }
 
       $departments = Department::getAllDepartments();
@@ -36,25 +36,25 @@
       }
 
       API::sendResponse(HttpStatus::OK, $body);
-      return;
+      die();
     case RequestMethod::POST:
       $data = API::getJsonInput();
 
       if (!array_key_exists('name', $data)) {
         API::sendError(HttpStatus::BAD_REQUEST, 'Missing required field');
-        return;
+        die();
       }
 
       if (count($data) > 1) {
         API::sendError(HttpStatus::BAD_REQUEST, 'Too many fields');
-        return;
+        die();
       }
 
       $name = $data['name'];
 
       if (Department::exists($name)) {
         API::sendError(HttpStatus::BAD_REQUEST, 'Department already exists');
-        return;
+        die();
       }
 
       $department = Department::create($name);
@@ -64,90 +64,93 @@
         'message' => 'Department created successfully',
         'body' => $body
       ]);
-      return;
+      die();
     case RequestMethod::PUT:
       $url = parse_url($_SERVER['REQUEST_URI']);
       $parts = explode('/', $url['path']);
 
       if (isset($parts[3]) && !is_numeric($parts[3])) {
         API::sendError(HttpStatus::BAD_REQUEST, 'Invalid field types');
-        return;
+        die();
       }
 
       if (count($parts) != 4) {
         API::sendError(HttpStatus::BAD_REQUEST, 'Endpoint not found');
-        return;
+        die();
       }
 
       try {
         $department = new Department((int) $parts[3]);
       } catch (Exception $e) {
         API::sendError(HttpStatus::NOT_FOUND, 'Department not found');
-        return;
+        die();
       }
       
       $data = API::getJsonInput();
 
       if (empty($data)) {
         API::sendError(HttpStatus::BAD_REQUEST, 'Body is empty');
-        return;
+        die();
       }
 
       if (!array_key_exists('name', $data)) {
         API::sendError(HttpStatus::BAD_REQUEST, 'Missing required field');
-        return;
+        die();
       }
 
       if (gettype($data['name']) != 'string') {
         API::sendError(HttpStatus::BAD_REQUEST, 'Invalid field types');
-        return;
+        die();
       }
 
       if (count($data) > 1) {
         API::sendError(HttpStatus::BAD_REQUEST, 'Too many fields');
-        return;
+        die();
       }
 
       try {
         $department->update($data['name']);
       } catch (Exception $e) {
         API::sendError(HttpStatus::BAD_REQUEST, 'Department already exists');
-        return;
+        die();
       }
 
       API::sendResponse(HttpStatus::OK, [
         'message' => 'Department updated successfully',
         'body' => Department::parseJsonInfo($department)
       ]);
-      return;
+      die();
     case RequestMethod::DELETE:
       $url = parse_url($_SERVER['REQUEST_URI']);
       $parts = explode('/', $url['path']);
 
       if (count($parts) != 4) {
         API::sendError(HttpStatus::BAD_REQUEST, 'Endpoint not found');
-        return;
+        die();
       }
 
       if (!is_numeric($parts[3])) {
         API::sendError(HttpStatus::BAD_REQUEST, 'Invalid field types');
-        return;
+        die();
       }
 
       try {
         $body = Department::delete((int) $parts[3]);
       } catch (Exception $e) {
         API::sendError(HttpStatus::NOT_FOUND, 'Department not found');
-        return;
+        die();
       }
 
       API::sendResponse(HttpStatus::OK, [
         'message' => 'Department deleted successfully',
         'body' => $body
       ]);
-      return;
+      die();
+    case RequestMethod::OPTIONS:
+      API::corsSetup(RequestMethod::GET, RequestMethod::POST, RequestMethod::PUT, RequestMethod::DELETE, RequestMethod::OPTIONS);
+      die();
     default:
       API::sendError(HttpStatus::METHOD_NOT_ALLOWED, 'Method not allowed');
-      return;
+      die();
   }
 ?>

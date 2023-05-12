@@ -12,12 +12,12 @@
 
       if (count($parts) > 4) {
         API::sendError(HttpStatus::BAD_REQUEST, 'Endpoint not found');
-        return;
+        die();
       }
 
       if (isset($parts[3]) && !is_numeric($parts[3])) {
         API::sendError(HttpStatus::BAD_REQUEST, 'Invalid field types');
-        return;
+        die();
       }
       
       $hashtagDb = new Hashtag();
@@ -25,7 +25,7 @@
       // get replies by id
       if (isset($parts[3])) {
         API::sendResponse(HttpStatus::OK, $hashtagDb->parseJsonInfo((int) $parts[3]));
-        return;
+        die();
       }
 
       $body = [];
@@ -34,35 +34,35 @@
       }
 
       API::sendResponse(HttpStatus::OK, $body);
-      return;
+      die();
     case RequestMethod::POST:
       $data = API::getJsonInput();
 
       if (empty($data)) {
         API::sendError(HttpStatus::BAD_REQUEST, 'JSON body is empty');
-        return;
+        die();
       }
 
       if (!array_key_exists('hashtag', $data)) {
         API::sendError(HttpStatus::BAD_REQUEST, 'Invalid field types');
-        return;
+        die();
       }
 
       if (gettype($data['hashtag']) !== 'string') {
         API::sendError(HttpStatus::BAD_REQUEST, 'Invalid field types');
-        return;
+        die();
       }
 
       if (array_diff_key($data, array_flip(['hashtag']))) {
         API::sendError(HttpStatus::BAD_REQUEST, 'Too many fields');
-        return;
+        die();
       }
 
       $hashtagDb = new Hashtag();
 
       if (Hashtag::exists($data['hashtag'])) {
         API::sendError(HttpStatus::BAD_REQUEST, 'Hashtag already exists');
-        return;
+        die();
       }
 
       $body = $hashtagDb->addHashtag($data['hashtag']);
@@ -71,46 +71,46 @@
         'message' => 'Hashtag created',
         'body' => $body
       ]);
-      return;
+      die();
     case RequestMethod::PUT:
       $url = parse_url($_SERVER['REQUEST_URI']);
       $parts = explode('/', $url['path']);
 
       if (count($parts) != 4) {
         API::sendError(HttpStatus::BAD_REQUEST, 'Endpoint not found');
-        return;
+        die();
       }
 
       if (!is_numeric($parts[3])) {
         API::sendError(HttpStatus::BAD_REQUEST, 'Invalid field types');
-        return;
+        die();
       }
       
       $data = API::getJsonInput();
 
       if (empty($data)) {
         API::sendError(HttpStatus::BAD_REQUEST, 'JSON body is empty');
-        return;
+        die();
       }
 
       if (!array_key_exists('hashtag', $data)) {
         API::sendError(HttpStatus::BAD_REQUEST, 'Invalid field types');
-        return;
+        die();
       }
 
       if (gettype($data['hashtag']) !== 'string') {
         API::sendError(HttpStatus::BAD_REQUEST, 'Invalid field types');
-        return;
+        die();
       }
 
       if (array_diff_key($data, array_flip(['hashtag']))) {
         API::sendError(HttpStatus::BAD_REQUEST, 'Too many fields');
-        return;
+        die();
       }
 
       if (!Hashtag::exists((int) $parts[3])) {
         API::sendError(HttpStatus::NOT_FOUND, 'Hashtag not found');
-        return;
+        die();
       }
 
       $hashtagDb = new Hashtag();
@@ -120,19 +120,19 @@
         'message' => 'Hashtag updated',
         'body' => $body
       ]);
-      return;
+      die();
     case RequestMethod::DELETE:
       $url = parse_url($_SERVER['REQUEST_URI']);
       $parts = explode('/', $url['path']);
 
       if (count($parts) != 4) {
         API::sendError(HttpStatus::BAD_REQUEST, 'Endpoint not found');
-        return;
+        die();
       }
 
       if (!is_numeric($parts[3])) {
         API::sendError(HttpStatus::BAD_REQUEST, 'Invalid field types');
-        return;
+        die();
       }
 
       $hashtagDb = new Hashtag();
@@ -142,9 +142,12 @@
         'message' => 'Hashtag deleted',
         'body' => $body
       ]);
-      return;
+      die();
+    case RequestMethod::OPTIONS:
+      API::corsSetup(RequestMethod::GET, RequestMethod::POST, RequestMethod::PUT, RequestMethod::DELETE, RequestMethod::OPTIONS);
+      die();
     default:
       API::sendError(HttpStatus::METHOD_NOT_ALLOWED, 'Method not allowed');
-      return;
+      die();
   }
 ?>

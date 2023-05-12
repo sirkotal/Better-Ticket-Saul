@@ -11,24 +11,24 @@
       $session = new Session();
       if ($session->isLoggedIn()) {
         API::sendError(HttpStatus::FORBIDDEN, 'You are already logged in');
-        return;
+        die();
       }
 
       $data = API::getJsonInput();
 
       if (!array_key_exists('username', $data) || !array_key_exists('password', $data)) {
         API::sendError(HttpStatus::BAD_REQUEST, 'Missing required fields');
-        return;
+        die();
       }
 
       if (gettype($data['username']) != 'string' || gettype($data['password']) != 'string') {
         API::sendError(HttpStatus::BAD_REQUEST, 'Invalid field types');
-        return;
+        die();
       }
 
       if (count($data) > 2) {
         API::sendError(HttpStatus::BAD_REQUEST, 'Too many fields');
-        return;
+        die();
       }
 
       if (User::isValid($data['username'], $data['password'])) {
@@ -37,7 +37,10 @@
       } else {
         API::sendError(HttpStatus::UNAUTHORIZED, 'Invalid username or password');
       }
-      return;
+      die();
+    case RequestMethod::OPTIONS:
+      API::corsSetup(RequestMethod::POST, RequestMethod::OPTIONS);
+      die();
     default:
       API::sendError(HttpStatus::METHOD_NOT_ALLOWED, 'Method not allowed');
   }

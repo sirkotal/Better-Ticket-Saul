@@ -36,5 +36,11 @@
 
       return $json;
     }
+
+    static function corsSetup(string ...$methods) {
+      header('Access-Control-Allow-Origin: *');
+      header('Access-Control-Allow-Methods: ' . implode(', ', $methods));
+      header('Access-Control-Allow-Headers: Content-Type');
+    }
   }
 ?>

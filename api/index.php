@@ -11,7 +11,7 @@
 
       if (count($parts) > 2) {
         API::sendError(HttpStatus::BAD_REQUEST, 'Endpoint not found');
-        return;
+        die();
       }
 
       $body = [
@@ -19,7 +19,10 @@
       ];
 
       API::sendResponse(HttpStatus::OK, $body);
-      return;
+      die();
+    case RequestMethod::OPTIONS:
+      API::corsSetup(RequestMethod::GET, RequestMethod::OPTIONS);
+      die();
     default:
       API::sendError(HttpStatus::METHOD_NOT_ALLOWED, 'Method not allowed');
   }

@@ -13,12 +13,12 @@
 
       if (count($parts) > 4) {
         API::sendError(HttpStatus::BAD_REQUEST, 'Endpoint not found');
-        return;
+        die();
       }
 
       if (isset($parts[3]) && !is_numeric($parts[3])) {
         API::sendError(HttpStatus::BAD_REQUEST, 'Invalid field types');
-        return;
+        die();
       }
 
       // get replies by id
@@ -27,11 +27,11 @@
           $reply = new TicketReply((int) $parts[3]);
         } catch (Exception $e) {
           API::sendError(HttpStatus::NOT_FOUND, 'Ticket reply not found');
-          return;
+          die();
         }
 
         API::sendResponse(HttpStatus::OK, $reply->parseJsonInfo());
-        return;
+        die();
       }
 
       $body = [];
@@ -40,35 +40,35 @@
       }
 
       API::sendResponse(HttpStatus::OK, $body);
-      return;
+      die();
     case RequestMethod::POST:
       $data = API::getJsonInput();
 
       if (empty($data)) {
         API::sendError(HttpStatus::BAD_REQUEST, 'Body is empty');
-        return;
+        die();
       }
 
       if (!array_key_exists('reply', $data) || !array_key_exists('ticketId', $data)) {
         API::sendError(HttpStatus::BAD_REQUEST, 'Invalid field types');
-        return;
+        die();
       }
 
       if (gettype($data['reply']) !== 'string' || gettype($data['ticketId']) !== 'integer') {
         API::sendError(HttpStatus::BAD_REQUEST, 'Invalid field types');
-        return;
+        die();
       }
 
       if (count($data) > 2) {
         API::sendError(HttpStatus::BAD_REQUEST, 'Too many fields');
-        return;
+        die();
       }
 
       try {
         $ticket = new Ticket($data['ticketId']);
       } catch (Exception $e) {
         API::sendError(HttpStatus::NOT_FOUND, 'Ticket not found');
-        return;
+        die();
       }
 
       $reply = TicketReply::create($data['reply'], $ticket->getId(), $ticket->getAgent()->getId(), $ticket->getDepartment()->getId());
@@ -77,48 +77,48 @@
         'message' => 'Ticket reply created successfully',
         'body' => $reply->parseJsonInfo()
       ]);
-      return;
+      die();
     case RequestMethod::PUT:
       $url = parse_url($_SERVER['REQUEST_URI']);
       $parts = explode('/', $url['path']);
 
       if (!isset($parts[3]) || !is_numeric($parts[3])) {
         API::sendError(HttpStatus::BAD_REQUEST, 'Invalid field types');
-        return;
+        die();
       }
 
       if (count($parts) > 4) {
         API::sendError(HttpStatus::BAD_REQUEST, 'Endpoint not found');
-        return;
+        die();
       }
 
       try {
         $reply = new TicketReply((int) $parts[3]);
       } catch (Exception $e) {
         API::sendError(HttpStatus::NOT_FOUND, 'Ticket reply not found');
-        return;
+        die();
       }
 
       $data = API::getJsonInput();
 
       if (empty($data)) {
         API::sendError(HttpStatus::BAD_REQUEST, 'Body is empty');
-        return;
+        die();
       }
 
       if (!array_key_exists('reply', $data)) {
         API::sendError(HttpStatus::BAD_REQUEST, 'Missing required field');
-        return;
+        die();
       }
 
       if (gettype($data['reply']) !== 'string') {
         API::sendError(HttpStatus::BAD_REQUEST, 'Invalid field types');
-        return;
+        die();
       }
 
       if (count($data) > 1) {
         API::sendError(HttpStatus::BAD_REQUEST, 'Too many fields');
-        return;
+        die();
       }
 
       $reply->update($data['reply']);
@@ -127,19 +127,19 @@
         'message' => 'Ticket reply updated successfully',
         'body' => $reply->parseJsonInfo()
       ]);
-      return;
+      die();
     case RequestMethod::DELETE:
       $url = parse_url($_SERVER['REQUEST_URI']);
       $parts = explode('/', $url['path']);
 
       if (!isset($parts[3]) || !is_numeric($parts[3])) {
         API::sendError(HttpStatus::BAD_REQUEST, 'Invalid field types');
-        return;
+        die();
       }
 
       if (count($parts) > 4) {
         API::sendError(HttpStatus::BAD_REQUEST, 'Endpoint not found');
-        return;
+        die();
       }
 
       $body = TicketReply::delete((int) $parts[3]);
@@ -148,9 +148,12 @@
         'message' => 'Ticket reply deleted successfully',
         'body' => $body
       ]);
-      return;
+      die();
+    case RequestMethod::OPTIONS:
+      API::corsSetup(RequestMethod::GET, RequestMethod::POST, RequestMethod::PUT, RequestMethod::DELETE, RequestMethod::OPTIONS);
+      die();
     default:
       API::sendError(HttpStatus::METHOD_NOT_ALLOWED, 'Method not allowed');
-      return;
+      die();
   }
 ?>

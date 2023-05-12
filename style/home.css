@@ -1,18 +1,49 @@
-#saul {
-    display: block;
-    margin-left: 0;
-    margin-right: 0;
+.saul-container {
+    position: relative;
     width: 100%;
-    height: auto;
-    object-fit: contain;
+    height: 100vh;
+    background-image: url('/assets/boss1.jpg');
+    background-size: cover;
+    background-position: center;
+    transition: opacity 0.5s ease-in-out;
 }
-
-#saul:hover {
+  
+.saul-container:hover {
     cursor: pointer;
-    opacity: 0.6;
-    transition: 1s;
+    opacity: 0.8;
+}
+  
+.saul-container .saul-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: white;
+    font-size: 3rem;
+    font-weight: bold;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+}
+  
+.saul-container:hover .saul-text {
+    opacity: 1;
 }
 
-#saul-container > h2 {
-    position: absolute;
+#saul-title:after {
+    display: block;
+    content: '';
+    border-bottom: solid 0.5rem white;  
+    transform: scaleX(0);  
+    transition: transform 1s ease-in-out;
+    margin-left: 0.75rem; /* might not be needed? */
+}
+
+.saul-container:hover #saul-title:after {
+    transform: scaleX(1); 
+}
+
+.saul-text h2 {
+    white-space: nowrap;
+    margin-bottom: 2rem;
 }

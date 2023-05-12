@@ -9,14 +9,15 @@
   <?php outputHeader() ?>
   <!-- TODO: change what to on the index page -->
   <main>
-    <div id="saul-container">
-      <img src="/assets/boss.jpg" id = "saul" alt="Saul Goodman"/>
-      <h2>Welcome to our Trouble Ticket Management System</h2>
-      <p>
-        Our system allows you to submit and track trouble tickets related to technical issues, customer support,
-        or any other inquiries. Please use the links above to submit a ticket, view your tickets, check the FAQs,
-        or contact us for assistance.
-      </p>
+    <div class="saul-container">
+      <div class="saul-text">
+        <h2 id="saul-title">Welcome to Better Ticket Saul</h2>
+        <p id="saul-greeting">
+          Our system allows you to submit and track trouble tickets related to technical issues, customer support,
+          or any other inquiries. Please use the links above to submit a ticket, view your tickets, check the FAQs,
+          or contact us for assistance.
+        </p>
+      </div>
     </div>
     <section>
       <h3><a href="../tickets/create.html">Submit a Ticket</a></h3>

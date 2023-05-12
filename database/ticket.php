@@ -5,6 +5,8 @@
   require_once(__DIR__ . '/user.php');
   require_once(__DIR__ . '/department.php');
   require_once(__DIR__ . '/hashtag.php');
+  require_once(__DIR__ . '/ticket_reply.php');
+  require_once(__DIR__ . '/ticket_log.php');
 
   //? maybe change throws to something else
 
@@ -15,12 +17,12 @@
     private int $date;
     private string $status;
     private string|null $priority;
-    private Client|null $client;
-    private Agent|null $agent;
-    private Department|null $department;
-    private array $hashtags = [];
-    private array $replies = [];
-    private array $logs = [];
+    private int|null $clientId;
+    private int|null $agentId;
+    private int|null $departmentId;
+    private array $hashtagsIds = [];
+    private array $repliesIds = [];
+    private array $logsIds = [];
 
     public function __construct(int $id) {
       $db = getDatabaseConnection();
@@ -41,39 +43,38 @@
       $this->date = $result['date'];
       $this->status = $result['status'];
       $this->priority = $result['priority'];
-      $this->client = $result['clientId'] !== null ? new Client($result['clientId']) : null;
-      $this->agent = $result['agentId'] !== null ? new Agent($result['agentId']) : null;
-      $this->department = $result['departmentId'] !== null ? new Department($result['departmentId']) : null;
+      $this->clientId = (int) $result['clientId'];
+      $this->agentId = (int) $result['agentId'];
+      $this->departmentId = (int) $result['departmentId'];
 
-      $stmt = $db->prepare('SELECT * FROM TicketHashtag WHERE ticketId = :ticketId');
+      $stmt = $db->prepare('SELECT hashtagId FROM TicketHashtag WHERE ticketId = :ticketId');
       $stmt->bindValue(':ticketId', $id, PDO::PARAM_INT);
       $stmt->execute();
 
       $result = $stmt->fetchAll();
 
-      foreach ($result as $row) {
-        $hashtags = new Hashtag();
-        $this->hashtags[] = $hashtags->getHashtagById($row['hashtagId']);
-      }
-
-      $stmt = $db->prepare('SELECT * FROM TicketReply WHERE ticketId = :ticketId');
-      $stmt->bindValue(':ticketId', $id, PDO::PARAM_INT);
-      $stmt->execute();
-
-      $result = $stmt->fetchAll();
-
-      $this->replies = array_map(function ($row) {
-        return new TicketReply($row['id']);
+      $this->hashtagsIds = array_map(function ($row) {
+        return (int) $row['hashtagId'];
       }, $result);
 
-      $stmt = $db->prepare('SELECT * FROM TicketLog WHERE ticketId = :ticketId');
+      $stmt = $db->prepare('SELECT id FROM TicketReply WHERE ticketId = :ticketId');
       $stmt->bindValue(':ticketId', $id, PDO::PARAM_INT);
       $stmt->execute();
 
       $result = $stmt->fetchAll();
 
-      $this->logs = array_map(function ($row) {
-        return new TicketLog($row['id']);
+      $this->repliesIds = array_map(function ($row) {
+        return (int) $row['id'];
+      }, $result);
+
+      $stmt = $db->prepare('SELECT id FROM TicketLog WHERE ticketId = :ticketId');
+      $stmt->bindValue(':ticketId', $id, PDO::PARAM_INT);
+      $stmt->execute();
+
+      $result = $stmt->fetchAll();
+
+      $this->logsIds = array_map(function ($row) {
+        return (int) $row['id'];
       }, $result);
     }
 
@@ -100,12 +101,12 @@
      * 
      * @param string $title The ticket's title.
      * @param string $text The ticket's text.
-     * @param Client $client The ticket's client.
+     * @param int $client The ticket's client id.
      * @param array $ticket_hashtags The ticket's hashtags.
-     * @param Department $department The ticket's department. (optional)
+     * @param int|null $department The ticket's department id. (optional)
      * @return Ticket The created ticket.
      */
-    public static function create(string $title, string $text, Client $client, array $ticket_hashtags, Department $department = null): Ticket {
+    public static function create(string $title, string $text, int $clientId, array $ticket_hashtags, int|null $departmentId = null): Ticket {
       $db = getDatabaseConnection();
 
       $stmt = $db->prepare('INSERT INTO Ticket (title, text, date, status, clientId) VALUES (:title, :text, :date, :status, :clientId)');
@@ -113,14 +114,14 @@
       $stmt->bindValue(':text', $text);
       $stmt->bindValue(':date', time(), PDO::PARAM_INT);
       $stmt->bindValue(':status', 'Open');
-      $stmt->bindValue(':clientId', $client->getId(), PDO::PARAM_INT);
+      $stmt->bindValue(':clientId', $clientId, PDO::PARAM_INT);
       $stmt->execute();
 
       $ticket_id = (int) $db->lastInsertId();
 
-      if ($department !== null) {
+      if ($departmentId !== null) {
         $stmt = $db->prepare('UPDATE Ticket SET departmentId = :departmentId WHERE id = :id');
-        $stmt->bindValue(':departmentId', $department->getId(), PDO::PARAM_INT);
+        $stmt->bindValue(':departmentId', $departmentId, PDO::PARAM_INT);
         $stmt->bindValue(':id', $ticket_id, PDO::PARAM_INT);
         $stmt->execute();
       }
@@ -181,29 +182,19 @@
      * @return array The parsed user info.
      */
     public function parseJsonInfo(): array {
-      $repliesIds = [];
-      foreach ($this->replies as $reply) {
-        $repliesIds[] = $reply->getId();
-      }
-
-      $logsIds = [];
-      foreach ($this->logs as $log) {
-        $logsIds[] = $log->getId();
-      }
-
       return [
         'id' => $this->id,
         'title' => $this->title,
         'text' => $this->text,
         'date' => $this->date,
         'status' => $this->status,
-        'priority' => $this->priority,
-        'clientId' => $this->client ? $this->client->getId() : null,
-        'agentId' => $this->agent ? $this->agent->getId() : null,
-        'departmentId' => $this->department ? $this->department->getId() : null,
-        'hashtags' => $this->hashtags,
-        'repliesIds' => $repliesIds,
-        'logsIds' => $logsIds
+        'priority' => $this->priority ? $this->priority : null,
+        'clientId' => $this->clientId ? $this->clientId : null,
+        'agentId' => $this->agentId ? $this->agentId : null,
+        'departmentId' => $this->departmentId ? $this->departmentId : null,
+        'hashtags' => $this->getHashtags(),
+        'repliesIds' => $this->repliesIds,
+        'logsIds' => $this->logsIds
       ];
     }
 
@@ -213,15 +204,11 @@
      * @param Agent $agent The agent to assign.
      */
     public function assignAgent(Agent $agent): void {
-      if ($this->agent !== null) {
-        throw new Exception('The ticket already has an agent.');
-      }
-
-      if ($this->department === null) {
+      if ($this->departmentId === null) {
         throw new Exception('The ticket does not have a department.');
       }
 
-      if (!Department::isAgentFromDepartment($agent, $this->department)) {
+      if (!Department::isAgentFromDepartment($agent, new Department($this->departmentId))) {
         throw new Exception('The agent is not from the ticket\'s department.');
       }
 
@@ -234,7 +221,7 @@
       $stmt->bindValue(':id', $this->id, PDO::PARAM_INT);
       $stmt->execute();
 
-      $this->agent = $agent;
+      $this->agentId = $agent_id;
     }
 
     /**
@@ -243,12 +230,8 @@
      * @param Department $department The department to assign.
      */
     public function assignDepartment(Department $department): void {
-      if ($this->department !== null) {
-        throw new Exception('The ticket already has a department.');
-      }
-
-      if (!Department::isAgentFromDepartment($this->agent, $department)) {
-        throw new Exception('The agent is not from the ticket\'s department.');
+      if (!Department::isAgentFromDepartment(new Agent($this->agentId), $department)) {
+        throw new Exception('The agent is not from the desired department.');
       }
 
       $db = getDatabaseConnection();
@@ -260,7 +243,7 @@
       $stmt->bindValue(':id', $this->id, PDO::PARAM_INT);
       $stmt->execute();
 
-      $this->department = $department;
+      $this->departmentId = $department_id;
     }
 
     /**
@@ -275,7 +258,7 @@
       $stmt->bindValue(':id', $this->id, PDO::PARAM_INT);
       $stmt->execute();
 
-      $this->agent = null;
+      $this->agentId = null;
     }
 
     /**
@@ -290,7 +273,7 @@
       $stmt->bindValue(':id', $this->id, PDO::PARAM_INT);
       $stmt->execute();
 
-      $this->department = null;
+      $this->departmentId = null;
     }
 
     /**
@@ -327,7 +310,7 @@
       $hashtags = $hashtags->getHashtags();
       $hashtag_id = array_search($hashtag, $hashtags) + 1;
 
-      if (in_array($hashtag, $this->hashtags)) {
+      if (in_array($hashtag_id, $this->hashtagsIds)) {
         throw new Exception('The ticket already has the hashtag.');
       }
 
@@ -336,7 +319,7 @@
       $stmt->bindValue(':hashtagId', $hashtag_id, PDO::PARAM_INT);
       $stmt->execute();
 
-      $this->hashtags[] = $hashtag;
+      $this->hashtagsIds[] = $hashtag_id;
     }
 
     /**
@@ -347,22 +330,73 @@
     public function removeHashtag(string $hashtag): void {
       //! check if frontend can send the id instead of the hashtag
 
-      if (!in_array($hashtag, $this->hashtags)) {
-        throw new Exception('The ticket does not have the hashtag.');
-      }
-
-      $db = getDatabaseConnection();
-
       $hashtags = new Hashtag();
       $hashtags = $hashtags->getHashtags();
       $hashtag_id = array_search($hashtag, $hashtags) + 1;
+
+      if (!in_array($hashtag_id, $this->hashtagsIds)) {
+        throw new Exception('The ticket already has the hashtag.');
+      }
+
+      $db = getDatabaseConnection();
 
       $stmt = $db->prepare('DELETE FROM TicketHashtag WHERE ticketId = :ticketId AND hashtagId = :hashtagId');
       $stmt->bindValue(':ticketId', $this->id, PDO::PARAM_INT);
       $stmt->bindValue(':hashtagId', $hashtag_id, PDO::PARAM_INT);
       $stmt->execute();
 
-      $this->hashtags = array_diff($this->hashtags, [$hashtag]);
+      $this->hashtagsIds = array_diff($this->hashtagsIds, [$hashtag_id]);
+    }
+
+    /**
+     * Sets the ticket's title.
+     * 
+     * @param string $title The ticket's title.
+     */
+    public function setTitle(string $title): void {
+      $db = getDatabaseConnection();
+
+      $stmt = $db->prepare('UPDATE Ticket SET title = :title WHERE id = :id');
+      $stmt->bindValue(':title', $title);
+      $stmt->bindValue(':id', $this->id, PDO::PARAM_INT);
+      $stmt->execute();
+
+      $this->title = $title;
+    }
+
+    /**
+     * Sets the ticket's text.
+     * 
+     * @param string $text The ticket's text.
+     */
+    public function setText(string $text): void {
+      $db = getDatabaseConnection();
+
+      $stmt = $db->prepare('UPDATE Ticket SET text = :text WHERE id = :id');
+      $stmt->bindValue(':text', $text);
+      $stmt->bindValue(':id', $this->id, PDO::PARAM_INT);
+      $stmt->execute();
+
+      $this->text = $text;
+    }
+
+    /**
+     * Sets the ticket's hashtags.
+     * 
+     * @param array $hashtags The ticket's hashtags ids.
+     */
+    public function setHashtags(array $hashtags): void {
+      $db = getDatabaseConnection();
+
+      $stmt = $db->prepare('DELETE FROM TicketHashtag WHERE ticketId = :ticketId');
+      $stmt->bindValue(':ticketId', $this->id, PDO::PARAM_INT);
+      $stmt->execute();
+
+      $this->hashtagsIds = [];
+      $hashtagDb = new Hashtag();
+      foreach ($hashtags as $hashtag) {
+        $this->addHashtag($hashtagDb->getHashtagById($hashtag));
+      }
     }
 
     /**
@@ -422,10 +456,10 @@
     /**
      * Returns the ticket's client.
      * 
-     * @return Client The ticket's client.
+     * @return Client The ticket's client (can be null).
      */
-    public function getClient(): Client {
-      return $this->client;
+    public function getClient(): Client|null {
+      return $this->clientId ? new Client($this->clientId) : null;
     }
 
     /**
@@ -434,7 +468,7 @@
      * @return Agent The ticket's agent. (can be null)
      */
     public function getAgent(): Agent|null {
-      return $this->agent;
+      return $this->agentId ? new Agent($this->agentId) : null;
     }
 
     /**
@@ -443,7 +477,7 @@
      * @return Department The ticket's department. (can be null)
      */
     public function getDepartment(): Department|null {
-      return $this->department;
+      return $this->departmentId ? new Department($this->departmentId) : null;
     }
 
     /**
@@ -452,7 +486,15 @@
      * @return array The ticket's hashtags.
      */
     public function getHashtags(): array {
-      return $this->hashtags;
+      $hashtags = new Hashtag();
+      $hashtags = $hashtags->getHashtags();
+
+      $ticketHashtags = [];
+      foreach ($this->hashtagsIds as $hashtagId) {
+        $ticketHashtags[] = $hashtags[$hashtagId];
+      }
+
+      return $ticketHashtags;
     }
 
     /**
@@ -461,7 +503,9 @@
      * @return array The ticket's replies.
      */
     public function getReplies(): array {
-      return $this->replies;
+      return array_map(function($replyId) {
+        return new TicketReply($replyId);
+      }, $this->repliesIds);
     }
 
     /**
@@ -470,7 +514,9 @@
      * @return array The ticket's logs.
      */
     public function getLogs(): array {
-      return $this->logs;
+      return array_map(function($logId) {
+        return new TicketLog($logId);
+      }, $this->logsIds);
     }
   }
 ?>

@@ -6,6 +6,14 @@
 
   switch ($_SERVER['REQUEST_METHOD']) {
     case RequestMethod::GET:
+      $url = parse_url($_SERVER['REQUEST_URI']);
+      $parts = explode('/', $url['path']);
+
+      if (count($parts) > 2) {
+        API::sendError(HttpStatus::BAD_REQUEST, 'Endpoint not found');
+        return;
+      }
+
       $body = [
         'health' => 'ok'
       ];

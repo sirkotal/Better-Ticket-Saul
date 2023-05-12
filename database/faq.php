@@ -109,5 +109,34 @@
       unset($this->questions[$id]);
       return $info;
     }
+
+    /**
+     * Update a question
+     * 
+     * @param int $id The id of the question
+     * @param string $question The question
+     * @param string $answer The answer
+     * @return array The updated question info
+     */
+    public function updateQuestion(int $id, string $question, string $answer): array {
+      $db = getDatabaseConnection();
+
+      if (!isset($this->questions[$id])) {
+        throw new Exception('Question not found');
+      }
+
+      $stmt = $db->prepare('UPDATE Faq SET question = :question, answer = :answer WHERE id = :id');
+      $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+      $stmt->bindValue(':question', $question);
+      $stmt->bindValue(':answer', $answer);
+      $stmt->execute();
+
+      $this->questions[$id] = [
+        'question' => $question,
+        'answer' => $answer
+      ];
+
+      return FAQ::parseJsonInfo($id);
+    }
   }
 ?>

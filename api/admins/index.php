@@ -6,43 +6,38 @@
   require_once(__DIR__ . '/../../database/user.php');
 
   switch ($_SERVER['REQUEST_METHOD']) {
-    case RequestMethod::GET:
+    case RequestMethod::POST:
       $url = parse_url($_SERVER['REQUEST_URI']);
       $parts = explode('/', $url['path']);
 
-      if (count($parts) > 4) {
+      if (count($parts) != 4) {
         API::sendError(HttpStatus::BAD_REQUEST, 'Endpoint not found');
         return;
       }
 
-      // get user by id
-      if (isset($parts[3])) {
-        $id = $parts[3];
-
-        if (!is_numeric($id)) {
-          API::sendError(HttpStatus::BAD_REQUEST, 'Invalid id');
-          return;
-        }
-
-        if (User::exists((int) $id) === false) {
-          API::sendError(HttpStatus::NOT_FOUND, 'User not found');
-          return;
-        }
-
-        $user = User::getUserById((int) $id);
-
-        API::sendResponse(HttpStatus::OK, $user->parseJsonInfo());
+      if (!is_numeric($parts[3])) {
+        API::sendError(HttpStatus::BAD_REQUEST, 'Invalid field types');
         return;
       }
 
-      $users = User::getAllUsers();
-      $body = [];
-
-      foreach ($users as $user) {
-        $body[] = $user->parseJsonInfo();
+      try {
+        $user = User::getUserById((int) $parts[3]);
+      } catch (Exception $e) {
+        API::sendError(HttpStatus::NOT_FOUND, 'User not found');
+        return;
       }
-      
-      API::sendResponse(HttpStatus::OK, $body);
+
+      if (User::isAdmin($user->getId())) {
+        API::sendError(HttpStatus::BAD_REQUEST, 'User is already an admin');
+        return;
+      }
+
+      $user = User::makeAdmin($user->getId());
+
+      API::sendResponse(HttpStatus::OK, [
+        'message' => 'User is now an admin',
+        'body' => $user->parseJsonInfo()
+      ]);
       return;
     case RequestMethod::DELETE:
       $url = parse_url($_SERVER['REQUEST_URI']);
@@ -59,15 +54,22 @@
       }
 
       try {
-        $body = User::delete((int) $parts[3]);
+        $user = User::getUserById((int) $parts[3]);
       } catch (Exception $e) {
         API::sendError(HttpStatus::NOT_FOUND, 'User not found');
         return;
       }
 
+      if (!User::isAdmin($user->getId())) {
+        API::sendError(HttpStatus::BAD_REQUEST, 'User is not an admin');
+        return;
+      }
+
+      $user = User::demoteAdmin($user->getId());
+
       API::sendResponse(HttpStatus::OK, [
-        'message' => 'User deleted successfully',
-        'body' => $body
+        'message' => 'User is no longer an admin',
+        'body' => $user->parseJsonInfo()
       ]);
       return;
     default:

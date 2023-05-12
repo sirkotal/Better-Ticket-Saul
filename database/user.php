@@ -84,10 +84,7 @@
       
       $stmt = $db->prepare('SELECT * FROM User WHERE username = :username AND password = :password');
       $stmt->bindValue(':username', $username);
-
-      $sha1_password = sha1($password);
-
-      $stmt->bindValue(':password', $sha1_password);
+      $stmt->bindValue(':password', sha1($password));
       $stmt->execute();
 
       $result = $stmt->fetch();
@@ -268,11 +265,161 @@
     }
 
     /**
+     * Make a user an agent
+     * 
+     * @param int $userId The user id
+     * @return Agent The user (now an agent)
+     */
+    public static function makeAgent(int $userId): Agent {
+      if (User::isAgent($userId)) {
+        throw new Exception('User is already an agent');
+      }
+
+      $db = getDatabaseConnection();
+
+      $stmt = $db->prepare('INSERT INTO Agent (userId) VALUES (:userId)');
+      $stmt->bindValue(':userId', $userId, PDO::PARAM_INT);
+      $stmt->execute();
+
+      return new Agent($userId);
+    }
+
+    /**
+     * Make a user an admin
+     * 
+     * @param int $userId The user id
+     * @return Admin The user (now an admin)
+     */
+    public static function makeAdmin(int $userId): Admin {
+      if (User::isAdmin($userId)) {
+        throw new Exception('User is already an admin');
+      }
+
+      if (!User::isAgent($userId)) {
+        User::makeAgent($userId);
+      }
+
+      $db = getDatabaseConnection();
+
+      $stmt = $db->prepare('INSERT INTO Admin (userId) VALUES (:userId)');
+      $stmt->bindValue(':userId', $userId, PDO::PARAM_INT);
+      $stmt->execute();
+
+      return new Admin($userId);
+    }
+
+    /**
+     * Demote an agent to a client
+     * 
+     * @param int $userId The user id
+     * @return Client The user (now a client)
+     */
+    public static function demoteAgent(int $userId): Client {
+      if (User::isAdmin($userId)) {
+        throw new Exception('User is an admin');
+      }
+      
+      if (!User::isAgent($userId)) {
+        throw new Exception('User is not an agent');
+      }
+
+      $db = getDatabaseConnection();
+
+      $stmt = $db->prepare('DELETE FROM Agent WHERE userId = :userId');
+      $stmt->bindValue(':userId', $userId, PDO::PARAM_INT);
+      $stmt->execute();
+
+      return new Client($userId);
+    }
+
+    /**
+     * Demote an admin to an agent
+     * 
+     * @param int $userId The user id
+     * @return Agent The user (now an agent)
+     */
+    public static function demoteAdmin(int $userId): Agent {
+      if (!User::isAdmin($userId)) {
+        throw new Exception('User is not an admin');
+      }
+
+      $db = getDatabaseConnection();
+
+      $stmt = $db->prepare('DELETE FROM Admin WHERE userId = :userId');
+      $stmt->bindValue(':userId', $userId, PDO::PARAM_INT);
+      $stmt->execute();
+
+      return new Agent($userId);
+    }
+
+    /**
      * Parse a user info to an array ready to be json encoded
      * 
      * @return array The parsed user info
      */
     abstract public function parseJsonInfo(): array;
+
+    /**
+     * Update the user name
+     * 
+     * @param string $name The new user name
+     */
+    public function setUsername(string $username): void {
+      $db = getDatabaseConnection();
+
+      $stmt = $db->prepare('UPDATE User SET username = :username WHERE id = :id');
+      $stmt->bindValue(':username', $username);
+      $stmt->bindValue(':id', $this->id, PDO::PARAM_INT);
+      $stmt->execute();
+
+      $this->username = $username;
+    }
+
+    /**
+     * Update the user name
+     * 
+     * @param string $name The new user name
+     */
+    public function setName(string $name): void {
+      $db = getDatabaseConnection();
+
+      $stmt = $db->prepare('UPDATE User SET name = :name WHERE id = :id');
+      $stmt->bindValue(':name', $name);
+      $stmt->bindValue(':id', $this->id, PDO::PARAM_INT);
+      $stmt->execute();
+
+      $this->name = $name;
+    }
+
+    /**
+     * Update the user email
+     * 
+     * @param string $email The new user email
+     */
+    public function setEmail(string $email): void {
+      $db = getDatabaseConnection();
+
+      $stmt = $db->prepare('UPDATE User SET email = :email WHERE id = :id');
+      $stmt->bindValue(':email', $email);
+      $stmt->bindValue(':id', $this->id, PDO::PARAM_INT);
+      $stmt->execute();
+
+      $this->email = $email;
+    }
+
+    /**
+     * Update the user password
+     * 
+     * @param string $password The new user password
+     */
+    public function setPassword(string $password): void {
+      $db = getDatabaseConnection();
+
+      $stmt = $db->prepare('UPDATE User SET password = :password WHERE id = :id');
+      $stmt->bindValue(':password', sha1($password));
+      $stmt->bindValue(':id', $this->id, PDO::PARAM_INT);
+      $stmt->execute();
+    }
 
     /**
      * Get the user id
@@ -328,7 +475,7 @@
   }
 
   class Agent extends Client {
-    protected array $departments; //* just the ids, try to get the object
+    protected array $departmentsIds;
 
     public function __construct(int $userId) {
       if (!User::isAgent($userId)) {
@@ -345,7 +492,7 @@
 
       $result = $stmt->fetchAll();
 
-      $this->departments = array_map(function ($row) {
+      $this->departmentsIds = array_map(function ($row) {
         return $row['departmentId'];
       }, $result);
     }
@@ -357,7 +504,7 @@
         'name' => $this->name,
         'email' => $this->email,
         'role' => 'agent',
-        'departmentsIds' => $this->departments,
+        'departmentsIds' => $this->departmentsIds,
       ];
     }
 
@@ -365,33 +512,22 @@
      * Remove a department from the agent
      * 
      * @param Department $department The department to remove
-     * @param bool $exec_query If true, the query will be executed, if not just removes from the class array (default: true)
      */
-    public function removeDepartment(Department $department, bool $exec_query = true): void {
-      if (!in_array($department, $this->departments)) {
+    public function removeDepartment(Department $department): void {
+      if (!in_array($department->getId(), $this->departmentsIds)) {
         throw new Exception('Agent is not in the department');
       }
       
-      if ($exec_query) {
-        $db = getDatabaseConnection();
+      $db = getDatabaseConnection();
 
-        $stmt = $db->prepare('DELETE FROM AgentDepartment WHERE agentId = :agentId AND departmentId = :departmentId');
-        $stmt->bindValue(':agentId', $this->id, PDO::PARAM_INT);
-        $stmt->bindValue(':department', $department->getId(), PDO::PARAM_INT);
-        $stmt->execute();
-      }
+      $stmt = $db->prepare('DELETE FROM AgentDepartment WHERE agentId = :agentId AND departmentId = :departmentId');
+      $stmt->bindValue(':agentId', $this->id, PDO::PARAM_INT);
+      $stmt->bindValue(':department', $department->getId(), PDO::PARAM_INT);
+      $stmt->execute();
 
-      /* //! Uncomment when departments are objects
-      $this->departments = array_filter($this->departments, function ($d) use ($department) {
-        return $d->getId() !== $department->getId();
-      });
-      */
-
-      $this->departments = array_filter($this->departments, function ($id) use ($department) {
+      $this->departmentsIds = array_filter($this->departmentsIds, function ($id) use ($department) {
         return $id !== $department->getId();
       });
-
-      $department->removeAgent($this, false);
     }
 
     /**
@@ -399,10 +535,10 @@
      * 
      * @return array The agent departments
      */
-    public function getDepartments(): array { //! for now its like this, but it should be an array of Department objects
+    public function getDepartments(): array {
       $departments = [];
 
-      foreach ($this->departments as $department) {
+      foreach ($this->departmentsIds as $department) {
         $departments[] = new Department($department);
       }
 
@@ -426,7 +562,7 @@
         'name' => $this->name,
         'email' => $this->email,
         'role' => 'admin',
-        'departmentsIds' => $this->departments,
+        'departmentsIds' => $this->departmentsIds,
       ];
     }
   }

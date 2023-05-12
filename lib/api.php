@@ -29,6 +29,11 @@
       $input = file_get_contents('php://input');
       $json = json_decode($input, true);
 
+      if (json_last_error() !== JSON_ERROR_NONE) {
+        API::sendError(HttpStatus::BAD_REQUEST, 'Invalid JSON');
+        die();
+      }
+
       return $json;
     }
   }

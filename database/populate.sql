@@ -84,13 +84,14 @@ INSERT INTO Ticket (title, text, date, status, clientId) VALUES
         1 -- test_client
     );
 
-INSERT INTO Ticket (title, text, date, status, clientId, departmentId) VALUES
+INSERT INTO Ticket (title, text, date, status, clientId, agentId, departmentId) VALUES
     (
         'I want to buy a car',
         'I want to buy a car, but it needs to be in cash. I have $100,000 in cash.',
         1682731073,
         'Open',
         1, -- test_client
+        2, -- test_agent
         1 -- Sales
     );
 
@@ -98,3 +99,12 @@ INSERT INTO TicketHashtag (hashtagId, ticketId) VALUES
     (1, 1), -- #test
     (2, 1), -- #lalo
     (3, 1); -- #tuco
+
+INSERT INTO TicketReply (reply, date, ticketId, agentId, departmentId) VALUES
+    (
+        'Hello, I am Jim McGill, your attorney. I will take care of this.',
+        1682731073,
+        2, -- I want to buy a car
+        2, -- test_agent
+        1 -- Sales
+    );

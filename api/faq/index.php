@@ -74,6 +74,54 @@
 
       API::sendResponse(HttpStatus::CREATED, ['message' => 'Question added to FAQ', 'body' => $body]);
       return;
+    case RequestMethod::PUT:
+      $url = parse_url($_SERVER['REQUEST_URI']);
+      $parts = explode('/', $url['path']);
+
+      if (count($parts) != 4) {
+        API::sendError(HttpStatus::BAD_REQUEST, 'Endpoint not found');
+        return;
+      }
+
+      if (!isset($parts[3]) || !is_numeric($parts[3])) {
+        API::sendError(HttpStatus::BAD_REQUEST, 'Invalid field types');
+        return;
+      }
+
+      $data = API::getJsonInput();
+
+      if (empty($data)) {
+        API::sendError(HttpStatus::BAD_REQUEST, 'Body is empty');
+        return;
+      }
+
+      if (!array_key_exists('question', $data) || !array_key_exists('answer', $data)) {
+        API::sendError(HttpStatus::BAD_REQUEST, 'Missing required fields');
+        return;
+      }
+
+      if (gettype($data['question']) !== 'string' || gettype($data['answer']) !== 'string') {
+        API::sendError(HttpStatus::BAD_REQUEST, 'Invalid field types');
+        return;
+      }
+
+      if (count($data) > 2) {
+        API::sendError(HttpStatus::BAD_REQUEST, 'Too many fields');
+        return;
+      }
+
+      try {
+        $body = $faq->updateQuestion((int) $parts[3], $data['question'], $data['answer']);
+      } catch (Exception $e) {
+        API::sendError(HttpStatus::NOT_FOUND, 'Question not found');
+        return;
+      }
+
+      API::sendResponse(HttpStatus::OK, [
+        'message' => 'Question updated',
+        'body' => $body
+      ]);
+      return;
     case RequestMethod::DELETE:
       $url = parse_url($_SERVER['REQUEST_URI']);
       $parts = explode('/', $url['path']);

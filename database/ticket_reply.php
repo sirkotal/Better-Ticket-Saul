@@ -10,9 +10,9 @@
     private int $id;
     private string $reply;
     private int $date;
-    private Ticket $ticket; //? maybe only get the client
-    private Agent $agent; //? maybe store only the username in case the agent is deleted
-    private Department $department; //? maybe store only the name in case the department is deleted
+    private int $ticketId;
+    private int $agentId;
+    private int $departmentId;
 
     public function __construct(int $id) {
       $db = getDatabaseConnection();
@@ -23,32 +23,36 @@
 
       $result = $stmt->fetch();
 
+      if (!$result) {
+        throw new Exception('Ticket reply not found');
+      }
+
       $this->id = $result['id'];
       $this->reply = $result['reply'];
       $this->date = $result['date'];
-      $this->ticket = new Ticket($result['ticketId']);
-      $this->agent = new Agent($result['agentId']);
-      $this->department = new Department($result['departmentId']);
+      $this->ticketId = $result['ticketId'];
+      $this->agentId = $result['agentId'];
+      $this->departmentId = $result['departmentId'];
     }
 
     /**
      * Creates a new ticket reply.
      * 
      * @param string $reply The reply's text.
-     * @param Ticket $ticket The ticket to reply to.
-     * @param Agent $agent The agent that replied.
-     * @param Department $department The department of the agent.
+     * @param int $ticketId The ticket to reply to.
+     * @param int $agentId The agent that replied.
+     * @param int $departmentId The department of the agent.
      * @return TicketReply The created ticket reply.
      */
-    public static function create(string $reply, Ticket $ticket, Agent $agent, Department $department): TicketReply {
+    public static function create(string $reply, int $ticketId, int $agentId, int $departmentId): TicketReply {
       $db = getDatabaseConnection();
 
       $stmt = $db->prepare('INSERT INTO TicketReply (reply, date, ticketId, agentId, departmentId) VALUES (:reply, :date, :ticket, :agent, :department)');
       $stmt->bindValue(':reply', $reply);
       $stmt->bindValue(':date', time(), PDO::PARAM_INT);
-      $stmt->bindValue(':ticket', $ticket->getId());
-      $stmt->bindValue(':agent', $agent->getId());
-      $stmt->bindValue(':department', $department->getId());
+      $stmt->bindValue(':ticket', $ticketId, PDO::PARAM_INT);
+      $stmt->bindValue(':agent', $agentId, PDO::PARAM_INT);
+      $stmt->bindValue(':department', $departmentId, PDO::PARAM_INT);
       $stmt->execute();
 
       return new TicketReply((int) $db->lastInsertId());
@@ -61,15 +65,13 @@
      * @return array The deleted ticket reply info.
      */
     public static function delete(int $id): array {
-      $ticketReply = new TicketReply($id);
-      $info = [
-        'id' => $ticketReply->getId(),
-        'reply' => $ticketReply->getReply(),
-        'date' => $ticketReply->getDate(),
-        'ticketId' => $ticketReply->getTicket()->getId(),
-        'agentId' => $ticketReply->getAgent()->getId(),
-        'departmentId' => $ticketReply->getDepartment()->getId()
-      ];
+      try {
+        $ticketReply = new TicketReply($id);
+      } catch (Exception $e) {
+        throw new Exception('Ticket reply not found');
+      }
+
+      $info = $ticketReply->parseJsonInfo();
 
       $db = getDatabaseConnection();
 
@@ -78,6 +80,59 @@
       $stmt->execute();
 
       return $info;
+    }
+
+    /**
+     * Gets all ticket replies.
+     * 
+     * @return array All ticket replies.
+     */
+    public static function getAllReplies(): array {
+      $db = getDatabaseConnection();
+
+      $stmt = $db->prepare('SELECT id FROM TicketReply');
+      $stmt->execute();
+      $result = $stmt->fetchAll();
+
+      $replies = [];
+
+      foreach ($result as $reply) {
+        $replies[] = new TicketReply((int) $reply['id']);
+      }
+
+      return $replies;
+    }
+
+    /**
+     * Parse a ticket reply info to an array ready to be json encoded
+     * 
+     * @return array The parsed ticket reply info.
+     */
+    public function parseJsonInfo(): array {
+      return [
+        'id' => $this->id,
+        'reply' => $this->reply,
+        'date' => $this->date,
+        'ticketId' => $this->ticketId,
+        'agentId' => $this->agentId,
+        'departmentId' => $this->departmentId
+      ];
+    }
+
+    /**
+     * Updates a ticket reply.
+     * 
+     * @param string $reply The reply's text.
+     */
+    public function update(string $reply): void {
+      $db = getDatabaseConnection();
+
+      $stmt = $db->prepare('UPDATE TicketReply SET reply = :reply WHERE id = :id');
+      $stmt->bindValue(':reply', $reply);
+      $stmt->bindValue(':id', $this->id, PDO::PARAM_INT);
+      $stmt->execute();
+
+      $this->reply = $reply;
     }
 
     /**
@@ -113,7 +168,7 @@
      * @return Ticket The reply's ticket.
      */
     public function getTicket(): Ticket {
-      return $this->ticket;
+      return new Ticket($this->ticketId);
     }
 
     /**
@@ -122,7 +177,7 @@
      * @return Agent The reply's agent.
      */
     public function getAgent(): Agent {
-      return $this->agent;
+      return new Agent($this->agentId);
     }
 
     /**
@@ -131,7 +186,7 @@
      * @return Department The reply's department.
      */
     public function getDepartment(): Department {
-      return $this->department;
+      return new Department($this->departmentId);
     }
   }
 ?>

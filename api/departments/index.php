@@ -65,6 +65,61 @@
         'body' => $body
       ]);
       return;
+    case RequestMethod::PUT:
+      $url = parse_url($_SERVER['REQUEST_URI']);
+      $parts = explode('/', $url['path']);
+
+      if (isset($parts[3]) && !is_numeric($parts[3])) {
+        API::sendError(HttpStatus::BAD_REQUEST, 'Invalid field types');
+        return;
+      }
+
+      if (count($parts) != 4) {
+        API::sendError(HttpStatus::BAD_REQUEST, 'Endpoint not found');
+        return;
+      }
+
+      try {
+        $department = new Department((int) $parts[3]);
+      } catch (Exception $e) {
+        API::sendError(HttpStatus::NOT_FOUND, 'Department not found');
+        return;
+      }
+      
+      $data = API::getJsonInput();
+
+      if (empty($data)) {
+        API::sendError(HttpStatus::BAD_REQUEST, 'Body is empty');
+        return;
+      }
+
+      if (!array_key_exists('name', $data)) {
+        API::sendError(HttpStatus::BAD_REQUEST, 'Missing required field');
+        return;
+      }
+
+      if (gettype($data['name']) != 'string') {
+        API::sendError(HttpStatus::BAD_REQUEST, 'Invalid field types');
+        return;
+      }
+
+      if (count($data) > 1) {
+        API::sendError(HttpStatus::BAD_REQUEST, 'Too many fields');
+        return;
+      }
+
+      try {
+        $department->update($data['name']);
+      } catch (Exception $e) {
+        API::sendError(HttpStatus::BAD_REQUEST, 'Department already exists');
+        return;
+      }
+
+      API::sendResponse(HttpStatus::OK, [
+        'message' => 'Department updated successfully',
+        'body' => Department::parseJsonInfo($department)
+      ]);
+      return;
     case RequestMethod::DELETE:
       $url = parse_url($_SERVER['REQUEST_URI']);
       $parts = explode('/', $url['path']);

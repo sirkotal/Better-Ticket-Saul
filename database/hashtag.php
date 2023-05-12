@@ -22,15 +22,19 @@
     /**
      * Check if a hashtag exists (finds a hashtag with the given name)
      * 
-     * @param string $hashtag The hashtag
+     * @param string|int $key The hashtag name or id
      * @return bool true if the hashtag exists, false otherwise
      */
-    public static function exists(string $hashtag): bool {
+    public static function exists(string|int $key): bool {
       $db = getDatabaseConnection();
 
-      $stmt = $db->prepare('SELECT * FROM Hashtag WHERE hashtag = :hashtag');
-      $stmt->bindValue(':hashtag', $hashtag);
-      $stmt->execute();
+      if (is_int($key)) {
+        $stmt = $db->prepare('SELECT * FROM Hashtag WHERE id = :id');
+        $stmt->bindValue(':id', $key, PDO::PARAM_INT);
+      } else {
+        $stmt = $db->prepare('SELECT * FROM Hashtag WHERE hashtag = :hashtag');
+        $stmt->bindValue(':hashtag', $key);
+      }
 
       $result = $stmt->fetch();
       return $result !== false;
@@ -52,9 +56,7 @@
       $id = $db->lastInsertId();
       $this->hashtags[$id] = $hashtag;
 
-      return [
-        $id => $hashtag
-      ];
+      return $this->parseJsonInfo((int) $id);
     }
 
     /**
@@ -74,12 +76,23 @@
       $stmt->bindValue(':hashtagId', $id, PDO::PARAM_INT);
       $stmt->execute();
 
-      $info = [
-        $id => $this->hashtags[$id]
-      ];
+      $info = $this->parseJsonInfo($id);
       unset($this->hashtags[$id]);
 
       return $info;
+    }
+
+    public function updateHashtag(int $id, string $hashtag): array {
+      $db = getDatabaseConnection();
+
+      $stmt = $db->prepare('UPDATE Hashtag SET hashtag = :hashtag WHERE id = :id');
+      $stmt->bindValue(':hashtag', $hashtag);
+      $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+      $stmt->execute();
+
+      $this->hashtags[$id] = $hashtag;
+
+      return $this->parseJsonInfo($id);
     }
 
     /**
@@ -90,6 +103,20 @@
      */
     public function getHashtagById(int $id): string {
       return $this->hashtags[$id];
+    }
+
+    /**
+     * Parse the hashtag info to an array ready to be json encoded
+     * 
+     * @param int $id The hashtag id
+     * @return array The parsed hashtag info.
+     */
+    public function parseJsonInfo(int $id): array {
+      $info = [
+        $id => $this->hashtags[$id]
+      ];
+
+      return $info;
     }
 
     /**

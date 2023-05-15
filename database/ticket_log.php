@@ -12,57 +12,116 @@
     private int $id;
     private string $change;
     private int $date;
-    private Ticket $ticket;
-    private Agent $agent;
-    private Department $department;
+    private int $ticketId;
+    private int $agentId;
+    private int $departmentId;
 
     public function __construct(int $id) {
       $db = getDatabaseConnection();
 
-      $stmt = $db->prepare('SELECT * FROM TicketLog WHERE idTicketLog = :id');
-      $stmt->bindParam(':id', $id);
+      $stmt = $db->prepare('SELECT * FROM TicketLog WHERE id = :id');
+      $stmt->bindValue(':id', $id, PDO::PARAM_INT);
       $stmt->execute();
 
       $result = $stmt->fetch();
 
-      $this->id = $result['idTicketLog'];
+      $this->id = $result['id'];
       $this->change = $result['change'];
       $this->date = $result['date'];
-      $this->ticket = new Ticket($result['idTicket']);
-      $this->agent = new Agent($result['agent']);
-      $this->department = new Department($result['department']);
+      $this->ticketId = (int) $result['ticketId'];
+      $this->agentId = (int) $result['agentId'];
+      $this->departmentId = (int) $result['departmentId'];
     }
 
     /**
      * Creates a new ticket log.
      * 
      * @param string $change The change that was made.
-     * @param Ticket $ticket The ticket that was changed.
-     * @param Agent $agent The agent that made the change.
-     * @param Department $department The department of the agent.
+     * @param int $ticketId The id of ticket that was changed.
+     * @param int $agentId The id of agent that made the change.
+     * @param int $departmentId The id of department of the agent.
+     * @return TicketLog The created ticket log.
      */
-    public static function create(string $change, Ticket $ticket, Agent $agent, Department $department): void {
+    public static function create(string $change, int $ticketId, int $agentId, int $departmentId): TicketLog {
       $db = getDatabaseConnection();
 
-      $stmt = $db->prepare('INSERT INTO TicketLog (change, date, idTicket, agent, department) VALUES (:change, :date, :idTicket, :agent, :department)');
+      $stmt = $db->prepare('INSERT INTO TicketLog (change, date, ticketId, agentId, departmentId) VALUES (:change, :date, :idTicket, :agent, :department)');
       $stmt->bindValue(':change', $change);
-      $stmt->bindValue(':date', time());
-      $stmt->bindValue(':idTicket', $ticket->getId());
-      $stmt->bindValue(':agent', $agent->getUsername());
-      $stmt->bindValue(':department', $department->getName());
+      $stmt->bindValue(':date', time(), PDO::PARAM_INT);
+      $stmt->bindValue(':idTicket', $ticketId, PDO::PARAM_INT);
+      $stmt->bindValue(':agent', $agentId, PDO::PARAM_INT);
+      $stmt->bindValue(':department', $departmentId, PDO::PARAM_INT);
       $stmt->execute();
+
+      return new TicketLog((int) $db->lastInsertId());
     }
 
     /**
      * Deletes a ticket log.
      * 
      * @param int $id The log's id.
+     * @return array The deleted log info.
      */
-    public static function delete(int $id): void {
+    public static function delete(int $id): array {
+      $ticketLog = new TicketLog($id);
+      $info = $ticketLog->parseJsonInfo();
+      
       $db = getDatabaseConnection();
 
-      $stmt = $db->prepare('DELETE FROM TicketLog WHERE idTicketLog = :id');
-      $stmt->bindParam(':id', $id);
+      $stmt = $db->prepare('DELETE FROM TicketLog WHERE id = :id');
+      $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+      $stmt->execute();
+
+      return $info;
+    }
+
+    /**
+     * Gets all ticket logs.
+     * 
+     * @return array All ticket logs.
+     */
+    public static function getAllLogs(): array {
+      $db = getDatabaseConnection();
+
+      $stmt = $db->prepare('SELECT id FROM TicketLog');
+      $stmt->execute();
+      $result = $stmt->fetchAll();
+
+      $logs = [];
+      foreach ($result as $log) {
+        $logs[] = new TicketLog((int) $log['id']);
+      }
+
+      return $logs;
+    }
+
+    /**
+     * Parse a ticket log info to an array ready to be json encoded
+     * 
+     * @return array The parsed ticket log info.
+     */
+    public function parseJsonInfo(): array {
+      return [
+        'id' => $this->id,
+        'change' => $this->change,
+        'date' => $this->date,
+        'ticketId' => $this->ticketId,
+        'agentId' => $this->agentId,
+        'departmentId' => $this->departmentId
+      ];
+    }
+
+    /**
+     * Updates the change of the log.
+     * 
+     * @param string $change The new change.
+     */
+    public function update(string $change): void {
+      $db = getDatabaseConnection();
+
+      $stmt = $db->prepare('UPDATE TicketLog SET change = :change WHERE id = :id');
+      $stmt->bindValue(':change', $change);
+      $stmt->bindValue(':id', $this->id, PDO::PARAM_INT);
       $stmt->execute();
     }
 
@@ -99,7 +158,7 @@
      * @return Ticket The ticket that was changed.
      */
     public function getTicket(): Ticket {
-      return $this->ticket;
+      return new Ticket($this->ticketId);
     }
 
     /**
@@ -108,7 +167,7 @@
      * @return Agent The agent that made the change.
      */
     public function getAgent(): Agent {
-      return $this->agent;
+      return new Agent($this->agentId);
     }
 
     /**
@@ -117,7 +176,7 @@
      * @return Department The department of the agent.
      */
     public function getDepartment(): Department {
-      return $this->department;
+      return new Department($this->departmentId);
     }
   }
 ?>

@@ -32,6 +32,15 @@
     }
 
     /**
+     * Get the user in the session
+     * 
+     * @return string the user username
+     */
+    public function getUser(): string {
+      return $_SESSION['user'];
+    }
+
+    /**
      * Set an error in the session
      * 
      * @param string $errorType the error type

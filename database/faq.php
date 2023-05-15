@@ -14,13 +14,28 @@
 
       $result = $stmt->fetchAll();
 
-      $this->questions = array_map(function ($row) {
-        return [
-          'id' => $row['faqId'],
+      foreach ($result as $row) {
+        $this->questions[(int) $row['id']] = [
           'question' => $row['question'],
           'answer' => $row['answer']
         ];
-      }, $result);
+      }
+    }
+
+    /**
+     * Parse a faq info to an array ready to be json encoded
+     * 
+     * @param int $faqId The id of the question
+     * @return array The parsed faq info
+     */
+    public static function parseJsonInfo(int $faqId): array {
+      $faq = new FAQ();
+      
+      return [
+        'id' => $faqId,
+        'question' => $faq->getQuestionById($faqId)['question'],
+        'answer' => $faq->getQuestionById($faqId)['answer']
+      ];
     }
 
     /**
@@ -33,12 +48,27 @@
     }
 
     /**
+     * Get a question by id
+     * 
+     * @param int $id The id of the question
+     * @return array The question
+     */
+    public function getQuestionById(int $id): array {
+      if (!isset($this->questions[$id])) {
+        throw new Exception('Question not found');
+      }
+
+      return $this->questions[$id];
+    }
+
+    /**
      * Add a question
      * 
      * @param string $question The question
      * @param string $anwser The answer
+     * @return array The added question
      */
-    public function addQuestion(string $question, string $anwser): void {
+    public function addQuestion(string $question, string $anwser): array {
       $db = getDatabaseConnection();
 
       $stmt = $db->prepare('INSERT INTO Faq (question, answer) VALUES (:question, :answer)');
@@ -46,28 +76,67 @@
       $stmt->bindValue(':answer', $anwser);
       $stmt->execute();
 
-      $this->questions[] = [
-        'id' => $db->lastInsertId(), //! needs testing
+      $questionId = $db->lastInsertId();
+
+      $question = [
         'question' => $question,
         'answer' => $anwser
       ];
+
+      $this->questions[$questionId] = $question;
+      return FAQ::parseJsonInfo((int) $questionId);
     }
 
     /**
      * Remove a question
      * 
      * @param int $id The id of the question
+     * @return array The removed question info
      */
-    public function removeQuestion(int $id): void {
+    public function removeQuestion(int $id): array {
       $db = getDatabaseConnection();
 
-      $stmt = $db->prepare('DELETE FROM Faq WHERE faqId = :id');
-      $stmt->bindValue(':id', $id);
+      if (!isset($this->questions[$id])) {
+        throw new Exception('Question not found');
+      }
+
+      $info = FAQ::parseJsonInfo($id);
+
+      $stmt = $db->prepare('DELETE FROM Faq WHERE id = :id');
+      $stmt->bindValue(':id', $id, PDO::PARAM_INT);
       $stmt->execute();
 
-      $this->questions = array_filter($this->questions, function ($question) use ($id) {
-        return $question['id'] !== $id;
-      });
+      unset($this->questions[$id]);
+      return $info;
+    }
+
+    /**
+     * Update a question
+     * 
+     * @param int $id The id of the question
+     * @param string $question The question
+     * @param string $answer The answer
+     * @return array The updated question info
+     */
+    public function updateQuestion(int $id, string $question, string $answer): array {
+      $db = getDatabaseConnection();
+
+      if (!isset($this->questions[$id])) {
+        throw new Exception('Question not found');
+      }
+
+      $stmt = $db->prepare('UPDATE Faq SET question = :question, answer = :answer WHERE id = :id');
+      $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+      $stmt->bindValue(':question', $question);
+      $stmt->bindValue(':answer', $answer);
+      $stmt->execute();
+
+      $this->questions[$id] = [
+        'question' => $question,
+        'answer' => $answer
+      ];
+
+      return FAQ::parseJsonInfo($id);
     }
   }
 ?>

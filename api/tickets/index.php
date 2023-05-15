@@ -1,10 +1,6 @@
 <?php
   declare(strict_types=1);
 
-  // TODO: add ticket reply and log GET endpoints
-  // api/ticket/1/replies => get all replies for ticket 1
-  // api/ticket/1/logs => get all logs for ticket 1
-
   require_once(__DIR__ . '/../../lib/http_status.php');
   require_once(__DIR__ . '/../../lib/api.php');
   require_once(__DIR__ . '/../../lib/session.php');
@@ -26,6 +22,9 @@
         die();
       }
 
+      $session = new Session();
+      $user = User::getUserById($session->getUser()->getId());
+
       // get ticket by id
       if ($parts[3]) {
         if (!is_numeric($parts[3])) {
@@ -37,6 +36,11 @@
           $ticket = new Ticket((int) $parts[3]);
         } catch (Exception $e) {
           API::sendError(HttpStatus::NOT_FOUND, 'Ticket not found');
+          die();
+        }
+
+        if ($ticket->getClient()->getId() != $user->getId() || (User::isAgent($user->getId()) && Department::isAgentFromDepartment(new Agent($user->getId()), $ticket->getDepartment()))) {
+          API::sendError(HttpStatus::FORBIDDEN, 'You do not have permission to do that');
           die();
         }
 
@@ -65,6 +69,11 @@
         }
 
         API::sendResponse(HttpStatus::OK, $ticket->parseJsonInfo());
+        die();
+      }
+
+      if (!User::isAdmin($user->getId())) {
+        API::sendError(HttpStatus::FORBIDDEN, 'You do not have permission to do that');
         die();
       }
 
@@ -143,6 +152,8 @@
         die();
       }
 
+      $user = User::getUserById($session->getUser()->getId());
+
       $url = parse_url($_SERVER['REQUEST_URI']);
       $parts = explode('/', $url['path']);
 
@@ -180,39 +191,34 @@
         die();
       }
 
-      if (isset($data['title'])) {
-        if (gettype($data['title']) != 'string') {
-          API::sendError(HttpStatus::BAD_REQUEST, 'Invalid field types');
-          die();
-        }
+      if (!User::isAdmin($user->getId()) || $ticket->getClient()->getId() != $user->getId() || $ticket->getAgent()->getId() != $user->getId()) {
+        API::sendError(HttpStatus::FORBIDDEN, 'You do not have permission to do that');
+        die();
+      }
 
+      if ((isset($data['title']) && gettype($data['title']) != 'string') ||
+        (isset($data['text']) && gettype($data['text']) != 'string') ||
+        (isset($data['hashtags']) && !is_array($data['hashtags'])) ||
+        ((isset($data['agentId']) && gettype($data['agentId']) != 'integer' && gettype($data['agentId']) != 'NULL')) ||
+        (isset($data['departmentId']) && gettype($data['departmentId']) != 'integer' && gettype($data['departmentId']) != 'NULL'))
+      {
+        API::sendError(HttpStatus::BAD_REQUEST, 'Invalid field types');
+        die();
+      }
+
+      if (isset($data['title'])) {
         $ticket->setTitle($data['title']);
       }
 
       if (isset($data['text'])) {
-        if (gettype($data['text']) != 'string') {
-          API::sendError(HttpStatus::BAD_REQUEST, 'Invalid field types');
-          die();
-        }
-
         $ticket->setText($data['text']);
       }
 
       if (isset($data['hashtags'])) {
-        if (!is_array($data['hashtags'])) {
-          API::sendError(HttpStatus::BAD_REQUEST, 'Invalid field types');
-          die();
-        }
-
         $ticket->setHashtags($data['hashtags']);
       }
 
       if (isset($data['agentId']) && !isset($data['departmentId'])) {
-        if (gettype($data['agentId']) != 'integer' && gettype($data['agentId']) != 'null') {
-          API::sendError(HttpStatus::BAD_REQUEST, 'Invalid field types');
-          die();
-        }
-
         if ($data['agentId'] == null) {
           $ticket->removeAgent();
         } else {
@@ -236,11 +242,6 @@
       }
 
       if (isset($data['departmentId']) && !isset($data['agentId'])) {
-        if (gettype($data['departmentId']) != 'integer' && gettype($data['departmentId']) != 'null') {
-          API::sendError(HttpStatus::BAD_REQUEST, 'Invalid field types');
-          die();
-        }
-
         if ($data['departmentId'] == null) {
           $ticket->removeDepartment();
         } else {
@@ -259,11 +260,6 @@
       }
 
       if (isset($data['agentId']) && isset($data['departmentId'])) {
-        if (gettype($data['agentId']) != 'integer' && gettype($data['agentId']) != 'null' && gettype($data['departmentId']) != 'integer' && gettype($data['departmentId']) != 'null') {
-          API::sendError(HttpStatus::BAD_REQUEST, 'Invalid field types');
-          die();
-        }
-
         if ($data['departmentId'] == null) {
           $ticket->removeAgent();
           $ticket->removeDepartment();
@@ -315,6 +311,15 @@
 
       if (!is_numeric($parts[3])) {
         API::sendError(HttpStatus::BAD_REQUEST, 'Invalid field types');
+        die();
+      }
+
+      $session = new Session();
+      $user = $session->getUser();
+      $ticket = new Ticket((int) $parts[3]);
+
+      if (!User::isAdmin($user->getId()) || $ticket->getClient()->getId() != $user->getId() || $ticket->getAgent()->getId() != $user->getId()) {
+        API::sendError(HttpStatus::FORBIDDEN, 'You do not have permission to do that');
         die();
       }
 

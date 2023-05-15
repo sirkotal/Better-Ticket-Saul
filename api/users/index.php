@@ -70,7 +70,7 @@
       }
 
       $user = User::getUserById((int) $parts[3]);
-      if ($user->getUsername() !== $session->getUser()) {
+      if ($user->getId() !== $session->getUser()) {
         API::sendError(HttpStatus::UNAUTHORIZED, 'You are not authorized to edit this user');
         die();
       }
@@ -173,6 +173,13 @@
 
       if (!is_numeric($parts[3])) {
         API::sendError(HttpStatus::BAD_REQUEST, 'Invalid field types');
+        die();
+      }
+
+      $user = User::getUserById((int) $parts[3]);
+
+      if ($user->getId() !== $session->getUser()->getId() || !User::isAdmin($user->getId())) {
+        API::sendError(HttpStatus::UNAUTHORIZED, 'You are not authorized to delete this user');
         die();
       }
 

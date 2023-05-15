@@ -3,6 +3,7 @@
 
   require_once(__DIR__ . '/../../lib/http_status.php');
   require_once(__DIR__ . '/../../lib/api.php');
+  require_once(__DIR__ . '/../../lib/session.php');
   require_once(__DIR__ . '/../../database/user.php');
 
   switch ($_SERVER['REQUEST_METHOD']) {
@@ -17,6 +18,17 @@
 
       if (!is_numeric($parts[3])) {
         API::sendError(HttpStatus::BAD_REQUEST, 'Invalid field types');
+        die();
+      }
+
+      $session = new Session();
+      if (!$session->isLoggedIn()) {
+        API::sendError(HttpStatus::UNAUTHORIZED, 'You must be logged in to do that');
+        die();
+      }
+
+      if (!User::isAdmin($session->getUser()->getId())) {
+        API::sendError(HttpStatus::FORBIDDEN, 'You must be an admin to do that');
         die();
       }
 
@@ -50,6 +62,17 @@
 
       if (!is_numeric($parts[3])) {
         API::sendError(HttpStatus::BAD_REQUEST, 'Invalid field types');
+        die();
+      }
+
+      $session = new Session();
+      if (!$session->isLoggedIn()) {
+        API::sendError(HttpStatus::UNAUTHORIZED, 'You must be logged in to do that');
+        die();
+      }
+
+      if (!User::isAdmin($session->getUser()->getId())) {
+        API::sendError(HttpStatus::FORBIDDEN, 'You must be an admin to do that');
         die();
       }
 

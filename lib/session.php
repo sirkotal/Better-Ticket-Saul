@@ -1,6 +1,8 @@
 <?php
   declare (strict_types = 1);
 
+  require_once(__DIR__ . '/../database/user.php');
+
   class Session {
     public function __construct() {
       session_start();
@@ -25,19 +27,19 @@
     /**
      * Set the user in the session
      * 
-     * @param string $user_username the user username
+     * @param int $user_id the user id
      */
-    public function setUser(string $user_username): void {
-      $_SESSION['user'] = $user_username;
+    public function setUser(int $user_id): void {
+      $_SESSION['user'] = $user_id;
     }
 
     /**
      * Get the user in the session
      * 
-     * @return string the user username
+     * @return User the user
      */
-    public function getUser(): string {
-      return $_SESSION['user'];
+    public function getUser(): User {
+      return User::getUserById($_SESSION['user']);
     }
 
     /**

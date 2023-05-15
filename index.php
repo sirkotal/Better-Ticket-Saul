@@ -35,7 +35,7 @@
       </p>
     </section>
     <section>
-      <h3><a href="#">FAQs</a></h3>
+      <h3><a href="departments.php">FAQs</a></h3>
       <p>
         Check our frequently asked questions for answers to common inquiries. If you can't find the information
         you're looking for, please feel free to contact us for further assistance.

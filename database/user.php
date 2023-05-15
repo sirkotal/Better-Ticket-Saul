@@ -498,13 +498,18 @@
     }
 
     public function parseJsonInfo(): array {
+      $departmentNames = array_map(function ($departmentId) {
+        $department = new Department($departmentId);
+        return $department->getName();
+      }, $this->departmentsIds);
+
       return [
         'id' => $this->id,
         'username' => $this->username,
         'name' => $this->name,
         'email' => $this->email,
         'role' => 'agent',
-        'departmentsIds' => $this->departmentsIds,
+        'departments' => $departmentNames,
       ];
     }
 
@@ -556,13 +561,18 @@
     }
 
     public function parseJsonInfo(): array {
+      $departmentNames = array_map(function ($departmentId) {
+        $department = new Department($departmentId);
+        return $department->getName();
+      }, $this->departmentsIds);
+
       return [
         'id' => $this->id,
         'username' => $this->username,
         'name' => $this->name,
         'email' => $this->email,
         'role' => 'admin',
-        'departmentsIds' => $this->departmentsIds,
+        'departments' => $departmentNames,
       ];
     }
   }

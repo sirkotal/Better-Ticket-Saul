@@ -104,14 +104,14 @@
 
         API::sendResponse(HttpStatus::OK, [
           'message' => 'Agent added to department',
-          'body' => Department::parseJsonInfo($department)
+          'body' => $department->parseJsonInfo()
         ]);
       } else {
         $department->removeAgent(new Agent($user->getId()));
 
         API::sendResponse(HttpStatus::OK, [
           'message' => 'Agent removed from department',
-          'body' => Department::parseJsonInfo($department)
+          'body' => $department->parseJsonInfo()
         ]);
       }
 

@@ -91,7 +91,8 @@
         throw new Exception('Department does not exist');
       }
 
-      $info = Department::parseJsonInfo(new Department($id));
+      $department = new Department($id);
+      $info = $department->parseJsonInfo();
       $db = getDatabaseConnection();
 
       $stmt = $db->prepare('DELETE FROM Department WHERE id = :id');
@@ -157,16 +158,19 @@
     /**
      * Parse a department info to an array ready to be json encoded
      * 
-     * @param Department $department The department to parse
      * @return array The parsed department info
      */
-    public static function parseJsonInfo(Department $department): array {
+    public function parseJsonInfo(): array {
       return [
-        'id' => $department->getId(),
-        'name' => $department->getName(),
-        'agentsIds' => array_map(function ($agent) {
-          return $agent->getId();
-        }, $department->getAgents())
+        'id' => $this->getId(),
+        'name' => $this->getName(),
+        'agents' => array_map(function ($agent) {
+          return [
+            'username' => $agent->getUsername(),
+            'name' => $agent->getName(),
+            'email' => $agent->getEmail()
+          ];
+        }, $this->getAgents())
       ];
     }
 

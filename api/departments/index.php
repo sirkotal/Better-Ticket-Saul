@@ -24,7 +24,7 @@
 
         $department = new Department((int) $parts[3]);
 
-        API::sendResponse(HttpStatus::OK, Department::parseJsonInfo($department));
+        API::sendResponse(HttpStatus::OK, $department->parseJsonInfo());
         die();
       }
 
@@ -32,7 +32,7 @@
       $body = [];
 
       foreach ($departments as $department) {
-        $body[] = Department::parseJsonInfo($department);
+        $body[] = $department->parseJsonInfo();
       }
 
       API::sendResponse(HttpStatus::OK, $body);
@@ -58,7 +58,7 @@
       }
 
       $department = Department::create($name);
-      $body = Department::parseJsonInfo($department);
+      $body = $department->parseJsonInfo();
 
       API::sendResponse(HttpStatus::CREATED, [
         'message' => 'Department created successfully',
@@ -117,7 +117,7 @@
 
       API::sendResponse(HttpStatus::OK, [
         'message' => 'Department updated successfully',
-        'body' => Department::parseJsonInfo($department)
+        'body' => $department->parseJsonInfo()
       ]);
       die();
     case RequestMethod::DELETE:

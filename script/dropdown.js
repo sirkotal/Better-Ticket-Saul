@@ -59,8 +59,6 @@ function faqDropdown() {
   const questions = document.querySelectorAll('.question');
 
   questions.forEach(section => {
-    const question = section.querySelector('h2');
-    const answer = section.querySelector('p');
     const button = section.querySelector('.dropdown-button');
     const icon = button.querySelector('i');
 

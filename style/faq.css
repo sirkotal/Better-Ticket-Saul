@@ -1,5 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap');
+
 :root {
     --highlight: #f8ebda80;
+    --color-header: #e3d1b8;
+    --font-title: 'Poppins', Arial, Helvetica, sans-serif;
 }
 
 #faq {
@@ -7,7 +11,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 2rem;
+    gap: 1rem;
     padding: 2rem;
     height: 100%;
 }
@@ -17,6 +21,7 @@
     color: black;
     font-weight: bold;
     padding-top: 2.3rem;
+    font-family: var(--font-title);
 }
 
 #faq .question {
@@ -30,11 +35,13 @@
 
 #faq .question-head {
     display: flex;
+    justify-content: space-between;
     align-items: center;
 }
 
 #faq .question h2 {
     padding-inline-end: 10px;
+    font-family: var(--font-title);
 }
 
 #faq .question p {

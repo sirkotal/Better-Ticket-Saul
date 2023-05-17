@@ -5,27 +5,21 @@
   require_once(__DIR__ . '/department.php');
 
   abstract class User {
-    protected int $id;
     protected string $username;
     protected string $name;
     protected string $email;
 
-    public function __construct(int $id) {
-      $this->id = $id;
+    public function __construct(string $username) {
+      $this->username = $username;
 
       $db = getDatabaseConnection();
 
-      $stmt = $db->prepare('SELECT * FROM User WHERE id = :id');
-      $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+      $stmt = $db->prepare('SELECT * FROM User WHERE username = :username');
+      $stmt->bindValue(':username', $username);
       $stmt->execute();
 
       $result = $stmt->fetch();
 
-      if ($result === false) {
-        throw new Exception('User not found');
-      }
-
-      $this->username = $result['username'];
       $this->name = $result['name'];
       $this->email = $result['email'];
     }
@@ -459,8 +453,8 @@
   }
 
   class Client extends User {
-    public function __construct(int $userId) {
-      parent::__construct($userId);
+    public function __construct(string $username) {
+      parent::__construct($username);
     }
 
     public function parseJsonInfo(): array {
@@ -477,12 +471,12 @@
   class Agent extends Client {
     protected array $departmentsIds;
 
-    public function __construct(int $userId) {
-      if (!User::isAgent($userId)) {
+    public function __construct(string $username) {
+      if (!User::isAgent($username)) {
         throw new Exception('User is not an agent');
       }
       
-      parent::__construct($userId);
+      parent::__construct($username);
 
       $db = getDatabaseConnection();
 
@@ -547,12 +541,12 @@
   }
 
   class Admin extends Agent {
-    public function __construct(int $userId) {
-      if (!User::isAdmin($userId)) {
+    public function __construct(string $username) {
+      if (!User::isAdmin($username)) {
         throw new Exception('User is not an admin');
       }
 
-      parent::__construct($userId);
+      parent::__construct($username);
     }
 
     public function parseJsonInfo(): array {

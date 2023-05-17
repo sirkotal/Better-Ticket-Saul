@@ -20,6 +20,7 @@
     <link href="/style/footer.css" rel="stylesheet">
     <link href="/style/register.css" rel="stylesheet">
     <link href="/style/login.css" rel="stylesheet">
+    <link href="/style/edit_profile.css" rel="stylesheet">
     <script src="/script/dropdown.js" defer></script>
 
     <?php foreach ($stylesheets as $stylesheet) { ?>
@@ -54,6 +55,7 @@
               <ul>
                 <li><a href="/create_ticket.php">Submit Ticket</a></li>
                 <li><a href="/view_ticket.php">View Tickets</a></li>
+                <li><a href="/edit_profile.php">Edit Profile</a></li>
               </ul>
             </div>
           </div>

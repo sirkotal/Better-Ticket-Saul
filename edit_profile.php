@@ -52,7 +52,7 @@
         <label class="title">Enter the new Username</label>
         <input type="text" name="username"> 
     </div>
-    <!--<div id="name-change" class="profile-change">
+    <div id="name-change" class="profile-change">
         <p class="title">Previous Name</p>
         <p class="value"><?=$name?></p>
         <label class="title">Enter the new Name</label>
@@ -63,7 +63,7 @@
         <p class="value"><?=$email?></p>
         <label class="title">Enter the new Email</label>
         <input type="email" name="email"> 
-    </div>-->
+    </div>
   </div>
 </body>
 <?php outputFooter() ?>

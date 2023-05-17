@@ -55,6 +55,20 @@ function signEffect(login, register, sign_div) {
     }
 }
 
+function faqDropdown() {
+  const questions = document.querySelectorAll('.question');
+
+  questions.forEach(section => {
+    const question = section.querySelector('h2');
+    const answer = section.querySelector('p');
+    const button = section.querySelector('.dropdown-button');
+
+    button.addEventListener('click', () => {
+      section.classList.toggle('open');
+    });
+  });
+}
+  
 const hamburger_button = document.querySelector('#hamburger-button');
 const hamburger_menu = document.querySelector('#hamburger-menu');
 hamburgerDropdown(hamburger_button, hamburger_menu);
@@ -68,6 +82,4 @@ const register_button = document.querySelector('#signup');
 const sign_div = document.querySelector('#sign');
 signEffect(login_button, register_button, sign_div);
 
-
-
-
+faqDropdown();

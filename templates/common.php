@@ -16,6 +16,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trouble Ticket Management System</title>
     
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href="/style/header.css" rel="stylesheet">
     <link href="/style/footer.css" rel="stylesheet">
     <link href="/style/register.css" rel="stylesheet">
@@ -25,6 +26,7 @@
     <link href="/style/contact.css" rel="stylesheet">
     <link href="/style/faq.css" rel="stylesheet">
     <script src="/script/dropdown.js" defer></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 
     <?php foreach ($stylesheets as $stylesheet) { ?>
       <link rel="stylesheet" href="<?= $stylesheet ?>">

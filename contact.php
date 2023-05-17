@@ -22,7 +22,7 @@
       <label>
         <textarea name="message" required></textarea> <p>Message</p> 
       </label>
-      <button type="submit">Submit</button>
+      <button formaction="#" formmethod="post">Submit</button>
     </form>
   </section>
   <?php outputFooter() ?>

@@ -16,7 +16,7 @@
     text-align: center;
     color: black;
     font-weight: bold;
-    padding-top: 0.3rem;
+    padding-top: 2.3rem;
 }
 
 #faq .question {
@@ -28,8 +28,55 @@
     padding: 1.5rem;
 }
 
+#faq .question-head {
+    display: flex;
+    align-items: center;
+}
+
+#faq .question h2 {
+    padding-inline-end: 10px;
+}
+
 #faq .question p {
+    display: none;
     padding-top: 0.3rem;
     font-size: large;
     font-style: italic;
+}
+
+#faq .question.open p {
+    display: block;
+}
+
+.down-button {
+    display: inline-block;
+}
+
+#faq .dropdown-button:hover {
+    cursor: pointer;
+}
+
+#faq .dropdown-button {
+    background: none;
+    border: none;
+}
+
+.down-button {
+    font-size: 18px;
+}
+
+/*.down-button::before {
+    content: "";
+    display: inline-block;
+    width: 0.5em;
+    height: 0.5em;
+    border-style: solid;
+    border-width: 0.15em 0.15em 0 0.15em;
+    border-color: #000;
+    transform: rotate(45deg);
+    margin-right: 0.5em;
+}*/
+  
+.down-button::before {
+    transform: rotate(-45deg);
 }

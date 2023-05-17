@@ -62,9 +62,13 @@ function faqDropdown() {
     const question = section.querySelector('h2');
     const answer = section.querySelector('p');
     const button = section.querySelector('.dropdown-button');
+    const icon = button.querySelector('i');
 
     button.addEventListener('click', () => {
       section.classList.toggle('open');
+      button.classList.toggle('rotate');
+      icon.classList.toggle('fa-caret-square-down');
+      icon.classList.toggle('fa-caret-square-up');
     });
   });
 }

@@ -1,0 +1,90 @@
+@import url('https://fonts.googleapis.com/css?family=Lora:400,700|Poppins:400,700');
+
+:root {
+    --font-serif: 'Lora', 'Times New Roman', Times, serif;
+    --font-sans: Arial, Helvetica, sans-serif;
+    --font-title: 'Poppins', Arial, Helvetica, sans-serif;
+}
+
+*{
+    box-sizing: border-box;
+    margin: 0;
+}
+
+#edit-profile {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 2rem;
+    width: 25%;
+}
+
+#edit-profile h1 {
+    font-family: var(--font-title);
+    padding: 1rem 0 0 1rem;
+}
+
+#profile-values{
+    display: flex;
+    flex-direction: column;
+    padding: 1em;
+}
+
+#profile-values button{
+    background-color: #e3d1b8;
+    border-radius: 10px;
+    color: black;
+    font-size: 1rem;
+    font-weight: bold;
+    border: none;
+    padding: 0.5rem;
+}
+
+#profile-values > .header-value{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    font-family: var(--font-title);
+    font-weight: bold;
+    font-size: 1.5rem;
+    padding-bottom: 0.5rem;
+    margin-right: 0.5rem;
+}
+
+#profile-values > .value{
+    border: 1px solid black;
+    border-radius: 15px;
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+
+#edit-profile button:hover {
+    cursor: pointer;
+    background-color: var(--highlight);
+    transition: 1s;
+} 
+
+#edit-profile input::placeholder{
+    color: black;
+    font-size: 1rem;
+    font-style: italic;
+}  
+
+
+
+.profile-change{
+    position: absolute;
+    padding-top: 2rem;
+    width: 20%;
+    left: 0;
+    right: 0;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    opacity: 0;
+}
+
+.profile-change.expanded{
+    opacity: 1;
+}

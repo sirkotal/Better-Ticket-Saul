@@ -125,7 +125,6 @@
         }
 
         $user->setUsername($data['username']);
-        $session->setUser($data['username']);
       }
 
       if (isset($data['name'])) {
@@ -150,7 +149,7 @@
       if (isset($data['password'])) {
         //! just a basic check for now
         if (strlen($data['password']) < 3) {
-          API::sendError(HttpStatus::BAD_REQUEST, 'Password must be at least 8 characters long');
+          API::sendError(HttpStatus::BAD_REQUEST, 'Password must be at least 3 characters long');
           die();
         }
 

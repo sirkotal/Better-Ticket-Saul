@@ -47,7 +47,7 @@
       }
 
       $user = User::create($data['username'], $data['name'], $data['email'], $data['password']);
-      $session->setUser($data['username']);
+      $session->setUser($user->getId());
 
       API::sendResponse(HTTPStatus::CREATED, ['message' => 'User created successfully', 'body' => $user->parseJsonInfo()]);
       die();

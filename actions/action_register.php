@@ -34,8 +34,8 @@
     die();
   }
 
-  User::create($username, $name, $email, $password);
-  $session->setUser($username);
+  $user = User::create($username, $name, $email, $password);
+  $session->setUser($user->getId());
 
   header('Location: /');
 ?>

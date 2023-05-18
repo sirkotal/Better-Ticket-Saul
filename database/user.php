@@ -40,10 +40,10 @@
       $db = getDatabaseConnection();
 
       if (is_int($key)) {
-        $stmt = $db->prepare('SELECT * FROM User WHERE id = :id');
+        $stmt = $db->prepare('SELECT id FROM User WHERE id = :id');
         $stmt->bindValue(':id', $key, PDO::PARAM_INT);
       } else {
-        $stmt = $db->prepare('SELECT * FROM User WHERE username = :username');
+        $stmt = $db->prepare('SELECT id FROM User WHERE username = :username');
         $stmt->bindValue(':username', $key);
       }
       $stmt->execute();
@@ -77,19 +77,23 @@
      * @param string $username The user username
      * @param string $password The user password
      * 
-     * @return bool true if the user is valid, false otherwise
+     * @return int|bool The user id if the user is valid, false otherwise
      */
-    public static function isValid(string $username, string $password): bool {
+    public static function isValid(string $username, string $password): int|bool {
       $db = getDatabaseConnection();
       
-      $stmt = $db->prepare('SELECT * FROM User WHERE username = :username AND password = :password');
+      $stmt = $db->prepare('SELECT id FROM User WHERE username = :username AND password = :password');
       $stmt->bindValue(':username', $username);
       $stmt->bindValue(':password', sha1($password));
       $stmt->execute();
 
       $result = $stmt->fetch();
+
+      if ($result === false) {
+        return false;
+      }
       
-      return $result !== false;
+      return (int) $result['id'];
     }
 
     /**

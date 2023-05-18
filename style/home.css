@@ -22,9 +22,9 @@
     left: 50%;
     transform: translate(-50%, -50%);
     text-align: center;
-    color: white;
+    color: black;
     font-size: 3rem;
-    font-weight: bold;
+    font-weight: normal;
     opacity: 0;
     transition: opacity 0.5s ease-in-out;
     background-color: rgba(255, 0, 0, 0);
@@ -40,7 +40,7 @@
 #saul-title:after {
     display: block;
     content: '';
-    border-bottom: solid 0.5rem white;  
+    border-bottom: solid 0.5rem black;  
     transform: scaleX(0);  
     transition: transform 1s ease-in-out;
 }

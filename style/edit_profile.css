@@ -24,13 +24,20 @@
     padding: 1rem 0 0 1rem;
 }
 
-#profile-values{
-    display: flex;
-    flex-direction: column;
-    padding: 1em;
+#edit-profile .title{
+    font-family: var(--font-title);
+    font-weight: bold;
+    font-size: 1.5rem;
 }
 
-#profile-values button{
+#edit-profile .value, .profile-change > input{
+    border: 1px solid black;
+    border-radius: 15px;
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+#edit-profile button{
     background-color: #e3d1b8;
     border-radius: 10px;
     color: black;
@@ -39,25 +46,6 @@
     border: none;
     padding: 0.5rem;
 }
-
-#profile-values > .header-value{
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    font-family: var(--font-title);
-    font-weight: bold;
-    font-size: 1.5rem;
-    padding-bottom: 0.5rem;
-    margin-right: 0.5rem;
-}
-
-#profile-values > .value{
-    border: 1px solid black;
-    border-radius: 15px;
-    padding: 0.5rem;
-    margin-bottom: 1rem;
-}
-
 
 #edit-profile button:hover {
     cursor: pointer;
@@ -71,23 +59,44 @@
     font-style: italic;
 }  
 
+#profile-values{
+    display: flex;
+    flex-direction: column;
+    padding: 1em;
+}
 
+#profile-values .header-value{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-right: 0.5rem;
+    padding-bottom: 0.5rem;
+}
 
 .profile-change{
     position: absolute;
-    padding-top: 2rem;
+    display: flex;
+    flex-direction: column;
     width: 20%;
+    padding: 1rem;
     left: 0;
     right: 0;
     margin: auto;
-    display: flex;
-    flex-direction: column;
     opacity: 0;
+    pointer-events: none;
+    border: 1px solid black;
+    border-radius: 15px;
 }
 
 .profile-change.expanded{
     opacity: 1;
     z-index: 1;
     pointer-events: auto;
+    filter: grayscale(0);
 }
+
+.profile-change .title {
+    padding-bottom: 0.5rem;
+}
+
 

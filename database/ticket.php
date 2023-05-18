@@ -10,6 +10,69 @@
 
   //? maybe change throws to something else
 
+  class TicketStatus {
+    public static function create(string $status, string $color): void {
+      $db = getDatabaseConnection();
+
+      $stmt = $db->prepare('INSERT INTO TicketStatus (status, color) VALUES (:status, :color)');
+      $stmt->bindValue(':status', $status);
+      $stmt->bindValue(':color', $color);
+      $stmt->execute();
+    }
+
+    public static function getAll(): array {
+      $db = getDatabaseConnection();
+
+      $stmt = $db->prepare('SELECT * FROM TicketStatus');
+      $stmt->execute();
+
+      $result = $stmt->fetchAll();
+
+      return array_map(function ($row) {
+        return [
+          'status' => $row['status'],
+          'color' => $row['color']
+        ];
+      }, $result);
+    }
+
+    public static function getColor(string $status): array {
+      $db = getDatabaseConnection();
+
+      $stmt = $db->prepare('SELECT * FROM TicketStatus WHERE status = :status');
+      $stmt->bindValue(':status', $status);
+      $stmt->execute();
+
+      $result = $stmt->fetch();
+
+      if (!$result) {
+        throw new Exception('Status not found');
+      }
+
+      return [
+        'status' => $result['status'],
+        'color' => $result['color']
+      ];
+    }
+
+    public static function update(string $status, string $color): void {
+      $db = getDatabaseConnection();
+
+      $stmt = $db->prepare('UPDATE TicketStatus SET color = :color WHERE status = :status');
+      $stmt->bindValue(':status', $status);
+      $stmt->bindValue(':color', $color);
+      $stmt->execute();
+    }
+
+    public static function delete(string $status): void {
+      $db = getDatabaseConnection();
+
+      $stmt = $db->prepare('DELETE FROM TicketStatus WHERE status = :status');
+      $stmt->bindValue(':status', $status);
+      $stmt->execute();
+    }
+  }
+
   class Ticket {
     private int $id;
     private string $title;
@@ -35,6 +98,13 @@
 
       if (!$result) {
         throw new Exception('Ticket not found');
+      }
+
+      // check if status exists
+      try {
+        TicketStatus::getColor($result['status']);
+      } catch (Exception $e) {
+        throw new Exception('Ticket status not found');
       }
 
       $this->id = $result['id'];
@@ -233,16 +303,14 @@
     public static function getTicketsByClient(Client $client): array {
       $db = getDatabaseConnection();
 
-      $client_username = $client->getUsername();
-
-      $stmt = $db->prepare('SELECT idTicket FROM Ticket WHERE client = :client');
-      $stmt->bindParam(':client', $client_username);
+      $stmt = $db->prepare('SELECT id FROM Ticket WHERE clientId = :clientId');
+      $stmt->bindValue(':clientId', $client->getId(), PDO::PARAM_INT);
       $stmt->execute();
 
       $result = $stmt->fetchAll();
 
       return array_map(function ($row) {
-        return new Ticket($row['idTicket']);
+        return new Ticket($row['id']);
       }, $result);
     }
 

@@ -34,58 +34,49 @@
     border: 0.1rem solid var(--border-color);
     border-top: none;
     padding: 1rem;
-    display: grid;
-    grid-template-columns: [start] auto [status_end] auto [department_end] auto [date_end] 1fr [end];
-    grid-template-rows: [start] auto [info] auto [end];
+    display: flex;
+    flex-direction: column;
 }
 
-.ticket > .title {
-    grid-row: start / info;
-    grid-column: start / end;
+.ticket > .bottom-row {
+    display: flex;
+}
+
+.ticket  .title {
     padding-bottom: 0.5rem;
     font-size: 1.7rem;
     font-weight: bold;
     font-family: var(--font-title);
 }
 
-.ticket .status {
-    border-radius: 0.938rem;
-    color: white;
-    padding: 0.25rem 0.75rem 0.25rem 0.75rem;
-    margin: 0.25rem 0.5rem 0.25rem 0.25rem;
-    grid-row: info / end;
-    grid-column: start / status_end;
-}
-
-.ticket > .status::before{
-    content:'Status: ';
+.ticket  .title > a {
     color: black;
 }
 
-.ticket > .date {
-    padding: 0 1rem;
-    grid-row: info / end;
-    grid-column: department_end / date_end;
+.ticket .status {
+    border-radius: 0.938rem;
+    color: white;
+    padding: 0.25rem 0.75rem;
+    margin-left: 0.25rem;
 }
 
-.ticket > .date::before{
+.ticket .date::before{
     content: 'Date: ';
 }
 
-.ticket > .department {
-    padding: 0 1rem;
-    grid-row: info / end;
-    grid-column: status_end / department_end;
-    border-right: 0.1rem solid black;
-    border-left: 0.1rem solid black;
-}
-
-.ticket > .department::before{
+.ticket .department::before{
     content:'Department: ';
 }
 
-
+.ticket .agent::before{
+    content:'Agent: ';
+}
 
 .ticket:hover {
     background-color: var(--background-color);
+}
+
+.ticket p:not(:last-of-type)::after {
+    content: "|";
+    padding: 0 .5em;
 }

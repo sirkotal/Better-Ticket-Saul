@@ -23,7 +23,7 @@
       }
 
       $session = new Session();
-      $user = User::getUserById($session->getUser()->getId());
+      $user = $session->getUser();
 
       // get ticket by id
       if ($parts[3]) {
@@ -72,19 +72,37 @@
         die();
       }
 
-      if (!User::isAdmin($user->getId())) {
-        API::sendError(HttpStatus::FORBIDDEN, 'You do not have permission to do that');
+      if (!$session->isLoggedIn()) {
+        API::sendError(HttpStatus::UNAUTHORIZED, 'You are not logged in');
         die();
       }
 
-      $tickets = Ticket::getAllTickets();
+      if (User::isAdmin($user->getId())) {
+        $tickets = Ticket::getAllTickets();
 
-      $body = [];
-      foreach ($tickets as $ticket) {
-        $body[] = $ticket->parseJsonInfo();
+        $body = [];
+        foreach ($tickets as $ticket) {
+          $body[] = $ticket->parseJsonInfo();
+        }
+
+        API::sendResponse(HttpStatus::OK, $body);
+        die();
       }
 
-      API::sendResponse(HttpStatus::OK, $body);
+      // is not admin and is not agent -> is client
+      if (!User::isAgent($user->getId())) {
+        $tickets = Ticket::getTicketsByClient($user);
+
+        $body = [];
+        foreach ($tickets as $ticket) {
+          $body[] = $ticket->parseJsonInfo();
+        }
+
+        API::sendResponse(HttpStatus::OK, $body);
+        die();
+      }
+
+      API::sendError(HttpStatus::FORBIDDEN, 'You do not have permission to do that');
       die();
     case RequestMethod::POST:
       $session = new Session();

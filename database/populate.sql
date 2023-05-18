@@ -74,6 +74,13 @@ INSERT INTO Faq (question, answer) VALUES
         'Because he is the best lawyer in Albuquerque.'
     );
 
+-- Create Ticket Status
+
+INSERT INTO TicketStatus (status, color) VALUES
+    ('Open', '#008000'),
+    ('In Progress', '#dd8000'),
+    ('Closed', '#800000');
+
 -- Create Tickets
 
 INSERT INTO Ticket (title, text, date, status, clientId) VALUES
@@ -90,7 +97,7 @@ INSERT INTO Ticket (title, text, date, status, clientId, agentId, departmentId) 
         'I want to buy a car',
         'I want to buy a car, but it needs to be in cash. I have $100,000 in cash.',
         1682731073,
-        'Open',
+        'In Progress',
         1, -- test_client
         2, -- test_agent
         1 -- Sales

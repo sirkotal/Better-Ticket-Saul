@@ -70,7 +70,7 @@
       }
 
       $user = User::getUserById((int) $parts[3]);
-      if ($user->getUsername() !== $session->getUser()) {
+      if ($user->getId() !== $session->getUser()) {
         API::sendError(HttpStatus::UNAUTHORIZED, 'You are not authorized to edit this user');
         die();
       }
@@ -125,7 +125,6 @@
         }
 
         $user->setUsername($data['username']);
-        $session->setUser($data['username']);
       }
 
       if (isset($data['name'])) {
@@ -150,7 +149,7 @@
       if (isset($data['password'])) {
         //! just a basic check for now
         if (strlen($data['password']) < 3) {
-          API::sendError(HttpStatus::BAD_REQUEST, 'Password must be at least 8 characters long');
+          API::sendError(HttpStatus::BAD_REQUEST, 'Password must be at least 3 characters long');
           die();
         }
 
@@ -173,6 +172,13 @@
 
       if (!is_numeric($parts[3])) {
         API::sendError(HttpStatus::BAD_REQUEST, 'Invalid field types');
+        die();
+      }
+
+      $user = User::getUserById((int) $parts[3]);
+
+      if ($user->getId() !== $session->getUser()->getId() || !User::isAdmin($user->getId())) {
+        API::sendError(HttpStatus::UNAUTHORIZED, 'You are not authorized to delete this user');
         die();
       }
 

@@ -20,6 +20,17 @@
         die();
       }
 
+      $session = new Session();
+      if (!$session->isLoggedIn()) {
+        API::sendError(HttpStatus::UNAUTHORIZED, 'You must be logged in to do that');
+        die();
+      }
+
+      if (!User::isAdmin($session->getUser()->getId())) {
+        API::sendError(HttpStatus::FORBIDDEN, 'You must be an admin to do that');
+        die();
+      }
+
       try {
         $user = User::getUserById((int) $parts[3]);
       } catch (Exception $e) {
@@ -50,6 +61,17 @@
 
       if (!is_numeric($parts[3])) {
         API::sendError(HttpStatus::BAD_REQUEST, 'Invalid field types');
+        die();
+      }
+
+      $session = new Session();
+      if (!$session->isLoggedIn()) {
+        API::sendError(HttpStatus::UNAUTHORIZED, 'You must be logged in to do that');
+        die();
+      }
+
+      if (!User::isAdmin($session->getUser()->getId())) {
+        API::sendError(HttpStatus::FORBIDDEN, 'You must be an admin to do that');
         die();
       }
 
@@ -104,14 +126,14 @@
 
         API::sendResponse(HttpStatus::OK, [
           'message' => 'Agent added to department',
-          'body' => Department::parseJsonInfo($department)
+          'body' => $department->parseJsonInfo()
         ]);
       } else {
         $department->removeAgent(new Agent($user->getId()));
 
         API::sendResponse(HttpStatus::OK, [
           'message' => 'Agent removed from department',
-          'body' => Department::parseJsonInfo($department)
+          'body' => $department->parseJsonInfo()
         ]);
       }
 
@@ -127,6 +149,17 @@
 
       if (!is_numeric($parts[3])) {
         API::sendError(HttpStatus::BAD_REQUEST, 'Invalid field types');
+        die();
+      }
+
+      $session = new Session();
+      if (!$session->isLoggedIn()) {
+        API::sendError(HttpStatus::UNAUTHORIZED, 'You must be logged in to do that');
+        die();
+      }
+
+      if (!User::isAdmin($session->getUser()->getId())) {
+        API::sendError(HttpStatus::FORBIDDEN, 'You must be an admin to do that');
         die();
       }
 

@@ -36,6 +36,17 @@
       API::sendResponse(HttpStatus::OK, $body);
       die();
     case RequestMethod::POST:
+      $session = new Session();
+      if (!$session->isLoggedIn()) {
+        API::sendError(HttpStatus::UNAUTHORIZED, 'You must be logged in to do that');
+        die();
+      }
+
+      if (!User::isAdmin($session->getUser()->getId())) {
+        API::sendError(HttpStatus::FORBIDDEN, 'You must be an admin to do that');
+        die();
+      }
+
       $data = API::getJsonInput();
 
       if (empty($data)) {
@@ -85,6 +96,17 @@
         API::sendError(HttpStatus::BAD_REQUEST, 'Invalid field types');
         die();
       }
+
+      $session = new Session();
+      if (!$session->isLoggedIn()) {
+        API::sendError(HttpStatus::UNAUTHORIZED, 'You must be logged in to do that');
+        die();
+      }
+
+      if (!User::isAdmin($session->getUser()->getId())) {
+        API::sendError(HttpStatus::FORBIDDEN, 'You must be an admin to do that');
+        die();
+      }
       
       $data = API::getJsonInput();
 
@@ -132,6 +154,17 @@
 
       if (!is_numeric($parts[3])) {
         API::sendError(HttpStatus::BAD_REQUEST, 'Invalid field types');
+        die();
+      }
+
+      $session = new Session();
+      if (!$session->isLoggedIn()) {
+        API::sendError(HttpStatus::UNAUTHORIZED, 'You must be logged in to do that');
+        die();
+      }
+
+      if (!User::isAdmin($session->getUser()->getId())) {
+        API::sendError(HttpStatus::FORBIDDEN, 'You must be an admin to do that');
         die();
       }
 

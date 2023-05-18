@@ -182,6 +182,12 @@
      * @return array The parsed user info.
      */
     public function parseJsonInfo(): array {
+      $client = $this->getClient();
+      $agent = $this->getAgent();
+      $department = $this->getDepartment();
+      $replies = $this->getReplies();
+      $logs = $this->getLogs();
+
       return [
         'id' => $this->id,
         'title' => $this->title,
@@ -189,12 +195,32 @@
         'date' => $this->date,
         'status' => $this->status,
         'priority' => $this->priority ? $this->priority : null,
-        'clientId' => $this->clientId ? $this->clientId : null,
-        'agentId' => $this->agentId ? $this->agentId : null,
-        'departmentId' => $this->departmentId ? $this->departmentId : null,
+        'client' => $this->clientId ? [
+          'username' => $client->getUsername(),
+          'name' => $client->getName(),
+          'email' => $client->getEmail()
+        ] : null,
+        'agent' => $this->agentId ? [
+          'username' => $agent->getUsername(),
+          'name' => $agent->getName(),
+          'email' => $agent->getEmail()
+        ] : null,
+        'department' => $this->departmentId ? [
+          'name' => $department->getName()
+        ] : null,
         'hashtags' => $this->getHashtags(),
-        'repliesIds' => $this->repliesIds,
-        'logsIds' => $this->logsIds
+        'replies' => array_map(function ($reply) {
+          $info = $reply->parseJsonInfo();
+          unset($info['id']);
+          unset($info['ticket']);
+          return $info;
+        }, $replies),
+        'logs' => array_map(function ($log) {
+          $info = $log->parseJsonInfo();
+          unset($info['id']);
+          unset($info['ticket']);
+          return $info;
+        }, $logs)
       ];
     }
 

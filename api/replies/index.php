@@ -42,6 +42,12 @@
       API::sendResponse(HttpStatus::OK, $body);
       die();
     case RequestMethod::POST:
+      $session = new Session();
+      if (!$session->isLoggedIn()) {
+        API::sendError(HttpStatus::UNAUTHORIZED, 'You must be logged in to do that');
+        die();
+      }
+      
       $data = API::getJsonInput();
 
       if (empty($data)) {
@@ -71,6 +77,11 @@
         die();
       }
 
+      if ($ticket->getAgent()->getId() !== $session->getUser()->getId() || $ticket->getClient()->getId() !== $session->getUser()->getId()) {
+        API::sendError(HttpStatus::FORBIDDEN, 'You are not authorized to do that');
+        die();
+      }
+
       $reply = TicketReply::create($data['reply'], $ticket->getId(), $ticket->getAgent()->getId(), $ticket->getDepartment()->getId());
 
       API::sendResponse(HttpStatus::CREATED, [
@@ -79,6 +90,12 @@
       ]);
       die();
     case RequestMethod::PUT:
+      $session = new Session();
+      if (!$session->isLoggedIn()) {
+        API::sendError(HttpStatus::UNAUTHORIZED, 'You must be logged in to do that');
+        die();
+      }
+
       $url = parse_url($_SERVER['REQUEST_URI']);
       $parts = explode('/', $url['path']);
 
@@ -96,6 +113,11 @@
         $reply = new TicketReply((int) $parts[3]);
       } catch (Exception $e) {
         API::sendError(HttpStatus::NOT_FOUND, 'Ticket reply not found');
+        die();
+      }
+
+      if ($reply->getAgent()->getId() !== $session->getUser()->getId() || $reply->getTicket()->getId() !== $session->getUser()->getId()) {
+        API::sendError(HttpStatus::FORBIDDEN, 'You are not authorized to do that');
         die();
       }
 
@@ -129,6 +151,12 @@
       ]);
       die();
     case RequestMethod::DELETE:
+      $session = new Session();
+      if (!$session->isLoggedIn()) {
+        API::sendError(HttpStatus::UNAUTHORIZED, 'You must be logged in to do that');
+        die();
+      }
+
       $url = parse_url($_SERVER['REQUEST_URI']);
       $parts = explode('/', $url['path']);
 
@@ -139,6 +167,13 @@
 
       if (count($parts) > 4) {
         API::sendError(HttpStatus::BAD_REQUEST, 'Endpoint not found');
+        die();
+      }
+
+      $reply = new TicketReply((int) $parts[3]);
+
+      if ($reply->getAgent()->getId() !== $session->getUser()->getId() || $reply->getTicket()->getId() !== $session->getUser()->getId()) {
+        API::sendError(HttpStatus::FORBIDDEN, 'You are not authorized to do that');
         die();
       }
 

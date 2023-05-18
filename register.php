@@ -11,7 +11,8 @@
 
 <?php outputHead(
   $stylesheets = [
-    $error !== null ? '/style/errors.css': ''
+    $error !== null ? '/style/errors.css': '',
+    '/style/register.css'
   ]
 ) ?>
 <body>

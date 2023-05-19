@@ -38,7 +38,7 @@
 <?php function outputHeader(): void {
   $session = new Session(); ?>
   <header>
-        <a href="/" id="logo"><img src="/assets/logo.png" alt="logo" width="75" height = "75" /></a>
+        <a href="/" id="logo"><img src="/assets/logo.webp" alt="logo" width="75" height = "75" /></a>
         <h1>Better Ticket Saul</h1>
         <nav id="menu" class="menu">
           <ul>

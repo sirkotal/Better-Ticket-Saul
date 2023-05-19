@@ -16,14 +16,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trouble Ticket Management System</title>
     
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href="/style/header.css" rel="stylesheet">
     <link href="/style/footer.css" rel="stylesheet">
     <link href="/style/register.css" rel="stylesheet">
     <link href="/style/login.css" rel="stylesheet">
     <link href="/style/signup.css" rel="stylesheet">
     <link href="/style/responsive.css" rel="stylesheet">
+    <link href="/style/layout.css" rel="stylesheet">
+    <link href="/style/home.css" rel="stylesheet">
     <script src="/script/dropdown.js" defer></script>
-
+    <script src="/script/switch.js" defer></script>
+    
     <?php foreach ($stylesheets as $stylesheet) { ?>
       <link rel="stylesheet" href="<?= $stylesheet ?>">
     <?php } ?>
@@ -95,6 +99,13 @@
 
 <?php function outputFooter(): void { ?>
   <footer>
-    <p>&copy; 2023 The LDTS Group || All Rights Reserved</p>
+    <p>&copy; 2023 Better Ticket Saul || All Rights Reserved</p>
+    <div class="footer-icons">
+        <ul class="socials">
+            <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+            <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+            <li><a href="#"><i class="fa fa-instagram"></i></a></li>
+        </ul>
+    </div>
   </footer>
 <?php } ?>

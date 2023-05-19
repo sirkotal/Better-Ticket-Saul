@@ -1,3 +1,8 @@
+:root {
+    --socials-color: #333333;
+    --hover-color: #575656;
+}
+
 * {
     box-sizing: border-box;
     margin: 0;
@@ -9,6 +14,37 @@ body > footer {
     background-color: gray;
     color: whitesmoke;
     padding: 1rem;
-    margin-bottom: 1rem;
     margin-top: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+footer > p {
+    font-weight: normal;
+}
+
+.socials li {
+    display: inline-block;
+    margin-right: 0.625rem;
+    list-style-type: none;
+}
+
+.socials li:last-child {
+    margin-right: 0;
+}
+
+.socials a {
+    display: inline-block;
+    width: 1.875rem;
+    height: 1.875rem;
+    line-height: 1.875rem;
+    text-align: center;
+    color: white;
+    background-color: var(--socials-color);
+    border-radius: 30%;
+}
+
+.socials a:hover {
+    background-color: var(--hover-color);
 }

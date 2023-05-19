@@ -23,10 +23,10 @@
     <h1>Contact Us</h1>
     <form>
       <label>
-        <input type="text" name="name" required value="<?= $name ?>"> <p>Name</p> 
+        <input type="text" name="name" required value="<?= $name ?>" <?php if ($session->isLoggedIn()) echo 'disabled' ?>> <p>Name</p> 
       </label>
       <label>
-        <input type="text" name="email" required value="<?= $email ?>"> <p>Email</p>
+        <input type="text" name="email" required value="<?= $email ?>" <?php if ($session->isLoggedIn()) echo 'disabled' ?>> <p>Email</p>
       </label>
       <label>
         <input type="text" name="subject" required> <p>Subject</p> 

@@ -2,24 +2,31 @@
   declare (strict_types = 1);
 
   require_once(__DIR__ . '/templates/common.php');
+  require_once(__DIR__ . '/lib/session.php');
+
+  $session = new Session();
+
+  $name = '';
+  $email = '';
+
+  if ($session->isLoggedIn()) {
+    $user = $session->getUser();
+    $name = $user->getName();
+    $email = $user->getEmail();
+  }
 ?>
 
 <?php outputHead() ?>
 <body>
   <?php outputHeader() ?>
-  <?php 
-  $name = isset($_SESSION['user']) ? $_SESSION['user'] : '';
-  $email = isset($_SESSION['user']) ? $_SESSION['email'] : '';
-  // var_dump($email);
-  ?>
   <section id="contact">
     <h1>Contact Us</h1>
     <form>
       <label>
-        <input type="text" name="name" required value="<?php echo $name; ?>"> <p>Name</p> 
+        <input type="text" name="name" required value="<?= $name ?>"> <p>Name</p> 
       </label>
       <label>
-        <input type="text" name="email" required value="<?php echo $email; ?>"> <p>Email</p> 
+        <input type="text" name="email" required value="<?= $email ?>"> <p>Email</p>
       </label>
       <label>
         <input type="text" name="subject" required> <p>Subject</p> 

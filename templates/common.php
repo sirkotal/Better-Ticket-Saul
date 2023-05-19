@@ -27,7 +27,6 @@
     <link href="/style/home.css" rel="stylesheet">
     <script src="/script/dropdown.js" defer></script>
     <script src="/script/switch.js" defer></script>
-    <script src="/script/home_welcome.js" defer></script>
     
     <?php foreach ($stylesheets as $stylesheet) { ?>
       <link rel="stylesheet" href="<?= $stylesheet ?>">

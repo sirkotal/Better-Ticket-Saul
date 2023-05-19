@@ -49,7 +49,7 @@
           <ul>
             <li><a href="/index.php">Home</a></li>
             <li><a href="#">FAQs</a></li>
-            <li><a href="#">Contact</a></li>
+            <li><a href="/departments.php">Contact</a></li>
           </ul>
         </nav>
         <button id="hamburger-button">

@@ -2,38 +2,53 @@
   declare (strict_types = 1);
 
   require_once(__DIR__ . '/templates/common.php');
+  require_once(__DIR__ . '/lib/session.php');
+  require_once(__DIR__ . '/database/department.php');
+  require_once(__DIR__ . '/database/user.php');
+
+  $session = new Session();
+
+  if (!$session->isLoggedIn()) {
+    header('Location: login.php');
+    die();
+  }
+  
+  $departs = Department::getAllDepartments();
+  //var_dump($departs);
 ?>
 
-<?php outputHead() ?>
+<?php function outputDepartment(Department $department) {
+  $department_id = $department->getId();
+  $department_name = $department->getName();
+  $department_agents = $department->getAgents() === null ? 'No agents' : $department->getAgents(); ?>
+
+  <div class="department" data-id="<?= $department_id ?>">
+    <h2 class="title"><a href="#"><?= $department_name ?></a></h2>
+    <div class="agent-section">
+      <p class="agent-count"><?= count($department_agents) ?></p>
+      <button class="agent-button">
+				<span class="proto-button"><i class='far fa-caret-square-down'></i></span>
+			</button>
+    </div>
+  </div>
+<?php } ?>
+
+<?php outputHead(
+  $stylesheets = [
+    '/style/departments.css'
+  ],
+  $scripts = [
+  ]
+) ?>
 <body>
   <?php outputHeader() ?>
-  <h1>Departments</h1>
-  <table class="department-table">
-    <thead>
-      <tr>
-        <th>Department</th>
-        <th>Assigned Personnel</th>
-        <th>Assigned Tickets</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>Technical Support</td>
-        <td>John Doe, Jane Smith</td>
-        <td>Ticket #001, Ticket #004</td>
-      </tr>
-      <tr>
-        <td>Customer Service</td>
-        <td>Mark Johnson, Sarah Lee</td>
-        <td>Ticket #002, Ticket #003</td>
-      </tr>
-      <tr>
-        <td>Accounting</td>
-        <td>Robert Kim</td>
-        <td>Ticket #005</td>
-      </tr>
-    </tbody>
-  </table> 
-  <?php outputFooter() ?>
+  <div id="departments">
+    <h1>Departments:</h1>
+    <?php
+      foreach ($departs as $depart) { 
+        outputDepartment($depart);
+      }
+    ?>
+  </div>
 </body>
-</html>
+<?php outputFooter() ?>

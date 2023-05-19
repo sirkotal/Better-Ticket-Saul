@@ -117,3 +117,23 @@
     background-color: #e6e0d9;
 }
 
+.profile-change .error {
+    color: #f00000;
+    font-weight: bold;
+    text-align: center;
+    font-style: italic;
+    margin-bottom: 1rem;
+}
+
+.profile-change .error:empty{
+    display: none;
+}
+  
+.profile-change .error::before {
+    font-style: normal;
+    content: '!';
+    border: 1px solid #f00000;
+    border-radius: 50%;
+    padding: .25em .5em;
+    margin-right: .25em;
+}

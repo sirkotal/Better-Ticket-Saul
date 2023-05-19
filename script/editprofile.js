@@ -1,6 +1,32 @@
+function changeProfilePopUp(buttons, menu, back) {
+  if (buttons!== null && menu !== null && back !== null) {   
+    const body = document.querySelector('#backgroud-popUp');
+    const header = document.querySelector('header');
+    buttons.forEach((button) => {
+      if (button !== null && header!==null && body !== null) {
+        button.addEventListener('click', () => {
+          menu.classList.add('expanded');
+          body.style.pointerEvents = 'none';
+          header.style.pointerEvents = 'none';
+          body.style.filter = 'grayscale(1)';
+          header.style.filter = 'grayscale(1)';   
+        });
+      }
+    });
+    back.addEventListener('click', () => {
+        menu.classList.remove('expanded');
+        body.style.pointerEvents = 'auto';
+        header.style.pointerEvents = 'auto';
+        body.style.filter = 'grayscale(0)';
+        header.style.filter = 'grayscale(0)';
+    })
+  }
+}
+
 function update(saveButton, backButton, newValue, values, field) {
   if (saveButton !== null && backButton !== null && newValue !== null && values !== null && field !== null) { 
-    saveButton.addEventListener('click', () => {    
+    saveButton.addEventListener('click', () => {
+      paragraph = document.querySelector('.profile-change #error-'+field);   
       id = document.querySelector('#profile-values input[name="id"]').value;
       request = new XMLHttpRequest();
       request.open('PUT', '/api/users/' + id);
@@ -20,17 +46,18 @@ function update(saveButton, backButton, newValue, values, field) {
       }
       request.onload = function() {
         if (request.status === 200 ){
-          console.log('working');
           values.forEach((value) => {
-            console.log('in');
             value.textContent = newValue.value;
-          })
+          });
+          paragraph.innerHTML = '';
+          document.querySelector('#'+field+'-change .back-button').click();
         }
         else if (request.status === 400){
-
+          let data = JSON.parse(request.responseText);  
+          paragraph.innerHTML = data.error; 
         }
+        newValue.value = '';
       }
-      newValue.value = '';
     });
     backButton.addEventListener('click', () =>{
       newValue.value = '';
@@ -83,4 +110,24 @@ saveButton = document.querySelector('#password-change #save-password');
 backButton = document.querySelector('#password-change .back-button');
 newValue = document.querySelector('#password-change input[name="password"]');
 confirmValue = document.querySelector('#password-change input[name="confirm-password"]');
-updatePassword(saveButton, backButton, newValue, confirmValue, values);
+updatePassword(saveButton, backButton, newValue, confirmValue);
+
+const username_button = document.querySelectorAll('.username-button');
+const username_popUp = document.querySelector('#username-change');
+const username_back = document.querySelector('#username-change .back-button');
+changeProfilePopUp(username_button, username_popUp, username_back);
+
+const name_button = document.querySelectorAll('.name-button');
+const name_popUp = document.querySelector('#name-change');
+const name_back = document.querySelector('#name-change .back-button');
+changeProfilePopUp(name_button, name_popUp, name_back);
+
+const email_button = document.querySelectorAll('.email-button');
+const email_popUp = document.querySelector('#email-change');
+const email_back = document.querySelector('#email-change .back-button');
+changeProfilePopUp(email_button, email_popUp, email_back);
+
+const password_button = document.querySelectorAll('.password-button');
+const password_popUp = document.querySelector('#password-change');
+const password_back = document.querySelector('#password-change .back-button');
+changeProfilePopUp(password_button, password_popUp, password_back);

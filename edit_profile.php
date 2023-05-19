@@ -55,7 +55,8 @@
         <p class="title">Previous Username</p>
         <p class="value value-username"><?=$username?></p>
         <label class="title">Enter the new Username</label>
-        <input type="text" name="username">
+        <input type="text" name="username"> 
+        <p class = "error" id = "error-username"></p>
         <div class="change-buttons">
           <button class="back-button">Back</button>
           <button class="username-button" id="save-username">Save</button> 
@@ -66,6 +67,7 @@
         <p class="value value-name"><?=$name?></p>
         <label class="title">Enter the new Name</label>
         <input type="text" name="name">
+        <p class = "error" id = "error-name"></p>
         <div class="change-buttons">
           <button class="back-button">Back</button>
           <button class="name-button" id="save-name">Save</button>  
@@ -76,6 +78,7 @@
         <p class="value value-email"><?=$email?></p>
         <label class="title">Enter the new Email</label>
         <input type="email" name="email">
+        <p class = "error" id = "error-email"></p>
         <div class="change-buttons">
           <button class="back-button">Back</button>
           <button class="email-button" id="save-email">Save</button>  
@@ -86,6 +89,7 @@
         <input type="password" name="password">
         <label class="title">Confirm Password</label>
         <input type="password" name="confirm-password">
+        <p class = "error" id = "error-password"></p>
         <div class="change-buttons">
           <button class="back-button">Back</button>
           <button class="password-button" id="save-password">Save</button>  

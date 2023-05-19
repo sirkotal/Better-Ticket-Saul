@@ -25,9 +25,13 @@
     <link href="/style/responsive.css" rel="stylesheet">
     <link href="/style/contact.css" rel="stylesheet">
     <link href="/style/faq.css" rel="stylesheet">
+    <link href="/style/layout.css" rel="stylesheet">
+    <link href="/style/home.css" rel="stylesheet">
+    <script src="/script/dropdown.js" defer></script>
+    <script src="/script/switch.js" defer></script>
     <script src="/script/dropdown.js" defer></script>
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
-
+    
     <?php foreach ($stylesheets as $stylesheet) { ?>
       <link rel="stylesheet" href="<?= $stylesheet ?>">
     <?php } ?>
@@ -100,5 +104,12 @@
 <?php function outputFooter(): void { ?>
   <footer>
     <p>&copy; 2023 Better Ticket Saul || All Rights Reserved</p>
+    <div class="footer-icons">
+        <ul class="socials">
+            <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+            <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+            <li><a href="#"><i class="fa fa-instagram"></i></a></li>
+        </ul>
+    </div>
   </footer>
 <?php } ?>

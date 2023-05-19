@@ -20,6 +20,8 @@
     <link href="/style/footer.css" rel="stylesheet">
     <link href="/style/register.css" rel="stylesheet">
     <link href="/style/login.css" rel="stylesheet">
+    <link href="/style/signup.css" rel="stylesheet">
+    <link href="/style/responsive.css" rel="stylesheet">
     <script src="/script/dropdown.js" defer></script>
 
     <?php foreach ($stylesheets as $stylesheet) { ?>
@@ -36,17 +38,22 @@
 <?php function outputHeader(): void {
   $session = new Session(); ?>
   <header>
-      <div id="header-left">
-        <a href="/" id="logo"><img src="/assets/logo.svg" alt="logo" width="100" height = "100" /></a>
-        <h1><a href="/">Trouble Ticket Management System</a></h1>
-        <nav id="menu">
+        <a href="/" id="logo"><img src="/assets/logo.webp" alt="logo" width="75" height = "75" /></a>
+        <h1>Better Ticket Saul</h1>
+        <nav id="menu" class="menu">
           <ul>
+            <li><a href="/index.php">Home</a></li>
             <li><a href="#">FAQs</a></li>
-            <li><a href="#">Contact Us</a></li>
+            <li><a href="#">Contact</a></li>
           </ul>
         </nav>
-      </div>
-      <div id="header-right">
+        <button id="hamburger-button">
+            <svg class="hamburger" viewBox="0 0 100 100" width="25">
+              <rect class="line top" width="80" height="10" x="10" y="25" rx="5" />
+              <rect class="line middle" width="80" height="10" x="10" y="45" rx="5" />
+              <rect class="line bottom" width="80" height="10" x="10" y="65" rx="5" />
+            </svg>
+        </button>
         <?php if ($session->isLoggedIn()) { ?>
           <div class="dropdown">
             <button id="ticket-button" class="header-options">Ticket</button>
@@ -57,27 +64,31 @@
               </ul>
             </div>
           </div>
-          <button><a href="/actions/action_logout.php">Logout</a></button>
-          <!-- use this for mobile (add the div needed for position: relative) -->
-          <!-- <button id="hamburger-button">
-            <svg class="hamburger" viewBox="0 0 100 100" width="25">
-              <rect class="line top" width="80" height="10" x="10" y="25" rx="5" />
-              <rect class="line middle" width="80" height="10" x="10" y="45" rx="5" />
-              <rect class="line bottom" width="80" height="10" x="10" y="65" rx="5" />
-            </svg>
-          </button>
+          <button id=logout><a href="/actions/action_logout.php">Logout</a></button>
           <div id="hamburger-menu" class="dropdown-menu">
             <ul>
+              <li><a href="/index.php">Home</a></li>
               <li><a href="/create_ticket.php">Submit Ticket</a></li>
               <li><a href="/view_ticket.php">View Tickets</a></li>
+              <li><a href="#">FAQs</a></li>
+              <li><a href="#">Contact</a></li>
               <li><a href="/actions/action_logout.php">Logout</a></li>
             </ul>
-          </div> -->
+          </div>
         <?php } else { ?>
-          <button><a href="/login.php">Login</a></button>
-          <button><a href="/register.php">Register</a></button>
+          <div id='sign'>
+            <button id='signin'><a href="/login.php">Login</a></button>
+            <button id='signup'><a href="/register.php">Register</a></button>
+          </div>
+          <div id="hamburger-menu" class="dropdown-menu">
+            <ul id = "hamburger-sign">
+              <li><a href="/index.php">Home</a></li>
+              <li><a href="#">FAQs</a></li>
+              <li><a href="#">Contact</a></li>
+              <li><a href="/login.php">Login</a></li>
+            </ul>
+          </div>
         <?php } ?>
-      </div>
   </header>
   
 <?php } ?>

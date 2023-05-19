@@ -1,0 +1,88 @@
+@media (max-width: 60em) {
+
+    body > header > h1 {
+        display: none;
+        
+    }
+
+    #sign a, #logout a {
+        padding: 1rem 0;
+    }
+
+    #logout {
+        width: 10rem;
+    }
+
+}
+
+@media (max-width: 30em){
+
+
+    #menu, .dropdown, #logout, #sign {
+        display: none;
+    }
+    
+    header {
+        justify-content: space-between;
+    }
+
+    #hamburger-button, #hamburger-menu{
+        display: block;
+    }
+
+    #hamburger-button{
+        border: none;
+        background: local;
+    }
+
+    #hamburger-button .line {
+        transition: transform 100ms ease-in 100ms, rotate 100ms ease-in, opacity 0ms 100ms;
+        transform-origin: center;
+    }
+    #hamburger-button.expanded .line {
+        transition: transform 100ms ease-in, rotate 100ms ease-in 100ms, opacity 0ms 100ms;
+    }
+    #hamburger-button.expanded .top {
+        transform: translateY(20px);
+        rotate: 45deg;
+    }
+    #hamburger-button.expanded .middle {
+        opacity: 0;
+    }
+    #hamburger-button.expanded .bottom {
+        transform: translateY(-20px);
+        rotate: -45deg;
+    }
+
+    #hamburger-menu {
+        border: 0.1rem solid black;
+        width: 100%;
+        position: absolute;
+        top: 4.8rem;
+        left: 0rem;
+        box-shadow: 0px 0px 10px #e6e0d9;
+        border-top-right-radius: 0;
+        border-top-left-radius: 0;
+    }
+
+    #hamburger-menu > ul {
+        height: 100%;
+        list-style-type: none;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        gap: 1rem;
+        font-size: 1.5rem;
+    }
+
+    #hamburger-menu > ul > li {
+        padding: 0.5rem;
+    }
+
+    #hamburger-menu > ul > li:last-of-type {
+        background-color: #d8bd96;
+        align-self: stretch;
+        text-align: center;
+    }
+}   

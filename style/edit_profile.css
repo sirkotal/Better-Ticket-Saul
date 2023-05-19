@@ -11,6 +11,7 @@
     margin: 0;
 }
 
+
 #edit-profile {
     display: flex;
     flex-direction: column;
@@ -35,6 +36,8 @@
     border-radius: 15px;
     padding: 0.5rem;
     margin-bottom: 1rem;
+    font-size: 1rem;
+    font-family: serif;
 }
 
 #edit-profile button{
@@ -99,4 +102,18 @@
     padding-bottom: 0.5rem;
 }
 
+.change-buttons{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.change-buttons button{
+    width: 100%;
+    margin: 0 1rem;
+}
+
+#edit-profile .back-button {
+    background-color: #e6e0d9;
+}
 

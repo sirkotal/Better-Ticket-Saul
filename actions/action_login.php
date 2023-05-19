@@ -26,12 +26,13 @@
     die();
   }
 
-  if (!User::isValid($username, $password)) {
+  $user_id = User::isValid($username, $password);
+  if ($user_id === false) {
     $session->setError('error-login', 'Invalid password');
     header('Location: ' . $_SERVER['HTTP_REFERER']);
     die();
   }
 
-  $session->setUser($username);
+  $session->setUser($user_id);
   header('Location: /');
 ?>

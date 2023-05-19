@@ -22,6 +22,7 @@
     <link href="/style/login.css" rel="stylesheet">
     <link href="/style/edit_profile.css" rel="stylesheet">
     <script src="/script/dropdown.js" defer></script>
+    <script src="/script/editprofile.js" defer></script>
 
     <?php foreach ($stylesheets as $stylesheet) { ?>
       <link rel="stylesheet" href="<?= $stylesheet ?>">

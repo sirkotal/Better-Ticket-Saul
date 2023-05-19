@@ -25,11 +25,15 @@
     <script src="/script/dropdown.js" defer></script>
 
     <?php foreach ($stylesheets as $stylesheet) { ?>
-      <link rel="stylesheet" href="<?= $stylesheet ?>">
+      <?php if (!empty($stylesheet)) { ?>
+        <link rel="stylesheet" href="<?= $stylesheet ?>">
+      <?php } ?>
     <?php } ?>
 
     <?php foreach ($scripts as $script) { ?>
-      <script src="<?= $script ?>" defer></script>
+      <?php if (!empty($script)) { ?>
+        <script src="<?= $script ?>" defer></script>
+      <?php } ?>
     <?php } ?>
 
   </head>

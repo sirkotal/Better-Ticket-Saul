@@ -55,7 +55,7 @@
         <p class="title">Previous Username</p>
         <p class="value value-username"><?=$username?></p>
         <label class="title">Enter the new Username</label>
-        <input type="text" name="username"> 
+        <input type="text" name="username">
         <div class="change-buttons">
           <button class="back-button">Back</button>
           <button class="username-button" id="save-username">Save</button> 

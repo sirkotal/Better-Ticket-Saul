@@ -1,9 +1,6 @@
 function update(saveButton, backButton, newValue, values, field) {
   if (saveButton !== null && backButton !== null && newValue !== null && values !== null && field !== null) { 
     saveButton.addEventListener('click', () => {    
-      values.forEach((value) => {
-        value.textContent = newValue.value;
-      })
       id = document.querySelector('#profile-values input[name="id"]').value;
       request = new XMLHttpRequest();
       request.open('PUT', '/api/users/' + id);
@@ -20,6 +17,18 @@ function update(saveButton, backButton, newValue, values, field) {
           break;
         default:
           break;
+      }
+      request.onload = function() {
+        if (request.status === 200 ){
+          console.log('working');
+          values.forEach((value) => {
+            console.log('in');
+            value.textContent = newValue.value;
+          })
+        }
+        else if (request.status === 400){
+
+        }
       }
       newValue.value = '';
     });

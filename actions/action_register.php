@@ -29,18 +29,13 @@
   }
 
   if (User::emailExists($email)) {
-    $session->setError('error-register', 'Email already exists');
+    $session->setError('error-register', 'Email already in use');
     header('Location: ' . $_SERVER['HTTP_REFERER']);
     die();
   }
 
-  if (!User::create($username, $name, $email, $password)) {
-    $session->setError('error-register', 'Error creating user');
-    header('Location: ' . $_SERVER['HTTP_REFERER']);
-    die();
-  }
-
-  $session->setUser($username);
+  $user = User::create($username, $name, $email, $password);
+  $session->setUser($user->getId());
 
   header('Location: /');
 ?>

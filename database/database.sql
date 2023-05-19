@@ -12,76 +12,79 @@ DROP TABLE IF EXISTS Department;
 DROP TABLE IF EXISTS Faq;
 
 CREATE TABLE User (
-    username VARCHAR(25) PRIMARY KEY,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username VARCHAR(25),
     name VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,
-    password VARCHAR(255) NOT NULL UNIQUE
+    password VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE Client (
-    username REFERENCES User(username)
+    userId REFERENCES User(id)
 );
 
 CREATE TABLE Agent (
-    username REFERENCES Client(username)
+    userId REFERENCES Client(id)
 );
 
 CREATE TABLE Admin (
-    username REFERENCES Agent(username)
-);
-
-CREATE TABLE AgentDepartment (
-    idAgentDeparment INTEGER PRIMARY KEY AUTOINCREMENT,
-    agent REFERENCES Agent(username),
-    department REFERENCES Department(name)
+    userId REFERENCES Agent(id)
 );
 
 CREATE TABLE Department (
-    name VARCHAR(25) PRIMARY KEY
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name VARCHAR(25)
 );
 
-CREATE TABLE Reply (
-    idReply INTEGER PRIMARY KEY AUTOINCREMENT,
-    reply VARCHAR,
-    date INTEGER,
-    -- attachment VARCHAR,
-    idTicket INTEGER REFERENCES Ticket(idTicket),
-    agent REFERENCES Agent(username),
-    department REFERENCES Department(name)
+CREATE TABLE AgentDepartment (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    agentId REFERENCES Agent(userId),
+    departmentId REFERENCES Department(id)
 );
 
 CREATE TABLE Ticket (
-    idTicket INTEGER PRIMARY KEY AUTOINCREMENT,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
     title VARCHAR,
     text VARCHAR,
     date INTEGER,
     status VARCHAR,
     priority VARCHAR,
-    client REFERENCES Client(username),
-    agent REFERENCES Agent(username),
-    department REFERENCES Department(name)
+    clientId REFERENCES Client(userId),
+    agentId REFERENCES Agent(userId),
+    departmentId REFERENCES Department(id)
 );
 
-CREATE TABLE Hashtag (
-    hashtag VARCHAR PRIMARY KEY
-);
-
-CREATE TABLE TicketHashtag (
-    hashtag REFERENCES Hashtag(hashtag),
-    idTicket REFERENCES Ticket(idTicket)
+CREATE TABLE TicketReply (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    reply VARCHAR,
+    date INTEGER,
+    -- attachment VARCHAR,
+    ticketId INTEGER REFERENCES Ticket(id),
+    agentId REFERENCES Agent(username),
+    departmentId REFERENCES Department(name)
 );
 
 CREATE TABLE TicketLog (
-    idTicketLog INTEGER PRIMARY KEY AUTOINCREMENT,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
     change VARCHAR,
     date INTEGER,
-    idTicket REFERENCES Ticket(idTicket),
-    agent REFERENCES Agent(username),
-    department REFERENCES Department(name)
+    ticketId REFERENCES Ticket(id),
+    agentId REFERENCES Agent(userId),
+    departmentId REFERENCES Department(id)
+);
+
+CREATE TABLE Hashtag (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    hashtag VARCHAR
+);
+
+CREATE TABLE TicketHashtag (
+    hashtagId REFERENCES Hashtag(id),
+    ticketId REFERENCES Ticket(id)
 );
 
 CREATE TABLE Faq (
-    faqId INTEGER PRIMARY KEY AUTOINCREMENT,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
     question VARCHAR,
     answer VARCHAR
 );

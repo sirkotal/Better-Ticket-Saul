@@ -6,41 +6,54 @@
 
   //? maybe change throws to something else
   class Department {
+    private int $id;
     private string $name;
-    private array $agents;
+    private array $agentsIds;
 
-    public function __construct(string $name) {
-      if (!Department::exists($name)) {
+    public function __construct(int $id) {
+      if (!Department::exists($id)) {
         throw new Exception('Department does not exist');
       }
 
-      $this->name = $name;
+      $this->id = $id;
 
       $db = getDatabaseConnection();
 
-      $stmt = $db->prepare('SELECT * FROM AgentDepartment WHERE department = :department');
-      $stmt->bindValue(':department', $name);
+      $stmt = $db->prepare('SELECT * FROM Department WHERE id = :id');
+      $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+      $stmt->execute();
+      
+      $result = $stmt->fetch();
+      $this->name = $result['name'];
+
+      $stmt = $db->prepare('SELECT * FROM AgentDepartment WHERE departmentId = :departmentId');
+      $stmt->bindValue(':departmentId', $id, PDO::PARAM_INT);
       $stmt->execute();
 
       $result = $stmt->fetchAll();
 
-      $this->agents = array_map(function ($row) {
-        return new Agent($row['agent']['username']);
+      $this->agentsIds = array_map(function ($row) {
+        return (int) $row['agentId'];
       }, $result);
     }
 
     /**
      * Check if a department exists (finds a department with the given name)
      * 
-     * @param string $name The department name
-     * 
+     * @param string|int $key The department name if string, department id if int
      * @return bool true if the department exists, false otherwise
      */
-    public static function exists(string $name): bool {
+    public static function exists(string|int $key): bool {
       $db = getDatabaseConnection();
 
-      $stmt = $db->prepare('SELECT * FROM Department WHERE name = :name');
-      $stmt->bindValue(':name', $name);
+      if (is_int($key)) {
+        $stmt = $db->prepare('SELECT * FROM Department WHERE id = :id');
+        $stmt->bindValue(':id', $key, PDO::PARAM_INT);
+      } else {
+        $stmt = $db->prepare('SELECT * FROM Department WHERE name = :name');
+        $stmt->bindValue(':name', $key);
+      }
+
       $stmt->execute();
 
       $result = $stmt->fetch();
@@ -51,8 +64,9 @@
      * Create a new department
      * 
      * @param string $name The department name
+     * @return Department The created department
      */
-    public static function create(string $name): void {
+    public static function create(string $name): Department {
       if (Department::exists($name)) {
         throw new Exception('Department already exists');
       }
@@ -62,27 +76,47 @@
       $stmt = $db->prepare('INSERT INTO Department (name) VALUES (:name)');
       $stmt->bindValue(':name', $name);
       $stmt->execute();
+
+      return new Department((int) $db->lastInsertId());
     }
 
     /**
      * Delete a department
      * 
-     * @param string $name The department name
+     * @param int $id The department id
+     * @return array The deleted department info ready to be json encoded
      */
-    public static function delete(string $name): void {
-      if (!Department::exists($name)) {
+    public static function delete(int $id): array {
+      if (!Department::exists($id)) {
         throw new Exception('Department does not exist');
       }
 
+      $department = new Department($id);
+      $info = $department->parseJsonInfo();
       $db = getDatabaseConnection();
 
-      $stmt = $db->prepare('DELETE FROM Department WHERE name = :name');
-      $stmt->bindValue(':name', $name);
+      $stmt = $db->prepare('DELETE FROM Department WHERE id = :id');
+      $stmt->bindValue(':id', $id, PDO::PARAM_INT);
       $stmt->execute();
 
-      $stmt = $db->prepare('DELETE FROM AgentDepartment WHERE department = :department');
-      $stmt->bindValue(':department', $name);
+      $stmt = $db->prepare('DELETE FROM AgentDepartment WHERE departmentId = :departmentId');
+      $stmt->bindValue(':departmentId', $id, PDO::PARAM_INT);
       $stmt->execute();
+
+      $stmt = $db->prepare('UPDATE Ticket SET departmentId = NULL WHERE departmentId = :departmentId');
+      $stmt->bindValue(':departmentId', $id, PDO::PARAM_INT);
+      $stmt->execute();
+      //? should we also set the agent as null in the ticket?
+
+      $stmt = $db->prepare('UPDATE TicketReply SET departmentId = NULL WHERE departmentId = :departmentId');
+      $stmt->bindValue(':departmentId', $id, PDO::PARAM_INT);
+      $stmt->execute();
+
+      $stmt = $db->prepare('UPDATE TicketLog SET departmentId = NULL WHERE departmentId = :departmentId');
+      $stmt->bindValue(':departmentId', $id, PDO::PARAM_INT);
+      $stmt->execute();
+
+      return $info;
     }
 
     /**
@@ -90,15 +124,14 @@
      * 
      * @param Agent $agent The agent to check
      * @param Department $department The department to check
-     * 
      * @return bool true if the agent is in the department, false otherwise
      */
     public static function isAgentFromDepartment(Agent $agent, Department $department): bool {
       $db = getDatabaseConnection();
 
-      $stmt = $db->prepare('SELECT * FROM AgentDepartment WHERE agent = :agent AND department = :department');
-      $stmt->bindValue(':agent', $agent->getUsername());
-      $stmt->bindValue(':department', $department->getName());
+      $stmt = $db->prepare('SELECT * FROM AgentDepartment WHERE agentId = :agentId AND departmentId = :departmentId');
+      $stmt->bindValue(':agentId', $agent->getId(), PDO::PARAM_INT);
+      $stmt->bindValue(':departmentId', $department->getId(), PDO::PARAM_INT);
       $stmt->execute();
 
       $result = $stmt->fetch();
@@ -106,30 +139,61 @@
     }
 
     /**
+     * Get all departments
+     * 
+     * @return array All departments
+     */
+    public static function getAllDepartments(): array {
+      $db = getDatabaseConnection();
+
+      $stmt = $db->prepare('SELECT * FROM Department');
+      $stmt->execute();
+
+      $result = $stmt->fetchAll();
+      return array_map(function ($row) {
+        return new Department($row['id']);
+      }, $result);
+    }
+
+    /**
+     * Parse a department info to an array ready to be json encoded
+     * 
+     * @return array The parsed department info
+     */
+    public function parseJsonInfo(): array {
+      return [
+        'id' => $this->getId(),
+        'name' => $this->getName(),
+        'agents' => array_map(function ($agent) {
+          return [
+            'username' => $agent->getUsername(),
+            'name' => $agent->getName(),
+            'email' => $agent->getEmail()
+          ];
+        }, $this->getAgents())
+      ];
+    }
+
+    /**
      * Remove an agent from the department
      * 
      * @param Agent $agent The agent to remove
-     * @param bool $exec_query If true, the query will be executed (default: true)
      */
-    public function removeAgent(Agent $agent, bool $exec_query = true): void {
-      if (!in_array($agent, $this->agents)) {
+    public function removeAgent(Agent $agent): void {
+      if (!Department::isAgentFromDepartment($agent, $this)) {
         throw new Exception('Agent not in department');
       }
 
-      if ($exec_query) {
-        $db = getDatabaseConnection();
+      $db = getDatabaseConnection();
 
-        $stmt = $db->prepare('DELETE FROM AgentDepartment WHERE agent = :agent AND department = :department');
-        $stmt->bindValue(':agent', $agent->getUsername());
-        $stmt->bindValue(':department', $this->name);
-        $stmt->execute();
-      }
+      $stmt = $db->prepare('DELETE FROM AgentDepartment WHERE agentId = :agentId AND departmentId = :departmentId');
+      $stmt->bindValue(':agentId', $agent->getId(), PDO::PARAM_INT);
+      $stmt->bindValue(':departmentId', $this->id, PDO::PARAM_INT);
+      $stmt->execute();
 
-      $this->agents = array_filter($this->agents, function ($a) use ($agent) {
-        return $a->getUsername() !== $agent->getUsername();
+      $this->agentsIds = array_filter($this->agentsIds, function ($id) use ($agent) {
+        return $id !== $agent->getId();
       });
-
-      $agent->removeDepartment($this, false);
     }
 
     /**
@@ -138,18 +202,47 @@
      * @param Agent $agent The agent to add
      */
     public function addAgent(Agent $agent): void {
-      if (in_array($agent, $this->agents)) {
+      if (Department::isAgentFromDepartment($agent, $this)) {
         throw new Exception('Agent already in department');
       }
 
       $db = getDatabaseConnection();
 
-      $stmt = $db->prepare('INSERT INTO AgentDepartment (agent, department) VALUES (:agent, :department)');
-      $stmt->bindValue(':agent', $agent->getUsername());
-      $stmt->bindValue(':department', $this->name);
+      $stmt = $db->prepare('INSERT INTO AgentDepartment (agentId, departmentId) VALUES (:agentId, :departmentId)');
+      $stmt->bindValue(':agentId', $agent->getId(), PDO::PARAM_INT);
+      $stmt->bindValue(':departmentId', $this->id, PDO::PARAM_INT);
       $stmt->execute();
 
-      $this->agents[] = $agent;
+      $this->agentsIds[] = $agent->getId();
+    }
+
+    /**
+     * Update the department name
+     * 
+     * @param string $newName The new department name
+     */
+    public function update(string $newName): void {
+      if (Department::exists($newName)) {
+        throw new Exception('Department already exists');
+      }
+
+      $db = getDatabaseConnection();
+
+      $stmt = $db->prepare('UPDATE Department SET name = :name WHERE id = :id');
+      $stmt->bindValue(':name', $newName);
+      $stmt->bindValue(':id', $this->id, PDO::PARAM_INT);
+      $stmt->execute();
+
+      $this->name = $newName;
+    }
+
+    /**
+     * Get the department id
+     * 
+     * @return int The department id
+     */
+    public function getId(): int {
+      return $this->id;
     }
 
     /**
@@ -167,7 +260,9 @@
      * @return array The department agents
      */
     public function getAgents(): array {
-      return $this->agents;
+      return array_map(function ($id) {
+        return new Agent($id);
+      }, $this->agentsIds);
     }
   }
 ?>

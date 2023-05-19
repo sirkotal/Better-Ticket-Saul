@@ -34,5 +34,6 @@
   }
 
   $session->setUser($user_id);
+  $session->unsetError('error-login');
   header('Location: /');
 ?>

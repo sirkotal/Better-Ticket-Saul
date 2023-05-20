@@ -1,6 +1,29 @@
 "use strict";
 
 const ticketList = document.querySelector("#tickets");
+const departmentFilter = document.querySelector("#filter-department");
+const statusFilter = document.querySelector("#filter-status");
+
+// add status and department options to the filter
+async function addOptionsToFilter() {
+    const statusResponse = await fetch("http://localhost:9000/api/status");
+    const statusData = await statusResponse.json();
+    statusData.forEach((status) => {
+        const option = document.createElement("option");
+        option.value = status.status;
+        option.textContent = status.status;
+        statusFilter.appendChild(option);
+    });
+
+    const departmentResponse = await fetch("http://localhost:9000/api/departments");
+    const departmentData = await departmentResponse.json();
+    departmentData.forEach((department) => {
+        const option = document.createElement("option");
+        option.value = department.name;
+        option.textContent = department.name;
+        departmentFilter.appendChild(option);
+    });
+}
 
 async function createTicketRow(ticket) {
     // create the ticket div
@@ -66,13 +89,53 @@ async function createTicketRow(ticket) {
 async function getTickets() {
     const response = await fetch("http://localhost:9000/api/tickets");
     const data = await response.json();
-    console.log(data);
     return data;
 }
 
 // js cant have top level await so we need to wrap it in a function
 async function main() {
+    await addOptionsToFilter();
     const tickets = await getTickets();
+
     tickets.forEach(createTicketRow);
+
+    // filter when changing the department or status
+    departmentFilter.addEventListener("change", () => {
+        // save the upper row so we can remove it later
+        const upperRow = document.querySelector(".upper-row");
+
+        if (departmentFilter.value === "all") {
+            ticketList.innerHTML = "";
+            ticketList.appendChild(upperRow);
+            tickets.forEach(createTicketRow);
+            return;
+        }
+
+        const filteredTickets = tickets.filter((ticket) => {
+            if (ticket.department) {
+                return ticket.department.name === departmentFilter.value;
+            }
+        });
+        ticketList.innerHTML = "";
+        ticketList.appendChild(upperRow);
+        filteredTickets.forEach(createTicketRow);
+    });
+
+    statusFilter.addEventListener("change", () => {
+        // save the upper row so we can remove it later
+        const upperRow = document.querySelector(".upper-row");
+
+        if (statusFilter.value === "all") {
+            ticketList.innerHTML = "";
+            ticketList.appendChild(upperRow);
+            tickets.forEach(createTicketRow);
+            return;
+        }
+
+        const filteredTickets = tickets.filter((ticket) => ticket.status === statusFilter.value);
+        ticketList.innerHTML = "";
+        ticketList.appendChild(upperRow);
+        filteredTickets.forEach(createTicketRow);
+    });
 }
 main();

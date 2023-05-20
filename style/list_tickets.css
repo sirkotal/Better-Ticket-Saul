@@ -15,17 +15,49 @@
     text-decoration: none;
 }
 
-#tickets > h1{
+#tickets {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 1.5em 0;
+}
+
+#tickets > .upper-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
     background-color: var(--background-color);
     border: 0.1rem solid var(--border-color);
-    border-top-left-radius: 0.938rem;
-    border-top-right-radius: 0.938rem;
+    border-radius: 15px 15px 0 0;
     width: 70%;
-    margin: 1rem auto auto auto;
     padding: 1rem;
+}
+
+#tickets > .upper-row > h1{
     font-size: 2rem;
     font-weight: bold;
     font-family: var(--font-title);
+}
+
+#tickets .filters {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+#tickets .filter {
+    margin-left: 1rem;
+}
+
+#tickets .filter > select {
+    padding: .5em 1em;
+    border-radius: 25px;
+    appearance: none;
+    cursor: pointer;
+}
+
+#tickets .filter > select:hover {
+    background-color: white;
 }
 
 #tickets > .ticket {
@@ -49,7 +81,7 @@
     font-family: var(--font-title);
 }
 
-.ticket  .title > a {
+.ticket .title > a {
     color: black;
 }
 

@@ -23,7 +23,23 @@
 <body>
   <?php outputHeader() ?>
   <div id="tickets">
-    <h1>My Tickets:</h1>
+    <div class="upper-row">
+      <h1>My Tickets:</h1>
+      <div class="filters"> <!-- TODO: change this to js -->
+        <div class="filter">
+          <label for="filter-department">Department:</label>
+          <select id="filter-department">
+            <option value="all">All</option>
+          </select>
+        </div>
+        <div class="filter">
+          <label for="filter-status">Status:</label>
+          <select id="filter-status">
+            <option value="all">All</option>
+          </select>
+        </div>
+      </div>
+    </div>
   </div>
 </body>
 <?php outputFooter() ?>

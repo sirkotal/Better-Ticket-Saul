@@ -1,4 +1,4 @@
-const images = ['/assets/boss1.jpg', '/assets/boss2.jpg', '/assets/boss3.jpg', '/assets/boss4.jpg', '/assets/boss5.jpg', '/assets/boss6.jpg'];
+/*const images = ['/assets/boss1.jpg', '/assets/boss2.jpg', '/assets/boss3.jpg', '/assets/boss4.jpg', '/assets/boss5.jpg', '/assets/boss6.jpg'];
 const container = document.querySelector('.saul-container');
 container.style.transition = 'background-image 3s ease-in-out';
 
@@ -20,4 +20,4 @@ setInterval(() => {
         nextIndex = 0;
     }
   }, 1000);
-}, 5000);
+}, 5000);*/

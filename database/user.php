@@ -320,7 +320,8 @@
      */
     public static function demoteAgent(int $userId): Client {
       if (User::isAdmin($userId)) {
-        throw new Exception('User is an admin');
+        User::demoteAdmin($userId);
+        //throw new Exception('User is an admin');
       }
       
       if (!User::isAgent($userId)) {

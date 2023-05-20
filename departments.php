@@ -25,10 +25,12 @@
   <div class="department" data-id="<?= $department_id ?>">
     <h2 class="title"><a href="#"><?= $department_name ?></a></h2>
     <div class="agent-section">
-      <p class="agent-count"><?= count($department_agents) ?></p>
-      <button class="agent-button" aria-expanded="false">
-				<span class="proto-button"><i class='far fa-caret-square-down'></i></span>
-			</button>
+      <div class="agent-overall">
+        <p class="agent-count"><?= count($department_agents) ?></p>
+        <button class="agent-button" aria-expanded="false">
+          <span class="proto-button"><i class='far fa-caret-square-down'></i></span>
+        </button>
+      </div>  
       <?php foreach ($department_agents as $agent) { 
         outputAgent($agent);
       } ?>

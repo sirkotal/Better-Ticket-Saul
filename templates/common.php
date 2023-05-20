@@ -27,7 +27,6 @@
     <link href="/style/departments.css" rel="stylesheet">
     <script src="/script/dropdown.js" defer></script>
     <script src="/script/switch.js" defer></script>
-    <script src="/script/departments.js" defer></script>
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
     
     <?php foreach ($stylesheets as $stylesheet) { ?>

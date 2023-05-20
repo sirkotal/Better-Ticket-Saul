@@ -67,7 +67,3 @@ const login_button = document.querySelector('#signin');
 const register_button = document.querySelector('#signup');
 const sign_div = document.querySelector('#sign');
 signEffect(login_button, register_button, sign_div);
-
-
-
-

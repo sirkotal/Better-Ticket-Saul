@@ -26,10 +26,26 @@
     <h2 class="title"><a href="#"><?= $department_name ?></a></h2>
     <div class="agent-section">
       <p class="agent-count"><?= count($department_agents) ?></p>
-      <button class="agent-button">
+      <button class="agent-button" aria-expanded="false">
 				<span class="proto-button"><i class='far fa-caret-square-down'></i></span>
 			</button>
+      <?php foreach ($department_agents as $agent) { 
+        outputAgent($agent);
+      } ?>
     </div>
+  </div>
+<?php } ?>
+
+<?php function outputAgent(Agent $agent) {
+  $agent_id = $agent->getId();
+  $agent_name = $agent->getName();
+  $agent_username = $agent->getUsername();
+  $agent_email = $agent->getEmail(); ?>
+
+  <div class="agent-data" data-id="<?= $agent_id ?>">
+    <p class="agent-name"><?= $agent_name ?></p>
+    <p class="agent-username"><?= $agent_username ?></p>
+    <p class="agent-email"><?= $agent_email ?></p>
   </div>
 <?php } ?>
 
@@ -38,6 +54,7 @@
     '/style/departments.css'
   ],
   $scripts = [
+    '/script/departments.js'
   ]
 ) ?>
 <body>

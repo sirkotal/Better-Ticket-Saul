@@ -101,13 +101,32 @@
      * @return array The parsed ticket log info.
      */
     public function parseJsonInfo(): array {
+      $ticket = $this->getTicket();
+      $agent = $this->getAgent();
+      $department = $this->getDepartment();
+
       return [
         'id' => $this->id,
         'change' => $this->change,
         'date' => $this->date,
-        'ticketId' => $this->ticketId,
-        'agentId' => $this->agentId,
-        'departmentId' => $this->departmentId
+        'ticket' => [
+          'title' => $ticket->getTitle(),
+          'text' => $ticket->getText(),
+          'status' => $ticket->getStatus(),
+          'client' => [
+            'username' => $ticket->getClient()->getUsername(),
+            'name' => $ticket->getClient()->getName(),
+            'email' => $ticket->getClient()->getEmail()
+          ]
+        ],
+        'agent' => [
+          'username' => $agent->getUsername(),
+          'name' => $agent->getName(),
+          'email' => $agent->getEmail()
+        ],
+        'department' => [
+          'name' => $department->getName(),
+        ],
       ];
     }
 

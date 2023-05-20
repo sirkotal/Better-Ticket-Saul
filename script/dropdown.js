@@ -8,50 +8,51 @@ function hamburgerDropdown(button, menu) {
 }
 
 function ticketDropdown(button, menu) {
-  if (button !== null && menu !== null) {
-    button.addEventListener('click', () => {
-      menu.classList.toggle('expanded');
-    });
-  }
-}  
-
-function changeProfilePopUp(buttons, menu, back) {
-  if (buttons!== null && menu !== null && back !== null) {   
-    const body = document.querySelector('#backgroud-popUp');
-    const header = document.querySelector('header');
-    isExpanded = false;
-    buttons.forEach((button) => {
-      if (button !== null && header!==null && body !== null) {
-        button.addEventListener('click', () => {
-          console.log(isExpanded);
-          console.log('hello');
-          if (!isExpanded){  
-            menu.classList.add('expanded');
-            body.style.pointerEvents = 'none';
-            header.style.pointerEvents = 'none';
-            body.style.filter = 'grayscale(1)';
-            header.style.filter = 'grayscale(1)';
-          }
-          else {
-            menu.classList.remove('expanded');
-            body.style.pointerEvents = 'auto';
-            header.style.pointerEvents = 'auto';
-            body.style.filter = 'grayscale(0)';
-            header.style.filter = 'grayscale(0)';
-          }
-          isExpanded = !isExpanded;     
-        });
-      }
-    });
-    back.addEventListener('click', () => {
-        isExpanded=false;
+    if (button !== null && menu !== null) {
+      button.addEventListener('mouseenter', () => {
+        menu.classList.add('expanded');
+        button.style.marginBottom = '-5rem';
+        button.style.paddingBottom = '6rem';
+      });
+      button.addEventListener('mouseleave', () => {
+          menu.classList.remove('expanded');
+          button.style.marginBottom = '0';
+          button.style.paddingBottom = '1rem';
+      });
+      menu.addEventListener('mouseenter', () => {
+        menu.classList.add('expanded');
+      });
+      menu.addEventListener('mouseleave', () => {
         menu.classList.remove('expanded');
-        body.style.pointerEvents = 'auto';
-        header.style.pointerEvents = 'auto';
-        body.style.filter = 'grayscale(0)';
-        header.style.filter = 'grayscale(0)';
-    })
-  }
+      });
+    }
+}
+
+function signEffect(login, register, sign_div) {
+    if (login !== null){
+        login.addEventListener('mouseenter', () => {
+          login.style.marginLeft = '3rem';
+          login.style.marginRight = '-3rem';
+          login.style.zIndex = '1';
+          register.style.zIndex = '0';
+        })
+        login.addEventListener('mouseleave', () => {
+          login.style.marginRight = '0';
+          login.style.marginLeft = '0';
+          login.style.zIndex = '0';
+          register.style.zIndex = '1';
+        })
+    }
+    if (register !== null){
+      register.addEventListener('mouseenter', () => {
+          register.style.marginLeft = '-3rem';
+          register.style.marginRight = '3rem';
+      })
+      register.addEventListener('mouseleave', () => {
+          register.style.marginLeft = '0';
+          register.style.marginRight = '0';
+      })
+    }
 }
 
 const hamburger_button = document.querySelector('#hamburger-button');
@@ -61,6 +62,11 @@ hamburgerDropdown(hamburger_button, hamburger_menu);
 const ticket_button = document.querySelector('#ticket-button');
 const ticket_menu = document.querySelector('#ticket-menu');
 ticketDropdown(ticket_button, ticket_menu);
+
+const login_button = document.querySelector('#signin');
+const register_button = document.querySelector('#signup');
+const sign_div = document.querySelector('#sign');
+signEffect(login_button, register_button, sign_div);
 
 
 

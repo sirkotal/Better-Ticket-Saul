@@ -42,6 +42,18 @@
       API::sendResponse(HttpStatus::OK, $body);
       die();
     case RequestMethod::POST:
+      //? maybe add a BOT
+      $session = new Session();
+      if (!$session->isLoggedIn()) {
+        API::sendError(HttpStatus::UNAUTHORIZED, 'You must be logged in to do that');
+        die();
+      }
+
+      if (!User::isAdmin($session->getUser()->getId())) {
+        API::sendError(HttpStatus::FORBIDDEN, 'You must be an admin to do that');
+        die();
+      }
+      
       $data = API::getJsonInput();
 
       if (empty($data)) {
@@ -92,6 +104,17 @@
         die();
       }
 
+      $session = new Session();
+      if (!$session->isLoggedIn()) {
+        API::sendError(HttpStatus::UNAUTHORIZED, 'You must be logged in to do that');
+        die();
+      }
+
+      if (!User::isAdmin($session->getUser()->getId())) {
+        API::sendError(HttpStatus::FORBIDDEN, 'You must be an admin to do that');
+        die();
+      }
+
       try {
         $log = new TicketLog((int) $parts[3]);
       } catch (Exception $e) {
@@ -139,6 +162,17 @@
 
       if (count($parts) > 4) {
         API::sendError(HttpStatus::BAD_REQUEST, 'Endpoint not found');
+        die();
+      }
+
+      $session = new Session();
+      if (!$session->isLoggedIn()) {
+        API::sendError(HttpStatus::UNAUTHORIZED, 'You must be logged in to do that');
+        die();
+      }
+
+      if (!User::isAdmin($session->getUser()->getId())) {
+        API::sendError(HttpStatus::FORBIDDEN, 'You must be an admin to do that');
         die();
       }
 

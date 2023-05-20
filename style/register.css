@@ -67,3 +67,17 @@
     background-color: var(--highlight);
     transition: 1s;
 } 
+<<<<<<< HEAD
+=======
+
+#register a {
+    text-decoration: none;
+    color: #7a7979;
+    margin-top: -1rem;
+}
+
+#register a::before {
+    content: 'Already have an account? ';
+    color: black;
+}
+>>>>>>> main

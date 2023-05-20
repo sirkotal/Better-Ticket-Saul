@@ -67,3 +67,14 @@
     background-color: var(--highlight);
     transition: 1s;
 } 
+
+#login a {
+    text-decoration: none;
+    color: #7a7979;
+    margin-top: -1rem;
+}
+
+#login a::before {
+    content: 'Do not have an account? ';
+    color: black;
+}

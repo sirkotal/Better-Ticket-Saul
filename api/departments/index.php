@@ -24,7 +24,7 @@
 
         $department = new Department((int) $parts[3]);
 
-        API::sendResponse(HttpStatus::OK, Department::parseJsonInfo($department));
+        API::sendResponse(HttpStatus::OK, $department->parseJsonInfo());
         die();
       }
 
@@ -32,7 +32,7 @@
       $body = [];
 
       foreach ($departments as $department) {
-        $body[] = Department::parseJsonInfo($department);
+        $body[] = $department->parseJsonInfo();
       }
 
       API::sendResponse(HttpStatus::OK, $body);
@@ -58,7 +58,7 @@
       }
 
       $department = Department::create($name);
-      $body = Department::parseJsonInfo($department);
+      $body = $department->parseJsonInfo();
 
       API::sendResponse(HttpStatus::CREATED, [
         'message' => 'Department created successfully',
@@ -76,6 +76,17 @@
 
       if (count($parts) != 4) {
         API::sendError(HttpStatus::BAD_REQUEST, 'Endpoint not found');
+        die();
+      }
+
+      $session = new Session();
+      if (!$session->isLoggedIn()) {
+        API::sendError(HttpStatus::UNAUTHORIZED, 'You must be logged in to do that');
+        die();
+      }
+
+      if (!User::isAdmin($session->getUser()->getId())) {
+        API::sendError(HttpStatus::FORBIDDEN, 'You must be an admin to do that');
         die();
       }
 
@@ -117,7 +128,7 @@
 
       API::sendResponse(HttpStatus::OK, [
         'message' => 'Department updated successfully',
-        'body' => Department::parseJsonInfo($department)
+        'body' => $department->parseJsonInfo()
       ]);
       die();
     case RequestMethod::DELETE:
@@ -131,6 +142,17 @@
 
       if (!is_numeric($parts[3])) {
         API::sendError(HttpStatus::BAD_REQUEST, 'Invalid field types');
+        die();
+      }
+
+      $session = new Session();
+      if (!$session->isLoggedIn()) {
+        API::sendError(HttpStatus::UNAUTHORIZED, 'You must be logged in to do that');
+        die();
+      }
+
+      if (!User::isAdmin($session->getUser()->getId())) {
+        API::sendError(HttpStatus::FORBIDDEN, 'You must be an admin to do that');
         die();
       }
 

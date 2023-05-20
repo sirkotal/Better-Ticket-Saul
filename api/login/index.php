@@ -31,8 +31,9 @@
         die();
       }
 
-      if (User::isValid($data['username'], $data['password'])) {
-        $session->setUser($data['username']);
+      $user_id = User::isValid($data['username'], $data['password']);
+      if ($user_id !== false) {
+        $session->setUser($user_id);
         API::sendResponse(HttpStatus::OK, ['message' => 'Logged in as ' . $data['username'] . '.']);
       } else {
         API::sendError(HttpStatus::UNAUTHORIZED, 'Invalid username or password');

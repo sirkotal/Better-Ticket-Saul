@@ -17,6 +17,7 @@
         <input type="password" name="password"> <p>Password</p> 
       </label>
       <button formaction="/actions/action_login.php" formmethod="post">Login</button>
+      <a href="/register.php">Sign up</a>
     </form>
   </section>
   <?php outputFooter() ?>

@@ -1,5 +1,5 @@
 function changeProfilePopUp(buttons, menu, back) {
-  if (buttons!== null && menu !== null && back !== null) {   
+  if (buttons && menu && back) {   
     const body = document.querySelector('#backgroud-popUp');
     const header = document.querySelector('header');
     buttons.forEach((button) => {
@@ -24,7 +24,7 @@ function changeProfilePopUp(buttons, menu, back) {
 }
 
 function update(saveButton, backButton, newValue, values, field) {
-  if (saveButton !== null && backButton !== null && newValue !== null && values !== null && field !== null) { 
+  if (saveButton && backButton && newValue && values && field) { 
     saveButton.addEventListener('click', () => {
       paragraph = document.querySelector('.profile-change #error-'+field);   
       id = document.querySelector('#profile-values input[name="id"]').value;
@@ -67,7 +67,7 @@ function update(saveButton, backButton, newValue, values, field) {
 }
 
 function updatePassword(saveButton, backButton, newValue, confirmValue) {
-  if (saveButton !== null && backButton !== null && newValue !== null && confirmValue!== null) {   
+  if (saveButton && backButton && newValue && confirmValue) {   
     saveButton.addEventListener('click', () => { 
       id = document.querySelector('#profile-values input[name="id"]').value;
       if (newValue.value == confirmValue.value){
@@ -104,46 +104,43 @@ function updatePassword(saveButton, backButton, newValue, confirmValue) {
   }
 }
   
-saveButton = document.querySelector('#username-change #save-username');
-backButton = document.querySelector('#username-change .back-button');
-newValue = document.querySelector('#username-change input[name="username"]');
-values = document.querySelectorAll('.value-username');
-update(saveButton, backButton, newValue, values, 'username');
+function initializeFieldChange(field, saveButtonId, backButtonClass, newValueName, valuesClass) {
+  const saveButton = document.querySelector('#' + field + '-change #' + saveButtonId);
+  const backButton = document.querySelector('#' + field + '-change .' + backButtonClass);
+  const newValue = document.querySelector('#' + field + '-change input[name="' + newValueName + '"]');
+  const values = document.querySelectorAll('.' + valuesClass);
+  update(saveButton, backButton, newValue, values, field);
+}
 
-saveButton = document.querySelector('#name-change #save-name');
-backButton = document.querySelector('#name-change .back-button');
-newValue = document.querySelector('#name-change input[name="name"]');
-values = document.querySelectorAll('.value-name');
-update(saveButton, backButton, newValue, values, 'name');
+function initializePasswordChange(saveButtonId, backButtonClass, newValueName, confirmValueName) {
+  const saveButton = document.querySelector('#password-change #' + saveButtonId);
+  const backButton = document.querySelector('#password-change .' + backButtonClass);
+  const newValue = document.querySelector('#password-change input[name="' + newValueName + '"]');
+  const confirmValue = document.querySelector('#password-change input[name="' + confirmValueName + '"]');
+  updatePassword(saveButton, backButton, newValue, confirmValue);
+}
 
-saveButton = document.querySelector('#email-change #save-email');
-backButton = document.querySelector('#email-change .back-button');
-newValue = document.querySelector('#email-change input[name="email"]');
-values = document.querySelectorAll('.value-email');
-update(saveButton, backButton, newValue, values, 'email');
+initializeFieldChange('username', 'save-username', 'back-button', 'username', 'value-username');
+initializeFieldChange('name', 'save-name', 'back-button', 'name', 'value-name');
+initializeFieldChange('email', 'save-email', 'back-button', 'email', 'value-email');
+initializePasswordChange('save-password', 'back-button', 'password', 'confirm-password');
 
-saveButton = document.querySelector('#password-change #save-password');
-backButton = document.querySelector('#password-change .back-button');
-newValue = document.querySelector('#password-change input[name="password"]');
-confirmValue = document.querySelector('#password-change input[name="confirm-password"]');
-updatePassword(saveButton, backButton, newValue, confirmValue);
+const usernameButton = document.querySelectorAll('.username-button');
+const usernamePopUp = document.querySelector('#username-change');
+const usernameBack = document.querySelector('#username-change .back-button');
+changeProfilePopUp(usernameButton, usernamePopUp, usernameBack);
 
-const username_button = document.querySelectorAll('.username-button');
-const username_popUp = document.querySelector('#username-change');
-const username_back = document.querySelector('#username-change .back-button');
-changeProfilePopUp(username_button, username_popUp, username_back);
+const nameButton = document.querySelectorAll('.name-button');
+const namePopUp = document.querySelector('#name-change');
+const nameBack = document.querySelector('#name-change .back-button');
+changeProfilePopUp(nameButton, namePopUp, nameBack);
 
-const name_button = document.querySelectorAll('.name-button');
-const name_popUp = document.querySelector('#name-change');
-const name_back = document.querySelector('#name-change .back-button');
-changeProfilePopUp(name_button, name_popUp, name_back);
+const emailButton = document.querySelectorAll('.email-button');
+const emailPopUp = document.querySelector('#email-change');
+const emailBack = document.querySelector('#email-change .back-button');
+changeProfilePopUp(emailButton, emailPopUp, emailBack);
 
-const email_button = document.querySelectorAll('.email-button');
-const email_popUp = document.querySelector('#email-change');
-const email_back = document.querySelector('#email-change .back-button');
-changeProfilePopUp(email_button, email_popUp, email_back);
-
-const password_button = document.querySelectorAll('.password-button');
-const password_popUp = document.querySelector('#password-change');
-const password_back = document.querySelector('#password-change .back-button');
-changeProfilePopUp(password_button, password_popUp, password_back);
+const passwordButton = document.querySelectorAll('.password-button');
+const passwordPopUp = document.querySelector('#password-change');
+const passwordBack = document.querySelector('#password-change .back-button');
+changeProfilePopUp(passwordButton, passwordPopUp, passwordBack);

@@ -67,8 +67,6 @@
     background-color: var(--highlight);
     transition: 1s;
 } 
-<<<<<<< HEAD
-=======
 
 #register a {
     text-decoration: none;
@@ -80,4 +78,3 @@
     content: 'Already have an account? ';
     color: black;
 }
->>>>>>> main

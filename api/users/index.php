@@ -70,11 +70,7 @@
       }
 
       $user = User::getUserById((int) $parts[3]);
-<<<<<<< HEAD
-      if ($user->getId() !== $session->getUser()->getId()) {
-=======
       if ($user->getId() !== $session->getUser()) {
->>>>>>> main
         API::sendError(HttpStatus::UNAUTHORIZED, 'You are not authorized to edit this user');
         die();
       }
@@ -180,10 +176,7 @@
       }
 
       $user = User::getUserById((int) $parts[3]);
-<<<<<<< HEAD
-=======
 
->>>>>>> main
       if ($user->getId() !== $session->getUser()->getId() || !User::isAdmin($user->getId())) {
         API::sendError(HttpStatus::UNAUTHORIZED, 'You are not authorized to delete this user');
         die();

@@ -17,11 +17,11 @@
     <title>Trouble Ticket Management System</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="/style/edit_profile.css" rel="stylesheet">
     <link href="/style/header.css" rel="stylesheet">
     <link href="/style/footer.css" rel="stylesheet">
     <link href="/style/register.css" rel="stylesheet">
     <link href="/style/login.css" rel="stylesheet">
-    <link href="/style/edit_profile.css" rel="stylesheet">
     <link href="/style/signup.css" rel="stylesheet">
     <link href="/style/responsive.css" rel="stylesheet">
     <link href="/style/layout.css" rel="stylesheet">

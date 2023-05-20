@@ -51,6 +51,7 @@ function update(saveButton, backButton, newValue, values, field) {
           });
           paragraph.innerHTML = '';
           document.querySelector('#'+field+'-change .back-button').click();
+          alert(field+' updated with success!')
         }
         else if (request.status === 400){
           let data = JSON.parse(request.responseText);  
@@ -74,12 +75,27 @@ function updatePassword(saveButton, backButton, newValue, confirmValue) {
         request.open('PUT', '/api/users/' + id);
         request.setRequestHeader('Content-Type', 'application/json');
         request.send(JSON.stringify({ password: newValue.value }));
+        request.onload = function() {
+          if (request.status === 200 ){
+            values.forEach((value) => {
+              value.textContent = newValue.value;
+            });
+            paragraph.innerHTML = '';
+            document.querySelector('#password-change .back-button').click();
+            alert('Password updated successfully!');
+          }
+          else if (request.status === 400){
+            let data = JSON.parse(request.responseText);  
+            paragraph.innerHTML = data.error; 
+          }
+          newValue.value = '';
+          confirmValue.value = '';
+        }
       }
       else{
-        alert('The Passwords do not match!');
+        paragraph = document.querySelector('.profile-change #error-password');   
+        paragraph.innerHTML = 'The Passwords do not match!';
       }
-      newValue.value = '';
-      confirmValue.value = '';
     });
     backButton.addEventListener('click', () =>{
       newValue.value = '';

@@ -26,8 +26,10 @@
     <link href="/style/faq.css" rel="stylesheet">
     <link href="/style/layout.css" rel="stylesheet">
     <link href="/style/home.css" rel="stylesheet">
+    <link href="/style/admin.css" rel="stylesheet">
     <link href="/style/departments.css" rel="stylesheet">
     <link href="/style/responsive.css" rel="stylesheet">
+    <script src="/script/admin.js" defer></script>
     <script src="/script/dropdown.js" defer></script>
     <script src="/script/switch.js" defer></script>
     <script src="/script/edit_profile.js" defer></script>
@@ -116,9 +118,9 @@
     <p>&copy; 2023 Better Ticket Saul || All Rights Reserved</p>
     <div class="footer-icons">
         <ul class="socials">
-            <li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
-            <li><a href="#"><i class="fab fa-twitter"></i></a></li>
-            <li><a href="#"><i class="fab fa-instagram"></i></a></li>
+            <li><a href="https://www.facebook.com/bob.odenkirk"><i class="fa fa-facebook"></i></a></li>
+            <li><a href="https://twitter.com/mrbobodenkirk"><i class="fa fa-twitter"></i></a></li>
+            <li><a href="https://www.instagram.com/therealbobodenkirk/"><i class="fa fa-instagram"></i></a></li>
         </ul>
     </div>
   </footer>

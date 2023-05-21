@@ -19,7 +19,7 @@
   <?php outputHeader() ?>
   <section id="login">
     <h1>Login</h1>
-    <form>
+    <form method="post" action="/actions/action_login.php">
       <label>
         <input type="text" name="username"> <p>Username</p> 
       </label>
@@ -29,7 +29,8 @@
       <?php if ($error !== null) { ?>
         <p class="input-error"><?= $error ?></p>
       <?php } ?>
-      <button formaction="/actions/action_login.php" formmethod="post">Login</button>
+      <input type="hidden" name="csrf" value="<?= $session->getCSRF() ?>">
+      <button type="submit">Login</button>
       <a href="/register.php">Sign up</a>
     </form>
   </section>

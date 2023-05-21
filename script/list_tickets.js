@@ -29,13 +29,12 @@ async function createTicketRow(ticket) {
     // create the ticket div
     const ticketDiv = document.createElement("div");
     ticketDiv.classList.add("ticket");
-    ticketDiv.setAttribute("data-id", ticket.id);
 
     // create the ticket title
     const ticketTitle = document.createElement("h2");
     ticketTitle.classList.add("title");
     const ticketLink = document.createElement("a");
-    ticketLink.setAttribute("href", "#"); // TODO: change later
+    ticketLink.setAttribute("href", `/view_ticket.php?id=${ticket.id}`); // TODO: change later
     ticketLink.textContent = ticket.title;
     ticketTitle.appendChild(ticketLink);
 

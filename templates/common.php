@@ -35,11 +35,15 @@
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
     
     <?php foreach ($stylesheets as $stylesheet) { ?>
-      <link rel="stylesheet" href="<?= $stylesheet ?>">
+      <?php if (!empty($stylesheet)) { ?>
+        <link rel="stylesheet" href="<?= $stylesheet ?>">
+      <?php } ?>
     <?php } ?>
 
     <?php foreach ($scripts as $script) { ?>
-      <script src="<?= $script ?>" defer></script>
+      <?php if (!empty($script)) { ?>
+        <script src="<?= $script ?>" defer></script>
+      <?php } ?>
     <?php } ?>
 
   </head>

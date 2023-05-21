@@ -60,5 +60,18 @@
     public function unsetError(string $errorType): void {
       unset($_SESSION[$errorType]);
     }
+
+    /**
+     * Get an error in the session
+     * 
+     * @param string $errorType the error type
+     * @return string|null The error message or null if there is no error.
+     */
+    public function getError(string $errorType): string|null {
+      if (isset($_SESSION[$errorType])) {
+        return $_SESSION[$errorType];
+      }
+      return null;
+    }
   }
 ?>

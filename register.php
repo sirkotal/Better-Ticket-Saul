@@ -2,9 +2,18 @@
   declare (strict_types = 1);
 
   require_once(__DIR__ . '/templates/common.php');
+  require_once(__DIR__ . '/lib/session.php');
+
+  $session = new Session();
+  $error = $session->getError('error-register');
+  $session->unsetError('error-register');
 ?>
 
-<?php outputHead() ?>
+<?php outputHead(
+  $stylesheets = [
+    $error !== null ? '/style/errors.css': ''
+  ]
+) ?>
 <body>
   <?php outputHeader() ?>
   <section id="register">
@@ -22,6 +31,9 @@
       <label>
         <input type="password" name="password"> <p>Password</p> 
       </label>
+      <?php if ($error !== null) { ?>
+        <p class="input-error"><?= $error ?></p>
+      <?php } ?>
       <button formaction="/actions/action_register.php" formmethod="post">Register</button>
       <a href="/login.php">Log in</a>
     </form>

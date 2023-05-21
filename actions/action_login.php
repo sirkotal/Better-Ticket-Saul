@@ -15,10 +15,10 @@
     die();
   }
 
-  if (!isset($_POST['csrf']) || !$session->getCsrf() != $_POST['csrf']) {
-    header('Location: /');
-    die();
-  }
+  // if (!isset($_POST['csrf']) || !$session->getCsrf() != $_POST['csrf']) {
+  //   header('Location: /');
+  //   die();
+  // }
 
   $username = $_POST['username'];
   $password = $_POST['password'];

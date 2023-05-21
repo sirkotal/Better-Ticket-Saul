@@ -70,7 +70,7 @@
       }
 
       $user = User::getUserById((int) $parts[3]);
-      if ($user->getId() !== $session->getUser()) {
+      if ($user->getId() !== $session->getUser()->getId()) {
         API::sendError(HttpStatus::UNAUTHORIZED, 'You are not authorized to edit this user');
         die();
       }

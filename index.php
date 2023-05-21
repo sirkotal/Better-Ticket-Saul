@@ -15,7 +15,7 @@
     <div class="saul-container">
       <div class="saul-text">
         <?php if ($session->isLoggedIn()) { ?>
-          <h2 id="saul-title">Hello There, <?=$session->getUser()->getUsername()?>!</h2>
+          <h2 id="saul-title">Hello There, <?=$session->getUser()->getName()?>!</h2>
           <p id="saul-greeting">
             Our system allows you to submit and track trouble tickets related to technical issues, 
             customer support, or any other inquiries. Please use the links above to submit a ticket, view your tickets, check the FAQs,

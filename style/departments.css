@@ -1,0 +1,126 @@
+@import url('https://fonts.googleapis.com/css?family=Lora:400,700|Poppins:400,700');
+
+:root {
+    --font-serif: 'Lora', 'Times New Roman', Times, serif;
+    --font-sans: Arial, Helvetica, sans-serif;
+    --font-title: 'Poppins', Arial, Helvetica, sans-serif;
+    --border-color: #d5d8da;
+    --background-color: #edeff0;
+    --agent-back: #e3d1b8;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    text-decoration: none;
+}
+
+#departments > h1{
+    background-color: var(--background-color);
+    border: 0.1rem solid var(--border-color);
+    border-top-left-radius: 0.938rem;
+    border-top-right-radius: 0.938rem;
+    width: 70%;
+    margin: 1rem auto auto auto;
+    padding: 1rem;
+    font-size: 2rem;
+    font-weight: bold;
+    font-family: var(--font-title);
+}
+
+#departments > .department {
+    width: 70%;
+    margin: auto;
+    border: 0.1rem solid var(--border-color);
+    border-top: none;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.department .agent-overall {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.department  .title {
+    padding-bottom: 0.5rem;
+    font-size: 1.7rem;
+    font-weight: bold;
+    font-family: var(--font-title);
+}
+
+.department  .title > a {
+    color: black;
+}
+
+.department:hover {
+    background-color: var(--background-color);
+}
+
+.department p:not(:last-of-type)::after {
+    padding: 0 .5rem;
+}
+
+.department .agent-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.department .agent-count {
+    font-size: large;
+    padding-bottom: 0.5rem;
+    padding-top: 0.2rem;
+}
+
+.department .dropdown-button {
+    background: none;
+    border: none;
+}
+
+.department .down-button {
+    display: inline-block;
+    font-size: 36px;
+}
+
+.department .dropdown-button:hover {
+    cursor: pointer;
+}
+
+.agents-info {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 0.2rem;
+    gap: 0.5rem;
+}
+
+.agent-data {
+    display: none;
+    margin-top: 0.2rem;
+    background-color: var(--agent-back);
+    border: 1px solid black;
+    border-radius: 4px;
+    padding: 0.5rem;
+}
+
+.agent-data.show {
+    display: inline-block;
+}
+
+.agent-name::before {
+    content:'Name: ';
+    font-weight: bold;
+}
+
+.agent-username::before {
+    content:'Username: ';
+    font-weight: bold;
+}
+
+.agent-email::before {
+    content:'Email: ';
+    font-weight: bold;
+}

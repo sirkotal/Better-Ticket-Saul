@@ -16,7 +16,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trouble Ticket Management System</title>
     
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href="/style/edit_profile.css" rel="stylesheet">
     <link href="/style/header.css" rel="stylesheet">
     <link href="/style/footer.css" rel="stylesheet">
@@ -28,6 +27,7 @@
     <link href="/style/faq.css" rel="stylesheet">
     <link href="/style/layout.css" rel="stylesheet">
     <link href="/style/home.css" rel="stylesheet">
+    <link href="/style/departments.css" rel="stylesheet">
     <script src="/script/dropdown.js" defer></script>
     <script src="/script/switch.js" defer></script>
     <script src="/script/editprofile.js" defer></script>
@@ -55,6 +55,9 @@
             <li><a href="/index.php">Home</a></li>
             <li><a href="/faq.php">FAQs</a></li>
             <li><a href="/contact.php">Contact Us</a></li>
+            <?php if ($session->isLoggedIn()) { ?>
+              <li><a href="/departments.php">Departments</a></li>
+            <?php } ?>  
           </ul>
         </nav>
         <button id="hamburger-button">
@@ -109,10 +112,16 @@
     <p>&copy; 2023 Better Ticket Saul || All Rights Reserved</p>
     <div class="footer-icons">
         <ul class="socials">
-            <li><a href="#"><i class="fa fa-facebook"></i></a></li>
-            <li><a href="#"><i class="fa fa-twitter"></i></a></li>
-            <li><a href="#"><i class="fa fa-instagram"></i></a></li>
+            <li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
+            <li><a href="#"><i class="fab fa-twitter"></i></a></li>
+            <li><a href="#"><i class="fab fa-instagram"></i></a></li>
         </ul>
     </div>
   </footer>
+<?php } ?>
+
+<?php function outputDropdownButton(): void { ?>
+  <button class="dropdown-button" aria-expanded="false">
+		<span class="down-button"><i class='far fa-caret-square-down'></i></span>
+	</button>
 <?php } ?>

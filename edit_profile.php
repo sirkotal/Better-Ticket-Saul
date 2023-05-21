@@ -30,7 +30,7 @@
     '/style/edit_profile.css'
   ],
   $scripts = [
-    '/scripts/edit_profile.js'
+    '/script/edit_profile.js'
   ]
 ) ?>
 <body>

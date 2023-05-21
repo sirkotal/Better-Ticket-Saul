@@ -27,6 +27,33 @@
 
       API::sendResponse(HttpStatus::OK, $status);
       die();
+    case RequestMethod::POST:
+      $data = API::getJsonInput();
+      echo 'php';
+      if (!array_key_exists('status', $data)) {
+          API::sendResponse(HttpStatus::BAD_REQUEST, 'Missing required field');
+          die();
+      }
+
+      if (!array_key_exists('color', $data)) {
+        API::sendResponse(HttpStatus::BAD_REQUEST, 'Missing required field');
+        die();
+    }
+      
+      if (count($data) > 2) {
+        API::sendError(HttpStatus::BAD_REQUEST, 'Too many fields');
+        die();
+      }
+      
+      TicketStatus::create($data['status'],$data['color']);
+      API::sendResponse(HttpStatus::CREATED, [
+          'message' => 'Status created successfully',
+          'body' => [
+            'status' => $data['status'],
+            'color' => $data['color']
+          ]          
+        ]);
+      die();
     case RequestMethod::OPTIONS:
       // add unique CORS because this is for private use
       header('Access-Control-Allow-Origin: localhost:9000'); //! this is the url of our website

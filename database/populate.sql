@@ -53,6 +53,7 @@ INSERT INTO AgentDepartment (agentId, departmentId) VALUES
     (3, 2), -- test_agent_2 in Billing
     (3, 3); -- test_agent_2 in Billing
 
+
 -- Create Hashtags
 
 INSERT INTO Hashtag (hashtag) VALUES

@@ -27,7 +27,9 @@
     <link href="/style/faq.css" rel="stylesheet">
     <link href="/style/layout.css" rel="stylesheet">
     <link href="/style/home.css" rel="stylesheet">
+    <link href="/style/admin.css" rel="stylesheet">
     <link href="/style/departments.css" rel="stylesheet">
+    <script src="/script/admin.js" defer></script>
     <script src="/script/dropdown.js" defer></script>
     <script src="/script/switch.js" defer></script>
     <script src="/script/edit_profile.js" defer></script>

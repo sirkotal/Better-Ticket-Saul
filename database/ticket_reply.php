@@ -11,8 +11,7 @@
     private string $reply;
     private int $date;
     private int $ticketId;
-    private int $agentId;
-    private int $departmentId;
+    private int $authorId;
 
     public function __construct(int $id) {
       $db = getDatabaseConnection();
@@ -31,8 +30,7 @@
       $this->reply = $result['reply'];
       $this->date = $result['date'];
       $this->ticketId = $result['ticketId'];
-      $this->agentId = $result['agentId'];
-      $this->departmentId = $result['departmentId'];
+      $this->authorId = $result['authorId'];
     }
 
     /**
@@ -40,19 +38,17 @@
      * 
      * @param string $reply The reply's text.
      * @param int $ticketId The ticket to reply to.
-     * @param int $agentId The agent that replied.
-     * @param int $departmentId The department of the agent.
+     * @param int $authorId The reply's author.
      * @return TicketReply The created ticket reply.
      */
-    public static function create(string $reply, int $ticketId, int $agentId, int $departmentId): TicketReply {
+    public static function create(string $reply, int $ticketId, int $authorId): TicketReply {
       $db = getDatabaseConnection();
 
-      $stmt = $db->prepare('INSERT INTO TicketReply (reply, date, ticketId, agentId, departmentId) VALUES (:reply, :date, :ticket, :agent, :department)');
+      $stmt = $db->prepare('INSERT INTO TicketReply (reply, date, ticketId, authorId) VALUES (:reply, :date, :ticket, :author)');
       $stmt->bindValue(':reply', $reply);
       $stmt->bindValue(':date', time(), PDO::PARAM_INT);
       $stmt->bindValue(':ticket', $ticketId, PDO::PARAM_INT);
-      $stmt->bindValue(':agent', $agentId, PDO::PARAM_INT);
-      $stmt->bindValue(':department', $departmentId, PDO::PARAM_INT);
+      $stmt->bindValue(':author', $authorId, PDO::PARAM_INT);
       $stmt->execute();
 
       return new TicketReply((int) $db->lastInsertId());
@@ -110,8 +106,7 @@
      */
     public function parseJsonInfo(): array {
       $ticket = $this->getTicket();
-      $agent = $this->getAgent();
-      $department = $this->getDepartment();
+      $author = User::getUserById($this->authorId);
       
       return [
         'id' => $this->id,
@@ -127,13 +122,10 @@
             'email' => $ticket->getClient()->getEmail()
           ]
         ],
-        'agent' => [
-          'username' => $agent->getUsername(),
-          'name' => $agent->getName(),
-          'email' => $agent->getEmail()
-        ],
-        'department' => [
-          'name' => $department->getName(),
+        'author' => [
+          'username' => $author->getUsername(),
+          'name' => $author->getName(),
+          'email' => $author->getEmail()
         ],
       ];
     }
@@ -189,23 +181,14 @@
     public function getTicket(): Ticket {
       return new Ticket($this->ticketId);
     }
-
+    
     /**
-     * Gets the reply's agent.
+     * Gets the reply's author.
      * 
-     * @return Agent The reply's agent.
+     * @return User The reply's author.
      */
-    public function getAgent(): Agent {
-      return new Agent($this->agentId);
-    }
-
-    /**
-     * Gets the reply's department.
-     * 
-     * @return Department The reply's department.
-     */
-    public function getDepartment(): Department {
-      return new Department($this->departmentId);
+    public function getAuthor(): User {
+      return User::getUserById($this->authorId);
     }
   }
 ?>

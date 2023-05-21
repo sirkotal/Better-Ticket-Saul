@@ -25,7 +25,14 @@
   // TODO: format html to display ticket info
 ?>
 
-<?php outputHead() ?>
+<?php outputHead(
+  $stylesheets = [
+    '/style/edit_profile.css'
+  ],
+  $scripts = [
+    '/scripts/edit_profile.js'
+  ]
+) ?>
 <body>
   <?php outputHeader() ?>
   <div id="edit-profile">

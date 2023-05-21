@@ -1,5 +1,5 @@
 function showAgents() {
-  const agentButtons = document.querySelectorAll('.agent-button');
+  const agentButtons = document.querySelectorAll('.dropdown-button');
 
   agentButtons.forEach(button => {
     button.addEventListener('click', () => {

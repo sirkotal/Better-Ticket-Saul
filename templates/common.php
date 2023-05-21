@@ -119,3 +119,9 @@
     </div>
   </footer>
 <?php } ?>
+
+<?php function outputDropdownButton(): void { ?>
+  <button class="dropdown-button" aria-expanded="false">
+		<span class="down-button"><i class='far fa-caret-square-down'></i></span>
+	</button>
+<?php } ?>

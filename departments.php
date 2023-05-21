@@ -27,9 +27,7 @@
         <h2 class="title"><a href="#"><?= $department_name ?></a></h2>
         <p class="agent-count">(<?= count($department_agents) ?>)</p>
       </div>   
-      <button class="agent-button" aria-expanded="false">
-          <span class="proto-button"><i class='far fa-caret-square-down'></i></span>
-      </button>
+      <?php outputDropdownButton() ?>
     </div>  
     <div class="agent-section"> 
       <div class="agents-info">

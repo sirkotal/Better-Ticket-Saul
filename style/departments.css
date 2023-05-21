@@ -76,17 +76,17 @@
     padding-top: 0.2rem;
 }
 
-.agent-button {
+.department .dropdown-button {
     background: none;
     border: none;
 }
 
-.proto-button {
+.department .down-button {
     display: inline-block;
     font-size: 36px;
 }
 
-.proto-button:hover {
+.department .dropdown-button:hover {
     cursor: pointer;
 }
 

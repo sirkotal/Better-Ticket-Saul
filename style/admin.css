@@ -59,13 +59,13 @@
     right: 0;
     top: 7rem;
     margin: auto;
-    opacity: 1;
-    pointer-events: auto;
+    opacity: 0;
+    pointer-events: none;
     border: 1px solid black;
     border-radius: 15px;
 }
 
-.admin-forms select[name="Roles"]{
+.admin-forms select{
     background-color: white;
     border: 0.1rem solid black;
     border-radius: 1rem;

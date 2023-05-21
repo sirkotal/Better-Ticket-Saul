@@ -73,6 +73,11 @@ CREATE TABLE TicketLog (
     departmentId REFERENCES Department(id)
 );
 
+CREATE TABLE TicketStatus (
+    status VARCHAR,
+    color VARCHAR
+);
+
 CREATE TABLE Hashtag (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     hashtag VARCHAR

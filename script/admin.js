@@ -29,33 +29,79 @@ function PopUp(buttons) {
 function assignAgents() {
     const button_add = document.querySelector('#add-department .enter-button');
     const button_remove = document.querySelector('#remove-department .enter-button');
-    const select_add = document.querySelectorAll('#add-department select')
-    const select_remove = document.querySelectorAll('#remove-department select')
+    select_add = document.querySelectorAll('#add-department select');
+    select_remove = document.querySelectorAll('#remove-department select');
+    added_selects = [];
+    removed_selects = []; 
     if (true) { 
         button_add.addEventListener('click', () => {
-            const optionsToRemove = [];
+            optionsToRemove = [];
+            select_add = [...select_add, ...added_selects];
             select_add.forEach(select => {
                 option = select.options[select.selectedIndex];
                 id = document.querySelector("#add-department input[class='user-id'][name='"+select.id+"']").value;
                 if (option.value != 'none'){
-                    optionsToRemove.push(option);
+                    optionsToRemove.push({select,option, id});
                     request = new XMLHttpRequest();
                     request.open('PUT', '/api/agents/'+id)
                     request.setRequestHeader('Content-Type', 'application/json');
                     request.send(JSON.stringify({ action: 'add', departmentId: option.value}));
                 }
-            });
-            optionsToRemove.forEach(option => {
+            optionsToRemove.forEach(({select, option, id}) => {
                 option.remove();
+                if (select.options.length==1){
+                    select.style.display = "none";
+                    select.style.pointerEvents = "none";
+                    title = document.querySelector('#add-department p[id="'+select.id+'"]');
+                    title.style.display = 'none';
+                }
+                select1 = document.querySelector('#remove-department select[id="'+select.id+'"]');
+                if (select1 == null){
+                    select1 = document.createElement('select');
+                    select1.name = 'Departments';
+                    select1.id = select.id;
+                }
+                select1.style.display = "block";
+                select1.style.pointerEvents = "auto";
+                /*ptionDefault = document.createElement('option');
+                optionDefault.value = "none"
+                optionDefault.textContent = '--Default--'
+                select1.appendChild(optionDefault)*/    
+                selected = document.createElement('option');
+                selected.value = option.value;
+                selected.textContent = option.textContent;
+                select1.appendChild(selected);
+                title1 = document.querySelector('#remove-department p[id="'+select.id+'"]');
+                if (title1 == null){
+                    title1 = document.createElement('p');
+                    title1.className = 'title';
+                    title1.id = select.id;
+                    title1.innerHTML = select.id; 
+                }
+                title1.style.display = 'block';
+                idinput = document.createElement('input');
+                idinput.className = 'user-id';
+                idinput.type = 'hidden';
+                idinput.name = select.id;
+                idinput.value = id;
+                div = document.querySelector('#remove-department')
+                buttons = document.querySelector('#remove-department .change-buttons')
+                div.insertBefore(select1, buttons);
+                div.insertBefore(idinput, select1);
+                div.insertBefore(title1, idinput);
+                added_selects.push(select1);
             });
-        });
+            optionsToRemove.length = 0;
+            })
+        })
         button_remove.addEventListener('click', async () => {
-            const optionsToRemove = [];
+            optionsToAdd = [];
+            select_remove = [...select_remove].concat(added_selects);
             select_remove.forEach(select => {
                 option = select.options[select.selectedIndex];
                 id = document.querySelector("#remove-department input[class='user-id'][name='"+select.id+"']").value;
                 if (option.value != 'none'){
-                    optionsToRemove.push(option);
+                    optionsToAdd.push({select,option});
                     request = new XMLHttpRequest();
                     request.open('PUT', '/api/agents/'+id)
                     request.setRequestHeader('Content-Type', 'application/json');
@@ -68,28 +114,63 @@ function assignAgents() {
                     }
                 }
             });
-            optionsToRemove.forEach(option => {
+            optionsToAdd.forEach(({select,option}) => {
                 option.remove();
+                if (select.options.length==1){
+                    select.style.display = "none";
+                    select.style.pointerEvents = "none";
+                    title = document.querySelector('#remove-department p[id="'+select.id+'"]');
+                    title.style.display = 'none';
+                }
+                select2 = document.querySelector('#add-department select[id="'+select.id+'"]');
+                if (select2 == null){
+                    select2 = document.createElement('select');
+                    select2.name = 'Departments'
+                    select2.id = select.id;
+                }
+                select2.style.display = "block";
+                select2.style.pointerEvents = "auto";
+                selected = document.createElement('option');
+                selected.value = option.value;
+                selected.textContent = option.textContent;
+                select2.appendChild(selected);
+                title2 = document.querySelector('#add-department p[id="'+select.id+'"]');
+                if (title2 == null){
+                    title2 = document.createElement('p');
+                    title2.class = 'title';
+                    title2.id = select.id;
+                    title2.innerHTML = select.id; 
+                }
+                title2.style.display = 'block';
+                idinput2 = document.createElement('input');
+                idinput2.className = 'user-id';
+                idinput2.type = 'hidden';
+                idinput2.name = select.id;
+                idinput2.value = id;
+                div = document.querySelector('#add-department')
+                buttons = document.querySelector('#add-department .change-buttons')
+                div.insertBefore(select2, buttons);
+                div.insertBefore(idinput2, select2);
+                div.insertBefore(title2, idinput2);
             });
+
         })
-    };
+    }
 }
+
 
 
 function updateDepartment() {
     const button = document.querySelector('#New-Department .enter-button');
-    console.log(button);
     if (true) { 
         button.addEventListener('click', () => {
             department = document.querySelector('#New-Department input[name="department"]')
             id = document.querySelector('#New-Department input[id="department-id"]');
-            console.log(department);
             request = new XMLHttpRequest();
             request.open('POST', '/api/departments/')
             request.setRequestHeader('Content-Type', 'application/json');
             request.send(JSON.stringify({ name: department.value }));
             selects = document.querySelectorAll('#add-department select');
-            console.log(selects);
             request.onload = function() {
                 paragraph = document.querySelector('#New-Department .error'); 
                 if (request.status === 201 ){
@@ -122,7 +203,6 @@ function updateRole() {
     if (true) { 
         button.addEventListener('click', () => {
             selects.forEach(select => {
-                console.log('here');
                 value = select.options[select.selectedIndex].value;
                 request = new XMLHttpRequest();
                 id = document.querySelector("#update-role input[class='user-id'][name='"+select.id+"']").value;

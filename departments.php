@@ -22,14 +22,16 @@
   $department_agents = $department->getAgents() ?? []; ?>
 
   <div class="department" data-id="<?= $department_id ?>">
-    <h2 class="title"><a href="#"><?= $department_name ?></a></h2>
     <div class="agent-section">
       <div class="agent-overall">
-        <p class="agent-count"><?= count($department_agents) ?></p>
-        <button class="agent-button" aria-expanded="false">
+        <h2 class="title"><a href="#"><?= $department_name ?></a></h2>
+        <p class="agent-count">(<?= count($department_agents) ?>)</p>
+      </div>   
+      <button class="agent-button" aria-expanded="false">
           <span class="proto-button"><i class='far fa-caret-square-down'></i></span>
-        </button>
-      </div>  
+      </button>
+    </div>  
+    <div class="agent-section"> 
       <div class="agents-info">
         <?php foreach ($department_agents as $agent) {
           outputAgent($agent);

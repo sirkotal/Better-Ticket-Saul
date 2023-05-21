@@ -42,6 +42,7 @@
 .department .agent-overall {
     display: flex;
     align-items: center;
+    gap: 0.5rem;
 }
 
 .department  .title {
@@ -55,17 +56,6 @@
     color: black;
 }
 
-.department .status {
-    border-radius: 0.938rem;
-    color: white;
-    padding: 0.25rem 0.75rem;
-    margin-left: 0.25rem;
-}
-
-.department .agent-count::before{
-    content:'Agents: ';
-}
-
 .department:hover {
     background-color: var(--background-color);
 }
@@ -74,15 +64,26 @@
     padding: 0 .5rem;
 }
 
+.department .agent-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.department .agent-count {
+    font-size: large;
+    padding-bottom: 0.5rem;
+    padding-top: 0.2rem;
+}
+
 .agent-button {
     background: none;
     border: none;
-    padding-inline-start: 0.5rem;
-    padding-block-start: 0.125rem;
 }
 
 .proto-button {
     display: inline-block;
+    font-size: 36px;
 }
 
 .proto-button:hover {

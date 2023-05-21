@@ -81,8 +81,18 @@
     font-style: italic;
 }   
 
+form > button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 #hashtag-container {
     background-color: white;
+    flex: 7;
+    overflow: auto;
+    border: 1px solid black;
+    border-radius: 10px;
 }
 
 .create-first {
@@ -96,10 +106,16 @@
     display: flex;
     align-items: center;
     margin-bottom: 1rem;
+    gap: 0.5rem;
+}
+
+.create-second button {
+    flex-shrink: 0;
 }
 
 .hash-selection {
     display: flex;
     flex-direction: column;
     margin-bottom: 1rem;
+    gap: 0.5rem;
 }

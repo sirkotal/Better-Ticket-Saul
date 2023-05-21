@@ -1,0 +1,162 @@
+@import url('https://fonts.googleapis.com/css?family=Lora:400,700|Poppins:400,700');
+
+:root {
+    --font-serif: 'Lora', 'Times New Roman', Times, serif;
+    --font-sans: Arial, Helvetica, sans-serif;
+    --font-title: 'Poppins', Arial, Helvetica, sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    text-decoration: none;
+}
+
+#ticket {
+    width: 70%;
+    margin: auto;
+    margin-bottom: 1em;
+    background-color: #edeff0;
+    display: flex;
+    flex-direction: column;
+    padding: 2em;
+    border-radius: 15px
+}
+
+#ticket > .ticket-info {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+#ticket .title {
+    text-align: left;
+    font-size: 2rem;
+    font-weight: bold;
+    font-family: var(--font-title);
+}
+
+#ticket .client::before {
+    content:'Client: ';
+}
+
+#ticket .date::before {
+    content: 'Date: ';
+}
+
+#ticket .status::before {
+    content:'Status: ';
+}
+
+#ticket .department::before {
+    content:'Department: ';
+}
+
+#ticket .agent::before {
+    content:'Agent: ';
+}
+
+.ticket-info p:not(:last-of-type)::after {
+    content: "|";
+    padding: 0 .5em;
+}
+
+#ticket > .hashtags {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    column-gap: 0.5rem;
+    border: 1px solid #d5d8da;
+    border-radius: 10px;
+    margin: 1rem 0;
+}
+
+#ticket > .hashtags > li {
+    font-style: italic;
+    font-family: var(--font-serif);
+    font-size: 1.3rem;
+    color: gray;     
+    padding: 1rem;
+}
+
+.add-comment {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 1rem 0;
+}
+
+.add-comment > label {
+    font-size: 1.2rem;
+    font-family: var(--font-title);
+    font-weight: bold;
+}
+
+.add-comment > textarea {
+    border: 0.1rem solid #d5d8da;
+    border-radius: 1rem;
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+    resize: none;
+    width: 40vw;
+    height: 10vh;
+}
+
+.add-comment > input {
+    background-color: #e6e0d9;
+    border-radius: 10px;
+    color: black;
+    margin: 0;
+    padding: 1rem;
+    font-weight: bold;
+}
+
+#replies {
+    width: 70%;
+    margin: auto;
+    background-color: #edeff0;
+    padding: 1em;
+    border-radius: 15px;
+}
+
+#replies > h1 {
+    font-size: 2rem;
+    font-weight: bold;
+    font-family: var(--font-title);
+    margin-bottom: 1em;
+}
+
+.reply {
+    display: flex;
+    flex-direction: column;
+    
+    border: 0.1rem solid gray;
+    border-radius: 15px;
+    padding: 1em;
+    margin: 1em 0;
+}
+
+.reply > .info {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1em;
+}
+
+.reply > .info > .user {
+    font-size: 1.2rem;
+    font-family: var(--font-title);
+    font-weight: bold;
+}
+
+.reply > .info > .date {
+    font-size: 1.2rem;
+    font-family: var(--font-title);
+}
+
+.reply > .info > .date::before {
+    content: 'Date: ';
+}

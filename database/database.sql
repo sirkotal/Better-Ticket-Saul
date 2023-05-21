@@ -60,8 +60,7 @@ CREATE TABLE TicketReply (
     date INTEGER,
     -- attachment VARCHAR,
     ticketId INTEGER REFERENCES Ticket(id),
-    agentId REFERENCES Agent(username),
-    departmentId REFERENCES Department(name)
+    authorId REFERENCES User(id)
 );
 
 CREATE TABLE TicketLog (

@@ -15,6 +15,11 @@
     die();
   }
 
+  if (!isset($_POST['csrf']) || !$session->getCsrf() != $_POST['csrf']) {
+    header('Location: /');
+    die();
+  }
+
   require_once(__DIR__ . '/../database/user.php');
 
   $username = $_POST['username'];

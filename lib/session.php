@@ -6,6 +6,10 @@
   class Session {
     public function __construct() {
       session_start();
+
+      if (!isset($_SESSION['csrf'])) {
+        $_SESSION['csrf'] = bin2hex(openssl_random_pseudo_bytes(32));
+      }
     }
 
     /**
@@ -76,6 +80,15 @@
         return $_SESSION[$errorType];
       }
       return null;
+    }
+
+    /**
+     * Get the CSRF token
+     * 
+     * @return string the CSRF token
+     */
+    public function getCsrf(): string {
+      return $_SESSION['csrf'];
     }
   }
 ?>

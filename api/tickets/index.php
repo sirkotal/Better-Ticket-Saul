@@ -138,10 +138,11 @@
         die();
       }
 
+      $required = array_key_exists('title', $data) && array_key_exists('text', $data) && array_key_exists('clientId', $data) && !array_key_exists('hashtags', $data) && !array_key_exists('departmentId', $data) && count($data) > 3;
       $just_hashtags = array_key_exists('hashtags', $data) && count($data) > 4;
       $just_department = array_key_exists('departmentId', $data) && count($data) > 4;
       $both = array_key_exists('hashtags', $data) && array_key_exists('departmentId', $data) && count($data) > 5;
-      if (count($data) > 3 || $just_hashtags || $just_department || $both) {
+      if ($required || $just_hashtags || $just_department || $both) {
         API::sendError(HttpStatus::BAD_REQUEST, 'Too many fields');
         die();
       }

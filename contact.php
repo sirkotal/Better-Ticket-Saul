@@ -16,7 +16,11 @@
   }
 ?>
 
-<?php outputHead() ?>
+<?php outputHead(
+  $stilesheets = [
+    '/style/contact.css'
+  ]
+) ?>
 <body>
   <?php outputHeader() ?>
   <section id="contact">

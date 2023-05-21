@@ -7,7 +7,11 @@
   $session = new Session();
 ?>
 
-<?php outputHead() ?>
+<?php outputHead(
+  $stylesheets = [
+    '/style/home.css'
+  ]
+) ?>
 <body>
   <?php outputHeader() ?>
   <!-- TODO: change what to on the index page -->

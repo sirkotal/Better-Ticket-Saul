@@ -1,0 +1,133 @@
+@import url('https://fonts.googleapis.com/css?family=Lora:400,700|Poppins:400,700');
+
+:root {
+    --font-serif: 'Lora', 'Times New Roman', Times, serif;
+    --font-sans: Arial, Helvetica, sans-serif;
+    --font-title: 'Poppins', Arial, Helvetica, sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    text-decoration: none;
+}
+
+
+#ticket {
+    width: 70%;
+    margin: auto;
+    margin-bottom: 1rem;
+    background-color: #edeff0;
+    display: grid;
+    grid-template-columns: [start] auto [status_end] auto [author_end] auto [date_end] auto [title_end] 0.5fr [hashtag] 1fr [end];
+    grid-template-rows: [start] auto [middle] auto [info] auto [end];
+    padding: 1rem;
+    border: 0.1rem solid #edeff0;
+    border-radius: 15px
+}
+
+#ticket > .ticketTitle{
+    grid-row: start / middle;
+    grid-column: start / title_end;
+    padding: 1rem;
+    text-align: left;
+    font-size: 2rem;
+    font-weight: bold;
+    font-family: var(--font-title);
+}
+
+#ticket > .ticketName{
+    padding: 0 1rem;
+    grid-row: middle / info;
+    grid-column: status_end / author_end;
+    border-right: 0.1rem solid black;
+    border-left: 0.1rem solid black;
+}
+
+#ticket > .ticketName::before{
+    content:'Author: ';
+}
+
+#ticket > .ticketDate{
+    padding: 0 1rem;
+    grid-row: middle / info;
+    grid-column: author_end / date_end;
+}
+
+#ticket > .ticketDate::before{
+    content: 'Date ';
+}
+
+#ticket > .ticketStatus{
+    padding: 0 1rem;
+    grid-row: middle / info;
+    grid-column: start / status_end;
+}
+
+#ticket > .ticketStatus::before{
+    content:'Status: ';
+}
+
+#ticket > ul {
+    grid-row: start / end;
+    grid-column: hashtag / end;
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: 0.5rem;
+}
+
+#ticket > ul > li > a{
+    font-style: italic;
+    font-family: var(--font-serif);
+    font-size: 1.3rem;
+    color: gray;     
+}
+
+#ticket > ul > li{
+    padding: 1rem;
+}
+
+.message {
+    width: 70%;
+    margin: auto;
+    background-color: #edeff0;
+    display: grid;
+    grid-template-columns: [start] auto [author_end] auto [date_end] 1fr [end];
+    grid-template-rows: [start] auto [middle] auto [end];
+    padding: 1rem;
+    border: 0.1rem solid #edeff0;
+    border-radius: 15px
+}
+
+.message > .user {
+    padding: 0 0.5rem 1rem 1rem;
+    grid-row: start / middle;
+    grid-column: start / author_end;
+    font-size: 1.2rem;
+    font-family: var(--font-title);
+    font-weight: bold;
+}
+
+.message > .date {
+    padding: 0 1rem 1rem 0;
+    grid-row: start / middle;
+    grid-column: author_end / date_end;
+    text-align: left;
+    font-size: 1.2rem;
+    font-family: var(--font-title);
+    color: gray; 
+}
+
+.message > .date::before {
+    content: 'commented on ';
+}
+
+.message > p {
+    padding: 1rem;
+    grid-row: middle / end;
+    grid-column: start / end;
+    text-align: left;
+    background: white;
+}

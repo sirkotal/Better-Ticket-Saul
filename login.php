@@ -2,21 +2,35 @@
   declare (strict_types = 1);
 
   require_once(__DIR__ . '/templates/common.php');
+  require_once(__DIR__ . '/lib/session.php');
+  $session = new Session();
+  
+  $error = $session->getError('error-login');
+  $session->unsetError('error-login');
 ?>
 
-<?php outputHead() ?>
+<?php outputHead(
+  $stylesheets = [
+    $error !== null ? '/style/errors.css': '',
+    '/style/login.css'
+  ]
+) ?>
 <body>
   <?php outputHeader() ?>
   <section id="login">
     <h1>Login</h1>
-    <form>
+    <form method="post" action="/actions/action_login.php">
       <label>
         <input type="text" name="username"> <p>Username</p> 
       </label>
       <label>
         <input type="password" name="password"> <p>Password</p> 
       </label>
-      <button formaction="/actions/action_login.php" formmethod="post">Login</button>
+      <?php if ($error !== null) { ?>
+        <p class="input-error"><?= $error ?></p>
+      <?php } ?>
+      <input type="hidden" name="csrf" value="<?= $session->getCSRF() ?>">
+      <button type="submit">Login</button>
       <a href="/register.php">Sign up</a>
     </form>
   </section>

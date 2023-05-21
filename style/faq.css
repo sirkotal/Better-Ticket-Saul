@@ -1,0 +1,73 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap');
+
+:root {
+    --highlight: #f8ebda80;
+    --color-header: #e3d1b8;
+    --font-title: 'Poppins', Arial, Helvetica, sans-serif;
+}
+
+#faq {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    padding: 2rem;
+    height: 100%;
+}
+
+#faq-header {
+    text-align: center;
+    color: black;
+    font-weight: bold;
+    padding-top: 2.3rem;
+    font-family: var(--font-title);
+}
+
+#faq .question {
+    width: 80%;
+    background-color: var(--highlight);
+    box-sizing: border-box;
+    border: 2px solid black;
+    border-radius: 4px;
+    padding: 1.5rem;
+}
+
+#faq .question-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#faq .question h2 {
+    padding-inline-end: 10px;
+    font-family: var(--font-title);
+}
+
+#faq .question p {
+    display: none;
+    padding-top: 0.3rem;
+    font-size: large;
+    font-style: italic;
+}
+
+#faq .question.open p {
+    display: block;
+}
+
+.down-button {
+    display: inline-block;
+}
+
+#faq .dropdown-button:hover {
+    cursor: pointer;
+}
+
+#faq .dropdown-button {
+    background: none;
+    border: none;
+}
+
+.down-button {
+    font-size: 36px;
+}

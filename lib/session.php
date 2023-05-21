@@ -6,6 +6,10 @@
   class Session {
     public function __construct() {
       session_start();
+
+      if (!isset($_SESSION['csrf'])) {
+        $_SESSION['csrf'] = bin2hex(openssl_random_pseudo_bytes(32));
+      }
     }
 
     /**
@@ -36,9 +40,13 @@
     /**
      * Get the user in the session
      * 
-     * @return User the user
+     * @return User|null the user if it exists, null otherwise
      */
-    public function getUser(): User {
+    public function getUser(): User|null {
+      if (!isset($_SESSION['user'])) {
+        return null;
+      }
+
       return User::getUserById($_SESSION['user']);
     }
 
@@ -59,6 +67,28 @@
      */
     public function unsetError(string $errorType): void {
       unset($_SESSION[$errorType]);
+    }
+
+    /**
+     * Get an error in the session
+     * 
+     * @param string $errorType the error type
+     * @return string|null The error message or null if there is no error.
+     */
+    public function getError(string $errorType): string|null {
+      if (isset($_SESSION[$errorType])) {
+        return $_SESSION[$errorType];
+      }
+      return null;
+    }
+
+    /**
+     * Get the CSRF token
+     * 
+     * @return string the CSRF token
+     */
+    public function getCsrf(): string {
+      return $_SESSION['csrf'];
     }
   }
 ?>

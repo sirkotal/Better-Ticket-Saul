@@ -73,7 +73,6 @@
     }
   }
 
-
   class Ticket {
     private int $id;
     private string $title;
@@ -99,6 +98,13 @@
 
       if (!$result) {
         throw new Exception('Ticket not found');
+      }
+
+      // check if status exists
+      try {
+        TicketStatus::getColor($result['status']);
+      } catch (Exception $e) {
+        throw new Exception('Ticket status not found');
       }
 
       $this->id = $result['id'];
@@ -286,6 +292,26 @@
           return $info;
         }, $logs)
       ];
+    }
+
+    /**
+     * Get the tickets of a client.
+     * 
+     * @param Client $client The client.
+     * @return array The tickets.
+     */
+    public static function getTicketsByClient(Client $client): array {
+      $db = getDatabaseConnection();
+
+      $stmt = $db->prepare('SELECT id FROM Ticket WHERE clientId = :clientId');
+      $stmt->bindValue(':clientId', $client->getId(), PDO::PARAM_INT);
+      $stmt->execute();
+
+      $result = $stmt->fetchAll();
+
+      return array_map(function ($row) {
+        return new Ticket($row['id']);
+      }, $result);
     }
 
     /**

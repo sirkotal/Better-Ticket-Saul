@@ -1,10 +1,10 @@
 function hamburgerDropdown(button, menu) {
-    if (button !== null && menu !== null) {
-      button.addEventListener('click', () => {
-        button.classList.toggle('expanded');
-        menu.classList.toggle('expanded');
-      });
-    }
+  if (button !== null && menu !== null) {
+    button.addEventListener('click', () => {
+      button.classList.toggle('expanded');
+      menu.classList.toggle('expanded');
+    });
+  }
 }
 
 function ticketDropdown(button, menu) {
@@ -55,10 +55,26 @@ function signEffect(login, register, sign_div) {
     }
 }
 
+function faqDropdown() {
+  const questions = document.querySelectorAll('.question');
+
+  questions.forEach(section => {
+    const button = section.querySelector('.dropdown-button');
+    const icon = button.querySelector('i');
+
+    button.addEventListener('click', () => {
+      section.classList.toggle('open');
+      button.classList.toggle('rotate');
+      icon.classList.toggle('fa-caret-square-down');
+      icon.classList.toggle('fa-caret-square-up');
+    });
+  });
+}
+  
 const hamburger_button = document.querySelector('#hamburger-button');
 const hamburger_menu = document.querySelector('#hamburger-menu');
 hamburgerDropdown(hamburger_button, hamburger_menu);
-  
+
 const ticket_button = document.querySelector('#ticket-button');
 const ticket_menu = document.querySelector('#ticket-menu');
 ticketDropdown(ticket_button, ticket_menu);
@@ -66,8 +82,7 @@ ticketDropdown(ticket_button, ticket_menu);
 const login_button = document.querySelector('#signin');
 const register_button = document.querySelector('#signup');
 const sign_div = document.querySelector('#sign');
+
 signEffect(login_button, register_button, sign_div);
 
-
-
-
+faqDropdown();

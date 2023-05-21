@@ -15,8 +15,25 @@
     die();
   }
 
+  if (!isset($_POST['csrf']) || !$session->getCsrf() != $_POST['csrf']) {
+    header('Location: /');
+    die();
+  }
+
   $username = $_POST['username'];
   $password = $_POST['password'];
+
+  if (empty($username)) {
+    $session->setError('error-register', 'Username field is empty');
+    header('Location: ' . $_SERVER['HTTP_REFERER']);
+    die();
+  }
+
+  if (empty($password)) {
+    $session->setError('error-register', 'Password field is empty');
+    header('Location: ' . $_SERVER['HTTP_REFERER']);
+    die();
+  }
 
   require_once(__DIR__ . '/../database/user.php');
 
@@ -34,5 +51,6 @@
   }
 
   $session->setUser($user_id);
+  $session->unsetError('error-login');
   header('Location: /');
 ?>

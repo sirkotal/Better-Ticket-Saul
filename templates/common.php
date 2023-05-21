@@ -22,13 +22,13 @@
     <link href="/style/register.css" rel="stylesheet">
     <link href="/style/login.css" rel="stylesheet">
     <link href="/style/signup.css" rel="stylesheet">
-    <link href="/style/responsive.css" rel="stylesheet">
     <link href="/style/contact.css" rel="stylesheet">
     <link href="/style/faq.css" rel="stylesheet">
     <link href="/style/layout.css" rel="stylesheet">
     <link href="/style/home.css" rel="stylesheet">
     <link href="/style/admin.css" rel="stylesheet">
     <link href="/style/departments.css" rel="stylesheet">
+    <link href="/style/responsive.css" rel="stylesheet">
     <script src="/script/admin.js" defer></script>
     <script src="/script/dropdown.js" defer></script>
     <script src="/script/switch.js" defer></script>
@@ -60,7 +60,7 @@
           <ul>
             <li><a href="/index.php">Home</a></li>
             <li><a href="/faq.php">FAQs</a></li>
-            <li><a href="/contact.php">Contact Us</a></li>
+            <li><a href="/contact.php">Contact</a></li>
             <?php if ($session->isLoggedIn()) { ?>
               <li><a href="/departments.php">Departments</a></li>
             <?php } ?>  

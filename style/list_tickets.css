@@ -112,3 +112,12 @@
     content: "|";
     padding: 0 .5em;
 }
+
+@media (max-width: 60em){
+    #tickets > .upper-row {
+        width: 95%;
+    }
+    #tickets > .ticket {
+        width: 95%;
+    }
+}

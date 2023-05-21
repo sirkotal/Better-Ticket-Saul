@@ -139,3 +139,10 @@ body > header > h1 {
     display: none;
 }
 
+@media (max-width: 60em){
+    #menu li:first-child {
+        display: none;
+    }
+}
+
+

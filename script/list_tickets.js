@@ -35,7 +35,7 @@ async function createTicketRow(ticket) {
     const ticketTitle = document.createElement("h2");
     ticketTitle.classList.add("title");
     const ticketLink = document.createElement("a");
-    ticketLink.setAttribute("href", "#"); // TODO: change later
+    ticketLink.setAttribute("href", `/view_ticket.php?id=${ticket.id}`); // TODO: change later
     ticketLink.textContent = ticket.title;
     ticketTitle.appendChild(ticketLink);
 

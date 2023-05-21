@@ -71,17 +71,17 @@ function faqDropdown() {
   });
 }
   
-const hamburger_button = document.querySelector('#hamburger-button');
-const hamburger_menu = document.querySelector('#hamburger-menu');
+hamburger_button = document.querySelector('#hamburger-button');
+hamburger_menu = document.querySelector('#hamburger-menu');
 hamburgerDropdown(hamburger_button, hamburger_menu);
 
-const ticket_button = document.querySelector('#ticket-button');
-const ticket_menu = document.querySelector('#ticket-menu');
+ticket_button = document.querySelector('#ticket-button');
+ticket_menu = document.querySelector('#ticket-menu');
 ticketDropdown(ticket_button, ticket_menu);
 
-const login_button = document.querySelector('#signin');
-const register_button = document.querySelector('#signup');
-const sign_div = document.querySelector('#sign');
+login_button = document.querySelector('#signin');
+register_button = document.querySelector('#signup');
+sign_div = document.querySelector('#sign');
 signEffect(login_button, register_button, sign_div);
 
 faqDropdown();

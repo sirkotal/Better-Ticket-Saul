@@ -47,11 +47,13 @@
     color: black;
     margin: 0;
     padding: 1rem;
+    font-weight: bold;
 }
 
 #open button:hover{
     background-color: #d8bd96;
     cursor: pointer;
+    transition: 1s;
 }
 
 #open #title{

@@ -17,9 +17,19 @@ function addHashtag(hashtag) {
     hashtagContainer.appendChild(hashtagElement);
 }
 
+function toggleBorder() {
+    const selectedOption = hashtagSelector.value;
+    if (selectedOption !== "none") {
+      hashtagContainer.classList.add("has-elements");
+    } else {
+      hashtagContainer.classList.remove("has-elements");
+    }
+}
+
 addHashtagButton.addEventListener("click", () => {
     const hashtag = hashtagSelector.value;
     if (hashtag) {
         addHashtag(hashtag);
+        toggleBorder();
     }
 });

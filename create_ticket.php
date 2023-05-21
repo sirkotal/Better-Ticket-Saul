@@ -31,7 +31,7 @@
           </select>
         </label>
       </div>
-      <input id="ticket-text" name="hashtag" type="text" placeholder="Tell us what's up!">
+      <textarea id="ticket-text" name="hashtag" placeholder="Tell us what's up!"></textarea>
       <div class="create-second">
         <div class="hash-selection">
           <select id="hashtag-selector" name="hashtag">
@@ -45,7 +45,7 @@
         </div>  
         <div id="hashtag-container"></div>
       </div>  
-      <button formaction="#" formmethod="post">Open</button>
+      <button id="open-button" formaction="#" formmethod="post">Open</button>
     </form>
   </section>
   <?php outputFooter() ?>

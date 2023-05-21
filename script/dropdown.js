@@ -79,7 +79,6 @@ ticket_button = document.querySelector('#ticket-button');
 ticket_menu = document.querySelector('#ticket-menu');
 ticketDropdown(ticket_button, ticket_menu);
 
-
 login_button = document.querySelector('#signin');
 register_button = document.querySelector('#signup');
 sign_div = document.querySelector('#sign');

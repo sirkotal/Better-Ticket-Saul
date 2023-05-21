@@ -27,6 +27,7 @@
     <link href="/style/responsive.css" rel="stylesheet">
     <script src="/script/dropdown.js" defer></script>
     <script src="/script/switch.js" defer></script>
+    <script src="/script/edit_profile.js" defer></script>
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
     
     <?php foreach ($stylesheets as $stylesheet) { ?>

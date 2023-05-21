@@ -17,7 +17,14 @@
   $users = USER::getAllUsers();
 ?>
 
-<?php outputHead() ?>
+<?php outputHead(
+  $stylesheets = [
+  '/style/admin.css'
+  ],
+  $scripts = [
+    '/script/admin.js'
+  ]
+) ?>
 <body>
   <?php outputHeader() ?>
   <div id="menu-admin">

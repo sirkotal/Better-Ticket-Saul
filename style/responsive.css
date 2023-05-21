@@ -12,9 +12,6 @@
     #logout {
         width: 10rem;
     }
-
-    
-
 }
 
 @media (max-width: 30em){
@@ -89,23 +86,6 @@
         text-align: center;
     }
 
-    .saul-container .saul-text {
-        font-size: 1.5rem;
-        top: 25%;
-    }
+    
 
-    #edit-profile{
-        width: 100%;
-    }
-
-    .profile-change{
-        left:0;
-        top:4.8rem;
-        width: 100%;
-        background-color: #d5d8da;   
-    }
-
-    #edit-profile .value{
-        background: white;
-    }
 }   

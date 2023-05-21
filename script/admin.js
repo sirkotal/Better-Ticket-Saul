@@ -33,7 +33,7 @@ function assignAgents() {
     select_remove = document.querySelectorAll('#remove-department select');
     added_selects = [];
     removed_selects = []; 
-    if (true) { 
+    if (button_add !== null && button_remove !== null) { 
         button_add.addEventListener('click', () => {
             optionsToRemove = [];
             select_add = [...select_add, ...removed_selects];
@@ -166,7 +166,7 @@ function assignAgents() {
 
 function updateDepartment() {
     const button = document.querySelector('#New-Department .enter-button');
-    if (true) { 
+    if (button!==null) { 
         button.addEventListener('click', () => {
             department = document.querySelector('#New-Department input[name="department"]')
             id = document.querySelector('#New-Department input[id="department-id"]');
@@ -201,7 +201,7 @@ function updateDepartment() {
 
 function updateStatus() {
     const button = document.querySelector('#Add-Status .enter-button');
-    if (true) { 
+    if (button !== null) { 
         button.addEventListener('click', () => {
             stat = document.querySelector('#Add-Status input[name="status"]')
             color = document.querySelector('#Add-Status input[name="status-color"]')
@@ -225,7 +225,7 @@ function updateStatus() {
 function updateRole() {
     const button = document.querySelector('#update-role #enter-role');
     const selects = document.querySelectorAll('#update-role select');
-    if (true) { 
+    if (button !== null && selects !== null) { 
         button.addEventListener('click', () => {
             selects.forEach(select => {
                 value = select.options[select.selectedIndex].value;
@@ -283,7 +283,7 @@ function updateRole() {
     }
 }
 
-updateDepartment()
+updateDepartment();
 updateRole();
 assignAgents();
 updateStatus();

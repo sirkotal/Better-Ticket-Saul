@@ -82,7 +82,7 @@
         die();
       }
 
-      $reply = TicketReply::create($data['reply'], $ticket->getId(), $ticket->getAgent()->getId(), $ticket->getDepartment()->getId());
+      $reply = TicketReply::create($data['reply'], $ticket->getId(), $session->getUser()->getId());
 
       API::sendResponse(HttpStatus::CREATED, [
         'message' => 'Ticket reply created successfully',
@@ -116,7 +116,7 @@
         die();
       }
 
-      if ($reply->getAgent()->getId() !== $session->getUser()->getId() || $reply->getTicket()->getId() !== $session->getUser()->getId()) {
+      if ($reply->getAuthor()->getId() !== $session->getUser()->getId() || $reply->getTicket()->getAgent()->getId() !== $session->getUser()->getId()) {
         API::sendError(HttpStatus::FORBIDDEN, 'You are not authorized to do that');
         die();
       }
@@ -172,7 +172,7 @@
 
       $reply = new TicketReply((int) $parts[3]);
 
-      if ($reply->getAgent()->getId() !== $session->getUser()->getId() || $reply->getTicket()->getId() !== $session->getUser()->getId()) {
+      if ($reply->getAuthor()->getId() !== $session->getUser()->getId() || $reply->getTicket()->getAgent()->getId() !== $session->getUser()->getId()) {
         API::sendError(HttpStatus::FORBIDDEN, 'You are not authorized to do that');
         die();
       }

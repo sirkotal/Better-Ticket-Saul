@@ -29,7 +29,6 @@ async function createTicketRow(ticket) {
     // create the ticket div
     const ticketDiv = document.createElement("div");
     ticketDiv.classList.add("ticket");
-    ticketDiv.setAttribute("data-id", ticket.id);
 
     // create the ticket title
     const ticketTitle = document.createElement("h2");

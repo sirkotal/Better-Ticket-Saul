@@ -108,11 +108,10 @@ INSERT INTO TicketHashtag (hashtagId, ticketId) VALUES
     (2, 1), -- #lalo
     (3, 1); -- #tuco
 
-INSERT INTO TicketReply (reply, date, ticketId, agentId, departmentId) VALUES
+INSERT INTO TicketReply (reply, date, ticketId, authorId) VALUES
     (
         'Hello, I am Jim McGill, your attorney. I will take care of this.',
         1682731073,
         2, -- I want to buy a car
-        2, -- test_agent
-        1 -- Sales
+        2 -- test_agent
     );

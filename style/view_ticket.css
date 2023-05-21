@@ -16,117 +16,147 @@
 #ticket {
     width: 70%;
     margin: auto;
-    margin-bottom: 1rem;
+    margin-bottom: 1em;
     background-color: #edeff0;
-    display: grid;
-    grid-template-columns: [start] auto [status_end] auto [author_end] auto [date_end] auto [title_end] 0.5fr [hashtag] 1fr [end];
-    grid-template-rows: [start] auto [middle] auto [info] auto [end];
-    padding: 1rem;
-    border: 0.1rem solid #edeff0;
+    display: flex;
+    flex-direction: column;
+    padding: 2em;
     border-radius: 15px
 }
 
-#ticket > .ticketTitle{
-    grid-row: start / middle;
-    grid-column: start / title_end;
-    padding: 1rem;
+#ticket > .ticket-info {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+#ticket .title {
     text-align: left;
     font-size: 2rem;
     font-weight: bold;
     font-family: var(--font-title);
 }
 
-#ticket > .ticketName{
-    padding: 0 1rem;
-    grid-row: middle / info;
-    grid-column: status_end / author_end;
-    border-right: 0.1rem solid black;
-    border-left: 0.1rem solid black;
+#ticket .client::before {
+    content:'Client: ';
 }
 
-#ticket > .ticketName::before{
-    content:'Author: ';
+#ticket .date::before {
+    content: 'Date: ';
 }
 
-#ticket > .ticketDate{
-    padding: 0 1rem;
-    grid-row: middle / info;
-    grid-column: author_end / date_end;
-}
-
-#ticket > .ticketDate::before{
-    content: 'Date ';
-}
-
-#ticket > .ticketStatus{
-    padding: 0 1rem;
-    grid-row: middle / info;
-    grid-column: start / status_end;
-}
-
-#ticket > .ticketStatus::before{
+#ticket .status::before {
     content:'Status: ';
 }
 
-#ticket > ul {
-    grid-row: start / end;
-    grid-column: hashtag / end;
-    list-style: none;
-    display: flex;
-    flex-wrap: wrap;
-    column-gap: 0.5rem;
+#ticket .department::before {
+    content:'Department: ';
 }
 
-#ticket > ul > li > a{
+#ticket .agent::before {
+    content:'Agent: ';
+}
+
+.ticket-info p:not(:last-of-type)::after {
+    content: "|";
+    padding: 0 .5em;
+}
+
+#ticket > .hashtags {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    column-gap: 0.5rem;
+    border: 1px solid #d5d8da;
+    border-radius: 10px;
+    margin: 1rem 0;
+}
+
+#ticket > .hashtags > li {
     font-style: italic;
     font-family: var(--font-serif);
     font-size: 1.3rem;
     color: gray;     
-}
-
-#ticket > ul > li{
     padding: 1rem;
 }
 
-.message {
-    width: 70%;
-    margin: auto;
-    background-color: #edeff0;
-    display: grid;
-    grid-template-columns: [start] auto [author_end] auto [date_end] 1fr [end];
-    grid-template-rows: [start] auto [middle] auto [end];
-    padding: 1rem;
-    border: 0.1rem solid #edeff0;
-    border-radius: 15px
+.add-comment {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 1rem 0;
 }
 
-.message > .user {
-    padding: 0 0.5rem 1rem 1rem;
-    grid-row: start / middle;
-    grid-column: start / author_end;
+.add-comment > label {
     font-size: 1.2rem;
     font-family: var(--font-title);
     font-weight: bold;
 }
 
-.message > .date {
-    padding: 0 1rem 1rem 0;
-    grid-row: start / middle;
-    grid-column: author_end / date_end;
-    text-align: left;
+.add-comment > textarea {
+    border: 0.1rem solid #d5d8da;
+    border-radius: 1rem;
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+    resize: none;
+    width: 40vw;
+    height: 10vh;
+}
+
+.add-comment > input {
+    background-color: #e6e0d9;
+    border-radius: 10px;
+    color: black;
+    margin: 0;
+    padding: 1rem;
+    font-weight: bold;
+}
+
+#replies {
+    width: 70%;
+    margin: auto;
+    background-color: #edeff0;
+    padding: 1em;
+    border-radius: 15px;
+}
+
+#replies > h1 {
+    font-size: 2rem;
+    font-weight: bold;
+    font-family: var(--font-title);
+    margin-bottom: 1em;
+}
+
+.reply {
+    display: flex;
+    flex-direction: column;
+    
+    border: 0.1rem solid gray;
+    border-radius: 15px;
+    padding: 1em;
+    margin: 1em 0;
+}
+
+.reply > .info {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1em;
+}
+
+.reply > .info > .user {
     font-size: 1.2rem;
     font-family: var(--font-title);
-    color: gray; 
+    font-weight: bold;
 }
 
-.message > .date::before {
-    content: 'commented on ';
+.reply > .info > .date {
+    font-size: 1.2rem;
+    font-family: var(--font-title);
 }
 
-.message > p {
-    padding: 1rem;
-    grid-row: middle / end;
-    grid-column: start / end;
-    text-align: left;
-    background: white;
+.reply > .info > .date::before {
+    content: 'Date: ';
 }

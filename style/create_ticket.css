@@ -1,0 +1,97 @@
+@import url('https://fonts.googleapis.com/css?family=Lora:400,700|Poppins:400,700');
+
+:root {
+    --font-serif: 'Lora', 'Times New Roman', Times, serif;
+    --font-sans: Arial, Helvetica, sans-serif;
+    --font-title: 'Poppins', Arial, Helvetica, sans-serif;
+    --border-color: #d5d8da;
+    --background-color: #edeff0;
+    --agent-back: #e3d1b8;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+
+#open {
+    border: 0.1rem solid black;
+    border-radius: 1rem;
+    padding: 1rem;
+    width: 80%;
+    margin: auto auto auto auto;
+    background-color: #edeff0;
+}
+
+
+#open h1 {
+    padding: 1rem 0 0 1rem;
+    font-size: 2rem;
+}
+
+#open form{
+    display: grid;
+    padding: 1em;
+    gap: 1em;
+    grid-template-columns: [start] 1fr [firstquarter] 10% [middle] 10% [thirdquarter] 0.6fr [department] 0.4fr [end];
+    grid-template-rows: [start] 2rem [hashtag] 5rem [open] auto [end];
+}
+
+#open button{
+    grid-column: firstquarter / thirdquarter;
+    grid-row: open / end;
+    background-color: #e6e0d9;
+    border-radius: 10px;
+    color: black;
+    margin: 0;
+    padding: 1rem;
+}
+
+#open button:hover{
+    background-color: #d8bd96;
+    cursor: pointer;
+}
+
+#open #title{
+    grid-column: start / firstquarter;
+    grid-row: start / hashtag;
+
+}
+
+#open #title input{
+    padding: 0.5rem;
+    border: 0.1rem solid black;
+    border-radius: 1rem; 
+    width: 100%; 
+}
+
+#open #department{
+    grid-column: department / end;
+    grid-row: start / hashtag;
+}
+
+#open #department select{
+    background-color: white;
+    border: 0.1rem solid black;
+    border-radius: 1rem;
+    padding: 0.5rem;
+    cursor: pointer;
+    width: 100%;
+
+}
+
+#open textarea{
+    grid-column: start / end;
+    grid-row: hashtag / open;
+    border: 0.1rem solid black;
+    border-radius: 1rem;
+    padding: 0.5rem;
+}
+
+#open textarea::placeholder,input::placeholder{
+    color: black;
+    font-size: 1rem;
+    font-style: italic;
+}   

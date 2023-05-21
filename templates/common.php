@@ -17,6 +17,7 @@
     <title>Trouble Ticket Management System</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="/style/edit_profile.css" rel="stylesheet">
     <link href="/style/header.css" rel="stylesheet">
     <link href="/style/footer.css" rel="stylesheet">
     <link href="/style/register.css" rel="stylesheet">
@@ -29,6 +30,7 @@
     <link href="/style/home.css" rel="stylesheet">
     <script src="/script/dropdown.js" defer></script>
     <script src="/script/switch.js" defer></script>
+    <script src="/script/editprofile.js" defer></script>
     <script src="/script/dropdown.js" defer></script>
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
     
@@ -69,6 +71,7 @@
               <ul>
                 <li><a href="/create_ticket.php">Submit Ticket</a></li>
                 <li><a href="/view_ticket.php">View Tickets</a></li>
+                <li><a href="/edit_profile.php">Edit Profile</a></li>
               </ul>
             </div>
           </div>

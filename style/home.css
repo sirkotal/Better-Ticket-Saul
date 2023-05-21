@@ -69,3 +69,10 @@
       background-color: rgba(227, 209, 184, 0.8);
     }
 }
+
+@media (max-width: 30em){
+    .saul-container .saul-text {
+        font-size: 1.5rem;
+        top: 25%;
+    }
+}

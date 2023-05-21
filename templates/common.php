@@ -58,7 +58,7 @@
           <ul>
             <li><a href="/index.php">Home</a></li>
             <li><a href="/faq.php">FAQs</a></li>
-            <li><a href="/contact.php">Contact Us</a></li>
+            <li><a href="/contact.php">Contact</a></li>
             <?php if ($session->isLoggedIn()) { ?>
               <li><a href="/departments.php">Departments</a></li>
             <?php } ?>  

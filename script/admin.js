@@ -36,7 +36,7 @@ function assignAgents() {
     if (true) { 
         button_add.addEventListener('click', () => {
             optionsToRemove = [];
-            select_add = [...select_add, ...added_selects];
+            select_add = [...select_add, ...removed_selects];
             select_add.forEach(select => {
                 option = select.options[select.selectedIndex];
                 id = document.querySelector("#add-department input[class='user-id'][name='"+select.id+"']").value;
@@ -47,9 +47,11 @@ function assignAgents() {
                     request.setRequestHeader('Content-Type', 'application/json');
                     request.send(JSON.stringify({ action: 'add', departmentId: option.value}));
                 }
+            })
             optionsToRemove.forEach(({select, option, id}) => {
                 option.remove();
-                if (select.options.length==1){
+                flag = false;
+                if (select.options.length<=1){
                     select.style.display = "none";
                     select.style.pointerEvents = "none";
                     title = document.querySelector('#add-department p[id="'+select.id+'"]');
@@ -57,6 +59,7 @@ function assignAgents() {
                 }
                 select1 = document.querySelector('#remove-department select[id="'+select.id+'"]');
                 if (select1 == null){
+                    flag = true;
                     select1 = document.createElement('select');
                     select1.name = 'Departments';
                     select1.id = select.id;
@@ -89,19 +92,17 @@ function assignAgents() {
                 div.insertBefore(select1, buttons);
                 div.insertBefore(idinput, select1);
                 div.insertBefore(title1, idinput);
-                added_selects.push(select1);
             });
             optionsToRemove.length = 0;
-            })
         })
         button_remove.addEventListener('click', async () => {
             optionsToAdd = [];
-            select_remove = [...select_remove].concat(added_selects);
+            select_remove = [...select_remove, ...added_selects];
             select_remove.forEach(select => {
                 option = select.options[select.selectedIndex];
                 id = document.querySelector("#remove-department input[class='user-id'][name='"+select.id+"']").value;
                 if (option.value != 'none'){
-                    optionsToAdd.push({select,option});
+                    optionsToAdd.push({select,option, id});
                     request = new XMLHttpRequest();
                     request.open('PUT', '/api/agents/'+id)
                     request.setRequestHeader('Content-Type', 'application/json');
@@ -114,9 +115,11 @@ function assignAgents() {
                     }
                 }
             });
-            optionsToAdd.forEach(({select,option}) => {
+            optionsToAdd.forEach(({select,option, id}) => {
                 option.remove();
-                if (select.options.length==1){
+                flag=false;
+                console.log(select.options.length);
+                if (select.options.length<=1){
                     select.style.display = "none";
                     select.style.pointerEvents = "none";
                     title = document.querySelector('#remove-department p[id="'+select.id+'"]');
@@ -124,6 +127,7 @@ function assignAgents() {
                 }
                 select2 = document.querySelector('#add-department select[id="'+select.id+'"]');
                 if (select2 == null){
+                    flag=true;
                     select2 = document.createElement('select');
                     select2.name = 'Departments'
                     select2.id = select.id;
@@ -137,7 +141,7 @@ function assignAgents() {
                 title2 = document.querySelector('#add-department p[id="'+select.id+'"]');
                 if (title2 == null){
                     title2 = document.createElement('p');
-                    title2.class = 'title';
+                    title2.className = 'title';
                     title2.id = select.id;
                     title2.innerHTML = select.id; 
                 }
@@ -190,6 +194,27 @@ function updateDepartment() {
                     paragraph.innerHTML = data.error; 
                 }
                 department.value='';
+            }
+        });
+    };
+}
+
+function updateStatus() {
+    const button = document.querySelector('#Add-Status .enter-button');
+    if (true) { 
+        button.addEventListener('click', () => {
+            stat = document.querySelector('#Add-Status input[name="status"]')
+            color = document.querySelector('#Add-Status input[name="status-color"]')
+            request = new XMLHttpRequest();
+            request.open('POST', '/api/status/')
+            request.setRequestHeader('Content-Type', 'application/json');
+            request.send(JSON.stringify({ status: stat.value, color: color.value }));
+            request.onload = function() {
+                if (request.status === 201 ){
+                    document.querySelector('#Add-Status .back-button').click();
+                    alert('Status added successfully!');
+                    stat.value = '';
+                }
             }
         });
     };
@@ -261,6 +286,7 @@ function updateRole() {
 updateDepartment()
 updateRole();
 assignAgents();
+updateStatus();
 
 const admin_buttons = document.querySelectorAll('#admin-options button');
 const admin_menus = document.querySelectorAll('#admin-forms');

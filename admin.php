@@ -87,7 +87,7 @@
     </div>
     <div id="add-department" class="admin-forms agent_assign">
         <?php foreach($users as $user) {
-                if ($user->isAgent($user->getId()) ){?>
+                if ($user->isAgent($user->getId()) && count($user->getDepartments())!=count(DEPARTMENT::getAllDepartments())){?>
                     <p class='title' id='<?=$user->getUsername()?>' ><?=$user->getUsername()?> - <?php if($user->isAdmin($user->getId())): ?>Admin <?php elseif($user->isAgent($user->getId())): ?>Agent <?php else: ?>Client <?php endif; ?></p>
                     <input class='user-id' type='hidden' name=<?=$user->getUsername()?> value=<?=$user->getId()?>>
                     <select name="Departments" id=<?=$user->getUsername()?>>

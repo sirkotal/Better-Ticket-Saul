@@ -50,7 +50,10 @@ INSERT INTO Department (name) VALUES ('Billing');
 INSERT INTO AgentDepartment (agentId, departmentId) VALUES
     (2, 1), -- test_agent in Sales
     (2, 2), -- test_agent in Support
+    (3, 1), -- test_agent_2 in Billing
+    (3, 2), -- test_agent_2 in Billing
     (3, 3); -- test_agent_2 in Billing
+
 
 -- Create Hashtags
 

@@ -118,9 +118,9 @@
     <p>&copy; 2023 Better Ticket Saul || All Rights Reserved</p>
     <div class="footer-icons">
         <ul class="socials">
-            <li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
-            <li><a href="#"><i class="fab fa-twitter"></i></a></li>
-            <li><a href="#"><i class="fab fa-instagram"></i></a></li>
+            <li><a href="https://www.facebook.com/bob.odenkirk"><i class="fa fa-facebook"></i></a></li>
+            <li><a href="https://twitter.com/mrbobodenkirk"><i class="fa fa-twitter"></i></a></li>
+            <li><a href="https://www.instagram.com/therealbobodenkirk/"><i class="fa fa-instagram"></i></a></li>
         </ul>
     </div>
   </footer>

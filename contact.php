@@ -34,7 +34,7 @@
       <label>
         <textarea name="message" required></textarea> <p>Message</p> 
       </label>
-      <button formaction="#" formmethod="post">Submit</button>
+      <button formaction="mailto:lordkotal2002@gmail.com" formmethod="post" enctype="text/plain">Submit</button>
     </form>
   </section>
   <?php outputFooter() ?>

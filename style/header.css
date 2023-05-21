@@ -106,6 +106,7 @@ body > header > h1 {
     opacity: 1;
     transform: translateY(0);
     transition: opacity 100ms, transform 100ms;
+    z-index: 1;
 }
 
 #ticket-menu > ul {

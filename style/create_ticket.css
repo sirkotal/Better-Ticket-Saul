@@ -32,16 +32,11 @@
 }
 
 #open form {
-    display: grid;
     padding: 1em;
     gap: 1em;
-    grid-template-columns: [start] 1fr [firstquarter] 10% [middle] 10% [thirdquarter] 0.6fr [department] 0.4fr [end];
-    grid-template-rows: [start] 2rem [hashtag] 5rem [open] auto [end];
 }
 
 #open button {
-    grid-column: firstquarter / thirdquarter;
-    grid-row: open / end;
     background-color: #e6e0d9;
     border-radius: 10px;
     color: black;
@@ -56,12 +51,6 @@
     transition: 1s;
 }
 
-#open #title {
-    grid-column: start / firstquarter;
-    grid-row: start / hashtag;
-
-}
-
 #open #title input {
     padding: 0.5rem;
     border: 0.1rem solid black;
@@ -69,12 +58,7 @@
     width: 100%; 
 }
 
-#open #department {
-    grid-column: department / end;
-    grid-row: start / hashtag;
-}
-
-#open #department select {
+#open #department select, #open #hashtags select {
     background-color: white;
     border: 0.1rem solid black;
     border-radius: 1rem;
@@ -84,12 +68,11 @@
 
 }
 
-#open #hashtag {
-    grid-column: start / end;
-    grid-row: hashtag / open;
+#open #ticket-text {
     border: 0.1rem solid black;
     border-radius: 1rem;
     padding: 0.5rem;
+    margin-bottom: 1rem;
 }
 
 #open input::placeholder {
@@ -97,3 +80,26 @@
     font-size: 1rem;
     font-style: italic;
 }   
+
+#hashtag-container {
+    background-color: white;
+}
+
+.create-first {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.create-second {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.hash-selection {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+}

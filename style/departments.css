@@ -89,6 +89,12 @@
     cursor: pointer;
 }
 
+.agents-info {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 0.2rem;
+}
+
 .agent-data {
     display: none;
     margin-top: 0.2rem;
@@ -99,17 +105,20 @@
 }
 
 .agent-data.show {
-    display: block;
+    display: inline-block;
 }
 
 .agent-name::before {
     content:'Name: ';
+    font-weight: bold;
 }
 
 .agent-username::before {
     content:'Username: ';
+    font-weight: bold;
 }
 
 .agent-email::before {
     content:'Email: ';
+    font-weight: bold;
 }

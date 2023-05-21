@@ -20,7 +20,7 @@
 <?php function outputDepartment(Department $department) {
   $department_id = $department->getId();
   $department_name = $department->getName();
-  $department_agents = $department->getAgents() === null ? 'No agents' : $department->getAgents(); ?>
+  $department_agents = $department->getAgents() ?? []; ?>
 
   <div class="department" data-id="<?= $department_id ?>">
     <h2 class="title"><a href="#"><?= $department_name ?></a></h2>
@@ -31,24 +31,27 @@
           <span class="proto-button"><i class='far fa-caret-square-down'></i></span>
         </button>
       </div>  
+      <div class="agents-info">
       <?php foreach ($department_agents as $agent) { 
         outputAgent($agent);
       } ?>
+      </div>
     </div>
   </div>
 <?php } ?>
 
 <?php function outputAgent(Agent $agent) {
   $agent_id = $agent->getId();
+  // echo $agent_id;
   $agent_name = $agent->getName();
   $agent_username = $agent->getUsername();
   $agent_email = $agent->getEmail(); ?>
-
-  <div class="agent-data" data-id="<?= $agent_id ?>">
+  
+  <div class="agent-data">
     <p class="agent-name"><?= $agent_name ?></p>
     <p class="agent-username"><?= $agent_username ?></p>
     <p class="agent-email"><?= $agent_email ?></p>
-  </div>
+  </div>  
 <?php } ?>
 
 <?php outputHead(

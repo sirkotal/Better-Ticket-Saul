@@ -14,7 +14,6 @@
   }
   
   $departs = Department::getAllDepartments();
-  //var_dump($departs);
 ?>
 
 <?php function outputDepartment(Department $department) {
@@ -32,17 +31,16 @@
         </button>
       </div>  
       <div class="agents-info">
-      <?php foreach ($department_agents as $agent) { 
-        outputAgent($agent);
-      } ?>
+        <?php foreach ($department_agents as $agent) {
+          outputAgent($agent);
+        } ?>
       </div>
     </div>
   </div>
 <?php } ?>
 
 <?php function outputAgent(Agent $agent) {
-  $agent_id = $agent->getId();
-  // echo $agent_id;
+  // $agent_id = $agent->getId();
   $agent_name = $agent->getName();
   $agent_username = $agent->getUsername();
   $agent_email = $agent->getEmail(); ?>

@@ -7,6 +7,9 @@
 <?php outputHead(
   $stylesheets = [
     '/style/create_ticket.css'
+  ],
+  $scripts = [
+    '/script/suggestions.js'
   ]
   ) ?>
 <body>
@@ -19,13 +22,14 @@
           </label>
           <label id="department">
             <select name="department">
-              <option value="none" disabled selected hidden>--Select Deparment--</option>
+              <option value="default" disabled selected hidden>--Select Deparment--</option>
+              <option value="none">None</option>
               <option value="sales">Sales</option>
               <option value="support">Support</option> 
               <option value="billing">Billing</option> 
             </select>
           </label>
-          <textarea id="hashtag" name="hashtag" placeholder="Add your hashtags"></textarea>
+          <input id="hashtag" name="hashtag" type="text" placeholder="Add your hashtags">
           <div class="hash-container"></div>
           <button formaction="#" formmethod="post">Open</button>
         </form>

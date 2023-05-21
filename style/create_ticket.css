@@ -31,7 +31,7 @@
     font-size: 2rem;
 }
 
-#open form{
+#open form {
     display: grid;
     padding: 1em;
     gap: 1em;
@@ -39,7 +39,7 @@
     grid-template-rows: [start] 2rem [hashtag] 5rem [open] auto [end];
 }
 
-#open button{
+#open button {
     grid-column: firstquarter / thirdquarter;
     grid-row: open / end;
     background-color: #e6e0d9;
@@ -50,31 +50,31 @@
     font-weight: bold;
 }
 
-#open button:hover{
+#open button:hover {
     background-color: #d8bd96;
     cursor: pointer;
     transition: 1s;
 }
 
-#open #title{
+#open #title {
     grid-column: start / firstquarter;
     grid-row: start / hashtag;
 
 }
 
-#open #title input{
+#open #title input {
     padding: 0.5rem;
     border: 0.1rem solid black;
     border-radius: 1rem; 
     width: 100%; 
 }
 
-#open #department{
+#open #department {
     grid-column: department / end;
     grid-row: start / hashtag;
 }
 
-#open #department select{
+#open #department select {
     background-color: white;
     border: 0.1rem solid black;
     border-radius: 1rem;
@@ -84,7 +84,7 @@
 
 }
 
-#open textarea{
+#open #hashtag {
     grid-column: start / end;
     grid-row: hashtag / open;
     border: 0.1rem solid black;
@@ -92,7 +92,7 @@
     padding: 0.5rem;
 }
 
-#open textarea::placeholder,input::placeholder{
+#open input::placeholder {
     color: black;
     font-size: 1rem;
     font-style: italic;

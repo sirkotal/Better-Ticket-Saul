@@ -16,22 +16,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trouble Ticket Management System</title>
     
-    <link href="/style/edit_profile.css" rel="stylesheet">
     <link href="/style/header.css" rel="stylesheet">
     <link href="/style/footer.css" rel="stylesheet">
-    <link href="/style/register.css" rel="stylesheet">
-    <link href="/style/login.css" rel="stylesheet">
     <link href="/style/signup.css" rel="stylesheet">
     <link href="/style/responsive.css" rel="stylesheet">
-    <link href="/style/contact.css" rel="stylesheet">
-    <link href="/style/faq.css" rel="stylesheet">
     <link href="/style/layout.css" rel="stylesheet">
-    <link href="/style/home.css" rel="stylesheet">
-    <link href="/style/departments.css" rel="stylesheet">
     <script src="/script/dropdown.js" defer></script>
     <script src="/script/switch.js" defer></script>
-    <script src="/script/editprofile.js" defer></script>
-    <script src="/script/dropdown.js" defer></script>
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
     
     <?php foreach ($stylesheets as $stylesheet) { ?>

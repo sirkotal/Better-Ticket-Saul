@@ -4,7 +4,11 @@
   require_once(__DIR__ . '/templates/common.php');
 ?>
 
-<?php outputHead() ?>
+<?php outputHead(
+  $stylesheets = [
+    '/style/faq.css'
+  ]
+) ?>
 <body>
   <?php outputHeader() ?>
   <h1 id="faq-header">Frequently Asked Questions</h1>

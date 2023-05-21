@@ -1,0 +1,114 @@
+@import url('https://fonts.googleapis.com/css?family=Lora:400,700|Poppins:400,700');
+
+:root {
+    --font-serif: 'Lora', 'Times New Roman', Times, serif;
+    --font-sans: Arial, Helvetica, sans-serif;
+    --font-title: 'Poppins', Arial, Helvetica, sans-serif;
+    --border-color: #d5d8da;
+    --background-color: #edeff0;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    text-decoration: none;
+}
+
+#tickets {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 1.5em 0;
+}
+
+#tickets > .upper-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    background-color: var(--background-color);
+    border: 0.1rem solid var(--border-color);
+    border-radius: 15px 15px 0 0;
+    width: 70%;
+    padding: 1rem;
+}
+
+#tickets > .upper-row > h1{
+    font-size: 2rem;
+    font-weight: bold;
+    font-family: var(--font-title);
+}
+
+#tickets .filters {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+#tickets .filter {
+    margin-left: 1rem;
+}
+
+#tickets .filter > select {
+    padding: .5em 1em;
+    border-radius: 25px;
+    appearance: none;
+    cursor: pointer;
+}
+
+#tickets .filter > select:hover {
+    background-color: white;
+}
+
+#tickets > .ticket {
+    width: 70%;
+    margin: auto;
+    border: 0.1rem solid var(--border-color);
+    border-top: none;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.ticket > .bottom-row {
+    display: flex;
+}
+
+.ticket  .title {
+    padding-bottom: 0.5rem;
+    font-size: 1.7rem;
+    font-weight: bold;
+    font-family: var(--font-title);
+}
+
+.ticket .title > a {
+    color: black;
+}
+
+.ticket .status {
+    border-radius: 0.938rem;
+    color: white;
+    padding: 0.25rem 0.75rem;
+    margin-left: 0.25rem;
+}
+
+.ticket .date::before{
+    content: 'Date: ';
+}
+
+.ticket .department::before{
+    content:'Department: ';
+}
+
+.ticket .agent::before{
+    content:'Agent: ';
+}
+
+.ticket:hover {
+    background-color: var(--background-color);
+}
+
+.ticket p:not(:last-of-type)::after {
+    content: "|";
+    padding: 0 .5em;
+}

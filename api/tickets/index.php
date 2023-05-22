@@ -101,6 +101,17 @@
           }
         }
         $own_tickets = Ticket::getTicketsByClient($user);
+        foreach ($own_tickets as $ticket){
+          $flag = true;
+          foreach ($tickets as $t){
+            if ($t->getId() == $ticket->getId()){
+              $flag = false;
+              break;
+            }
+          }
+          if ($flag)
+            array_push($tickets, $ticket);
+        }
         $tickets = array_merge($tickets, $own_tickets);
         $body = [];
         foreach ($tickets as $ticket) {

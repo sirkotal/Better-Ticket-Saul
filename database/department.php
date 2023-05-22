@@ -260,9 +260,17 @@
      * @return array The department agents
      */
     public function getAgents(): array {
-      return array_map(function ($id) {
-        return new Agent($id);
-      }, $this->agentsIds);
+      $agents = [];
+      foreach ($this->agentsIds as $agent) {
+          if (User::isAgent($agent)) {
+              $agents[] = new Agent($agent);
+          }
+      }
+      return $agents;
+      /*return array_map(function ($id) {
+        return if(User::isAgent($id)){
+          new Agent($id);}
+      }, $this->agentsIds);*/
     }
   }
 ?>

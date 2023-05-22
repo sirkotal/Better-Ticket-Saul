@@ -51,9 +51,6 @@
             <li><a href="/index.php">Home</a></li>
             <li><a href="/faq.php">FAQs</a></li>
             <li><a href="/contact.php">Contact</a></li>
-            <?php if ($session->isLoggedIn()) { ?>
-              <li><a href="/departments.php">Departments</a></li>
-            <?php } ?>  
           </ul>
         </nav>
         <button id="hamburger-button">
@@ -65,12 +62,16 @@
         </button>
         <?php if ($session->isLoggedIn()) { ?>
           <div class="dropdown">
-            <button id="ticket-button" class="header-options">Ticket</button>
+            <button id="ticket-button" class="header-options">Options</button>
             <div id="ticket-menu" class="dropdown-menu">
               <ul>
                 <li><a href="/create_ticket.php">Open Ticket</a></li>
                 <li><a href="/view_ticket.php">View Tickets</a></li>
+                <li><a href="/departments.php">Departments</a></li>
                 <li><a href="/edit_profile.php">Edit Profile</a></li>
+                <?php if (User::isAdmin($session->getUser()->getId())) { ?>  
+                  <li><a href="/admin.php">Admin Dashboard</a></li>
+                <?php } ?>
               </ul>
             </div>
           </div>
@@ -80,8 +81,13 @@
               <li><a href="/index.php">Home</a></li>
               <li><a href="/create_ticket.php">Submit Ticket</a></li>
               <li><a href="/view_ticket.php">View Tickets</a></li>
-              <li><a href="#">FAQs</a></li>
-              <li><a href="#">Contact</a></li>
+              <li><a href="/departments.php">Departments</a></li>
+              <li><a href="/edit_profile.php">Edit Profile</a></li>
+              <?php if (User::isAdmin($session->getUser()->getId())) { ?>  
+                <li><a href="/admin.php">Admin Dashboard</a></li>
+              <?php } ?>
+              <li><a href="/faq.php">FAQs</a></li>
+              <li><a href="/contact.php">Contact</a></li>
               <li><a href="/actions/action_logout.php">Logout</a></li>
             </ul>
           </div>
@@ -93,8 +99,8 @@
           <div id="hamburger-menu" class="dropdown-menu">
             <ul id = "hamburger-sign">
               <li><a href="/index.php">Home</a></li>
-              <li><a href="#">FAQs</a></li>
-              <li><a href="#">Contact</a></li>
+              <li><a href="/faq.php">FAQs</a></li>
+              <li><a href="/contact.php">Contact</a></li>
               <li><a href="/login.php">Login</a></li>
             </ul>
           </div>

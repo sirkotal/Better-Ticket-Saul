@@ -89,6 +89,27 @@
         die();
       }
 
+      if (User::isAgent($user->getId())) {
+        $ticketsAll = Ticket::getAllTickets();
+        $tickets = [];
+
+        $departments = $user->getDepartments();
+        foreach ($departments as $department) {
+          foreach ($ticketsAll as $ticket1){
+            if ($ticket1->getDepartment()!==null && $ticket1->getDepartment()->getId() == $department->getId())
+              array_push($tickets, $ticket1);
+          }
+        }
+
+        $body = [];
+        foreach ($tickets as $ticket) {
+          $body[] = $ticket->parseJsonInfo();
+        }
+
+        API::sendResponse(HttpStatus::OK, $body);
+        die();
+      }
+
       // is not admin and is not agent -> is client
       if (!User::isAgent($user->getId())) {
         $tickets = Ticket::getTicketsByClient($user);

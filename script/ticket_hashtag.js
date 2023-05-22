@@ -5,6 +5,9 @@ const hashtagSelector = document.querySelector("#hashtag-selector");
 const hashtagContainer = document.querySelector("#hashtag-container");
 
 function addHashtag(hashtag) {
+    if (hashtag === "--Select Hashtag--") {
+        return;
+      }
     const hashtagElement = document.createElement("span");
     hashtagElement.classList.add("hashtag");
     hashtagElement.innerHTML = hashtag;
@@ -28,7 +31,7 @@ function toggleBorder() {
 
 addHashtagButton.addEventListener("click", () => {
     const hashtag = hashtagSelector.value;
-    if (hashtag) {
+    if (hashtag && hashtag !== "--Select Hashtag--") {
         addHashtag(hashtag);
         toggleBorder();
     }

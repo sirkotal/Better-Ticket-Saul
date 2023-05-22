@@ -34,7 +34,7 @@ button.addEventListener("click", async () => {
     console.log(ticketJson);
 
     const xhr = new XMLHttpRequest();
-    xhr.open("POST", "/api/tickets", true);
+    xhr.open("POST", "/api/tickets");
     xhr.setRequestHeader("Content-Type", "application/json");
     xhr.send(JSON.stringify(ticketJson));
     xhr.onload = function() {

@@ -29,7 +29,6 @@
   <?php outputHeader() ?>
   <section id="open">
     <h1>Open a Ticket</h1>
-    <form method="post">
       <div class="create-first">
         <label id="title">
           <input type="text" name="title" placeholder="Add your title">
@@ -59,7 +58,6 @@
       </div>  
       <button id="open-button">Open</button>
       <input id="client-id" type="hidden" name="client_id" value="<?= $user->getId() ?>">
-    </form>
   </section>
   <?php outputFooter() ?>
 </body>

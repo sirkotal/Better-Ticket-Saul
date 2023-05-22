@@ -89,7 +89,7 @@ INSERT INTO Ticket (title, text, date, status, clientId) VALUES
         'Sold my car and did not get paid',
         'I sold my car to a guy named Tuco Salamanca and he did not pay me. I want my money back.',
         1682731073,
-        'Open',
+        'In Progress',
         1 -- test_client
     );
 

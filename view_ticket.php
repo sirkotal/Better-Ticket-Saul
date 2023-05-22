@@ -78,7 +78,7 @@
     </ul>
     <p class="text"><?= $ticket->getText() ?></p>
   </section>
-  <?php if ($ticket->getClient()->getId() === $user->getId() || $ticket->getAgent()->getId() === $user->getId() || User::isAdmin($user->getId())) { ?>
+  <?php if (User::isAdmin($user->getId()) || $ticket->getClient()->getId() === $user->getId() || $ticket->getAgent()->getId() === $user->getId()) { ?>
     <form class="add-comment" method="post" action="/actions/action_add_reply.php">
       <label for="reply">Reply:</label>
       <textarea id="reply" name="reply" rows="4" cols="50"></textarea>

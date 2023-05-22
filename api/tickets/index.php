@@ -92,7 +92,8 @@
       if (User::isAgent($user->getId())) {
         $ticketsAll = Ticket::getAllTickets();
         $tickets = [];
-
+        $own_tickets = [];
+        
         $departments = $user->getDepartments();
         foreach ($departments as $department) {
           foreach ($ticketsAll as $ticket1){
@@ -109,10 +110,10 @@
               break;
             }
           }
-          if ($flag)
+          if ($flag){
             array_push($tickets, $ticket);
+          }
         }
-        $tickets = array_merge($tickets, $own_tickets);
         $body = [];
         foreach ($tickets as $ticket) {
           $body[] = $ticket->parseJsonInfo();

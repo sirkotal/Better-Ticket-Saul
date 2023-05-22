@@ -82,7 +82,7 @@
     <form class="add-comment" method="post" action="/actions/action_add_reply.php">
       <label for="reply">Reply:</label>
       <textarea id="reply" name="reply" rows="4" cols="50"></textarea>
-      <input type="submit" value="Submit">
+      <input class="submit-reply" type="submit" value="Submit">
       <input type="hidden" name="ticket_id" value="<?= $ticket->getId() ?>">
     </form>
   <?php } ?>

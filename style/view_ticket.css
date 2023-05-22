@@ -113,6 +113,12 @@
     font-weight: bold;
 }
 
+.submit-reply:hover {
+    background-color: #d8bd96;
+    cursor: pointer;
+    transition: 1s;
+}
+
 #replies {
     width: 70%;
     margin: auto;

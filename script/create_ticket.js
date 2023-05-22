@@ -42,7 +42,7 @@ button.addEventListener("click", async () => {
             alert("Ticket created successfully!");
             window.location.href = "/list_tickets.php";
         } else if (xhr.status === 400) {
-            window.location.href = "/create_ticket.php";
+           // window.location.href = "/create_ticket.php";
             const data = JSON.parse(xhr.responseText);
             alert(data.error);
         }

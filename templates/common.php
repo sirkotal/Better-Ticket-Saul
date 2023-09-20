@@ -22,9 +22,10 @@
     <link href="/style/signup.css" rel="stylesheet">
     <link href="/style/layout.css" rel="stylesheet">
     <link href="/style/responsive.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="/script/dropdown.js" defer></script>
     <script src="/script/switch.js" defer></script>
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <!-- <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script> -->
     
     <?php foreach ($stylesheets as $stylesheet) { ?>
       <?php if (!empty($stylesheet)) { ?>
@@ -114,9 +115,9 @@
     <p>&copy; 2023 Better Ticket Saul || All Rights Reserved</p>
     <div class="footer-icons">
         <ul class="socials">
-            <li><a href="https://www.facebook.com/bob.odenkirk"><i class="fab fa-facebook-f"></i></a></li>
-            <li><a href="https://twitter.com/mrbobodenkirk"><i class="fab fa-twitter"></i></a></li>
-            <li><a href="https://www.instagram.com/therealbobodenkirk"><i class="fab fa-instagram"></i></a></li>
+            <li><a href="https://www.facebook.com/bob.odenkirk"><i class="fa fa-facebook"></i></a></li>
+            <li><a href="https://twitter.com/mrbobodenkirk"><i class="fa fa-twitter"></i></i></a></li>
+            <li><a href="https://www.instagram.com/therealbobodenkirk"><i class="fa fa-instagram"></i></a></li>
         </ul>
     </div>
   </footer>

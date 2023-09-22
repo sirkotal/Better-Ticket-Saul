@@ -10,11 +10,18 @@
 <?php outputHead(
   $stylesheets = [
     '/style/home.css'
+  ],
+  $scripts = [
+    '/script/log.js'
   ]
 ) ?>
 <body>
   <?php outputHeader() ?>
   <!-- TODO: change what to on the index page -->
+  <div id="login-status" data-is-logged-in="<?php echo json_encode($isLoggedIn); ?>"></div>
+  <audio id="background-audio" autoplay>
+      <source src="/assets/saul_goodlogin.mp3" type="audio/mpeg">
+  </audio>
   <main>
     <div class="saul-container">
       <div class="saul-text">

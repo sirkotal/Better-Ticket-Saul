@@ -32,7 +32,7 @@ test_admin/saulgone
     - GET: Gets all FAQ (if `/api/faq/{id}` only gets the info of the FAQ with the id {id})
     - POST: Creates a new FAQ
     - PUT: (`/api/faq/{id}`) Edits a FAQ with the id {id}
-    - DELETE: (/api/faq/{id}) Deletes a FAQ with the id {id}
+    - DELETE: (`/api/faq/{id}`) Deletes a FAQ with the id {id}
 - `/api/hashtags`
     - GET: Gets all hashtags (if `/api/hashtags/{id}` only gets the info of the hashtag with the id {id})
     - POST: Creates a new hashtag
